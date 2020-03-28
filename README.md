@@ -1,5 +1,5 @@
 # Algebra
- Linear algebra
+ Linear algebra 
 
 ## Requirement
  .NET Standard 2.0
