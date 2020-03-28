@@ -6,9 +6,9 @@ namespace Algebra {
         /// <summary>固有値計算</summary>
         /// <param name="precision_level">精度(収束ループを回す回数)</param>
         public double[] CalculateEigenValues(int precision_level = 16) {
-            Matrix m = Copy(), q, r;
-            for(int i = 0; i < precision_level; i++) {
-                m.QRDecomposition(out q, out r);
+            Matrix m = Copy();
+            for (int i = 0; i < precision_level; i++) {
+                m.QRDecomposition(out Matrix q, out Matrix r);
                 m = r * q;
             }
 
@@ -31,7 +31,7 @@ namespace Algebra {
 
             double eigen_value;
             bool[] is_converged_vector = new bool[Size];
-            Matrix m = Copy(), q, r, g;
+            Matrix m = Copy(), g;
             Vector x_init = Vector.Zero(Size), x;
 
             for(int i = 0; i < Size; i++) {
@@ -41,7 +41,7 @@ namespace Algebra {
             x_init /= x_init.Norm;
 
             for(int i = 0; i < precision_level; i++) {
-                m.QRDecomposition(out q, out r);
+                m.QRDecomposition(out Matrix q, out Matrix r);
                 m = r * q;
 
                 eigen_values = m.Diagonals;

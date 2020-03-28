@@ -289,11 +289,10 @@ namespace Algebra.Tests {
         [TestMethod()]
         public void LUDecompositionTest() {
             Matrix matrix = new Matrix(new double[,] { { 2, 3, 1, 2 }, { 4, 1, 3, -2 }, { 2, 2, -3, 1 }, { 1, -3, 2, 4 } });
-            Matrix lower, upper;
 
-            matrix.LUDecomposition(out lower, out upper);
+            matrix.LUDecomposition(out Matrix lower, out Matrix upper);
 
-            foreach(var diagonal in lower.Diagonals) {
+            foreach (var diagonal in lower.Diagonals) {
                 Assert.AreEqual(diagonal, 1);
             }
 
@@ -303,9 +302,8 @@ namespace Algebra.Tests {
         [TestMethod()]
         public void QRDecompositionTest() {
             Matrix matrix = new Matrix(new double[,] { { 12, -51, 4 }, { 6, 167, -68 }, { -4, 24, -41 } });
-            Matrix q, r;
 
-            matrix.QRDecomposition(out q, out r);
+            matrix.QRDecomposition(out Matrix q, out Matrix r);
 
             Assert.AreEqual((matrix - q * r).Norm < 1e-12, true);
             Assert.AreEqual((q * q.Transpose - Matrix.Identity(matrix.Size)).Norm < 1e-12, true);
@@ -323,12 +321,10 @@ namespace Algebra.Tests {
         [TestMethod()]
         public void CalculateEigenVectorTest() {
             Matrix matrix = new Matrix(new double[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 8, 7, 9 } });
-            double[] eigen_values;
-            Vector[] eigen_vectors;
 
-            matrix.CalculateEigenValueVectors(out eigen_values, out eigen_vectors);
+            matrix.CalculateEigenValueVectors(out double[] eigen_values, out Vector[] eigen_vectors);
 
-            for(int i = 0; i < matrix.Size; i++) {
+            for (int i = 0; i < matrix.Size; i++) {
                 double eigen_value = eigen_values[i];
                 Vector eigen_vector = eigen_vectors[i];
 

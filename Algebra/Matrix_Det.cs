@@ -4,8 +4,7 @@
         /// <summary>行列式</summary>
         public double Det {
             get {
-                Matrix lower, upper;
-                LUDecomposition(out lower, out upper);
+                LUDecomposition(out _, out Matrix upper);
 
                 double prod = 1;
                 foreach(var diagonal in upper.Diagonals) {

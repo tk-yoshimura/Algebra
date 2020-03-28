@@ -188,7 +188,7 @@ namespace Algebra {
             if(ReferenceEquals(matrix1, matrix2)) {
                 return true;
             }
-            if((object)matrix1 == null || (object)matrix2 == null) {
+            if(matrix1 is null || matrix2 is null) {
                 return false;
             }
 

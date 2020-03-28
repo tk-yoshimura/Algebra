@@ -240,7 +240,7 @@ namespace Algebra {
             if(ReferenceEquals(vector1, vector2)) {
                 return true;
             }
-            if((object)vector1 == null || (object)vector2 == null) {
+            if(vector1 is null || vector2 is null) {
                 return false;
             }
 
