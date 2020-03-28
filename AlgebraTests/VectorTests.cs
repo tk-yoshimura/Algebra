@@ -1,5 +1,4 @@
-﻿using Algebra;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace Algebra.Tests {

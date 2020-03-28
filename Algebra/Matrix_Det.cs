@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Algebra {
+﻿namespace Algebra {
     /// <summary>行列クラス</summary>
     public partial class Matrix {
         /// <summary>行列式</summary>
