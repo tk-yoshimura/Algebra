@@ -71,7 +71,7 @@ namespace Algebra {
         public double SquareNorm {
             get {
                 double norm = 0;
-                foreach(var vi in v) {
+                foreach (var vi in v) {
                     norm += vi * vi;
                 }
 
@@ -82,8 +82,8 @@ namespace Algebra {
         /// <summary>行ベクトル</summary>
         public Matrix Horizontal {
             get {
-                Matrix ret = new Matrix(1, Dim);
-                for(int i = 0; i < Dim; i++) {
+                Matrix ret = new(1, Dim);
+                for (int i = 0; i < Dim; i++) {
                     ret[0, i] = v[i];
                 }
 
@@ -94,8 +94,8 @@ namespace Algebra {
         /// <summary>列ベクトル</summary>
         public Matrix Vertical {
             get {
-                Matrix ret = new Matrix(Dim, 1);
-                for(int i = 0; i < Dim; i++) {
+                Matrix ret = new(Dim, 1);
+                for (int i = 0; i < Dim; i++) {
                     ret[i, 0] = v[i];
                 }
 
@@ -115,7 +115,7 @@ namespace Algebra {
         public static Vector operator -(Vector vector) {
             double[] v = new double[vector.Dim];
 
-            for(int i = 0; i < vector.Dim; i++) {
+            for (int i = 0; i < vector.Dim; i++) {
                 v[i] = -vector[i];
             }
             return new Vector(v);
@@ -123,14 +123,14 @@ namespace Algebra {
 
         /// <summary>ベクトル加算</summary>
         public static Vector operator +(Vector vector1, Vector vector2) {
-            if(vector1.Dim != vector2.Dim) {
-                throw new ArgumentException();
+            if (vector1.Dim != vector2.Dim) {
+                throw new ArgumentException("unmatch size", $"{vector1},{vector2}");
             }
 
             int size = vector1.Dim;
             double[] v = new double[size];
 
-            for(int i = 0; i < size; i++) {
+            for (int i = 0; i < size; i++) {
                 v[i] = vector1[i] + vector2[i];
             }
 
@@ -139,14 +139,14 @@ namespace Algebra {
 
         /// <summary>ベクトル減算</summary>
         public static Vector operator -(Vector vector1, Vector vector2) {
-            if(vector1.Dim != vector2.Dim) {
-                throw new ArgumentException();
+            if (vector1.Dim != vector2.Dim) {
+                throw new ArgumentException("unmatch size", $"{vector1},{vector2}");
             }
 
             int size = vector1.Dim;
             double[] v = new double[size];
 
-            for(int i = 0; i < size; i++) {
+            for (int i = 0; i < size; i++) {
                 v[i] = vector1[i] - vector2[i];
             }
 
@@ -157,7 +157,7 @@ namespace Algebra {
         public static Vector operator *(double r, Vector vector) {
             double[] v = new double[vector.Dim];
 
-            for(int i = 0; i < vector.Dim; i++) {
+            for (int i = 0; i < vector.Dim; i++) {
                 v[i] = vector[i] * r;
             }
 
@@ -186,12 +186,12 @@ namespace Algebra {
 
         /// <summary>ベクトル内積</summary>
         public static double InnerProduct(Vector vector1, Vector vector2) {
-            if(vector1.Dim != vector2.Dim) {
-                throw new ArgumentException();
+            if (vector1.Dim != vector2.Dim) {
+                throw new ArgumentException("unmatch size", $"{vector1},{vector2}");
             }
 
             double sum = 0;
-            for(int i = 0, dim = vector1.Dim; i < dim; i++) {
+            for (int i = 0, dim = vector1.Dim; i < dim; i++) {
                 sum += vector1[i] * vector2[i];
             }
 
@@ -205,8 +205,8 @@ namespace Algebra {
 
         /// <summary>ゼロベクトルか判定</summary>
         public static bool IsZero(Vector vector) {
-            for(int i = 0; i < vector.Dim; i++) {
-                if(vector[i] != 0) {
+            for (int i = 0; i < vector.Dim; i++) {
+                if (vector[i] != 0) {
                     return false;
                 }
             }
@@ -217,7 +217,7 @@ namespace Algebra {
         /// <summary>不正なベクトル</summary>
         public static Vector Invalid(int size) {
             double[] v = new double[size];
-            for(int i = 0; i < size; i++) {
+            for (int i = 0; i < size; i++) {
                 v[i] = double.NaN;
             }
 
@@ -226,8 +226,8 @@ namespace Algebra {
 
         /// <summary>有効なベクトルか判定</summary>
         public static bool IsValid(Vector vector) {
-            for(int i = 0; i < vector.Dim; i++) {
-                if(double.IsNaN(vector[i]) || double.IsInfinity(vector[i])) {
+            for (int i = 0; i < vector.Dim; i++) {
+                if (double.IsNaN(vector[i]) || double.IsInfinity(vector[i])) {
                     return false;
                 }
             }
@@ -237,10 +237,10 @@ namespace Algebra {
 
         /// <summary>ベクトルが等しいか</summary>
         public static bool operator ==(Vector vector1, Vector vector2) {
-            if(ReferenceEquals(vector1, vector2)) {
+            if (ReferenceEquals(vector1, vector2)) {
                 return true;
             }
-            if(vector1 is null || vector2 is null) {
+            if (vector1 is null || vector2 is null) {
                 return false;
             }
 
@@ -254,7 +254,7 @@ namespace Algebra {
 
         /// <summary>等しいか判定</summary>
         public override bool Equals(object obj) {
-            return obj is Vector ? (Vector)obj == this : false;
+            return (!(obj is null)) && obj is Vector vector && vector == this;
         }
 
         /// <summary>ハッシュ値</summary>
@@ -274,13 +274,13 @@ namespace Algebra {
 
         /// <summary>文字列化</summary>
         public override string ToString() {
-            if(Dim <= 0) {
+            if (Dim <= 0) {
                 return string.Empty;
             }
 
             string str = $"{v[0]}";
 
-            for(int i = 1; i < Dim; i++) {
+            for (int i = 1; i < Dim; i++) {
                 str += $",{v[i]}";
             }
 

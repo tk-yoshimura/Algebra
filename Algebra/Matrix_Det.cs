@@ -4,10 +4,10 @@
         /// <summary>行列式</summary>
         public double Det {
             get {
-                LUDecomposition(out _, out Matrix upper);
+                (_, Matrix upper) = LUDecomposition();
 
                 double prod = 1;
-                foreach(var diagonal in upper.Diagonals) {
+                foreach (var diagonal in upper.Diagonals) {
                     prod *= diagonal;
                 }
 

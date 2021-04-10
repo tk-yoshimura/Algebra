@@ -4,10 +4,10 @@
         /// <summary>トレース</summary>
         public double Trace {
             get {
-                LUDecomposition(out _, out Matrix upper);
+                (_, Matrix upper) = LUDecomposition();
 
                 double sum = 0;
-                foreach(var diagonal in upper.Diagonals) {
+                foreach (var diagonal in upper.Diagonals) {
                     sum += diagonal;
                 }
 

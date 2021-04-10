@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Algebra", "Algebra\Algebra.csproj", "{9C47F9C8-9E89-45F1-84EB-61132A8C6B22}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlgebraTests", "AlgebraTests\AlgebraTests.csproj", "{60A6B481-DF32-4018-A8AD-AD816B5F43B4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9C47F9C8-9E89-45F1-84EB-61132A8C6B22} = {9C47F9C8-9E89-45F1-84EB-61132A8C6B22}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
