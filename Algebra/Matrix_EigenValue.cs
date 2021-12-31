@@ -1,11 +1,12 @@
-﻿using System;
+﻿using DoubleDouble;
+using System;
 
 namespace Algebra {
     /// <summary>行列クラス</summary>
     public partial class Matrix {
         /// <summary>固有値計算</summary>
         /// <param name="precision_level">精度(収束ループを回す回数)</param>
-        public double[] CalculateEigenValues(int precision_level = 16) {
+        public ddouble[] CalculateEigenValues(int precision_level = 28) {
             Matrix m = Copy();
             for (int i = 0; i < precision_level; i++) {
                 (Matrix q, Matrix r) = m.QRDecomposition();
@@ -19,24 +20,24 @@ namespace Algebra {
         /// <param name="eigen_values">固有値</param>
         /// <param name="eigen_vectors">固有ベクトル</param>
         /// <param name="precision_level">精度(収束ループを回す回数)</param>
-        public (double[] eigen_values, Vector[] eigen_vectors) CalculateEigenValueVectors(int precision_level = 16) {
+        public (ddouble[] eigen_values, Vector[] eigen_vectors) CalculateEigenValueVectors(int precision_level = 32) {
             if (!IsSquare(this)) {
                 throw new InvalidOperationException();
             }
 
-            double[] eigen_values = null;
+            ddouble[] eigen_values = null;
             Vector[] eigen_vectors = new Vector[Size];
 
             const int vector_converge_times = 3;
 
-            double eigen_value;
+            ddouble eigen_value;
             bool[] is_converged_vector = new bool[Size];
             Matrix m = Copy(), g;
             Vector x_init = Vector.Zero(Size), x;
 
             for (int i = 0; i < Size; i++) {
                 eigen_vectors[i] = Vector.Invalid(Size);
-                x_init[i] = 1;
+                x_init.v[i] = 1;
             }
             x_init /= x_init.Norm;
 

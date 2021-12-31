@@ -1,19 +1,35 @@
-﻿using System;
+﻿using DoubleDouble;
+using System;
 using System.Diagnostics;
 
 namespace Algebra {
     /// <summary>行列クラス</summary>
     [DebuggerDisplay("{ToString(),nq}")]
     public partial class Matrix : ICloneable {
-        private readonly double[,] e;
+        internal readonly ddouble[,] e;
 
         /// <summary>コンストラクタ</summary>
         /// <param name="m">行列要素配列</param>
-        public Matrix(double[,] m) {
+        public Matrix(double[,] m) : this(m.GetLength(0), m.GetLength(1)) {
             if (m is null) {
                 throw new ArgumentNullException(nameof(m));
             }
-            this.e = (double[,])m.Clone();
+
+            for (int i = 0; i < Rows; i++) {
+                for (int j = 0; j < Columns; j++) {
+                    e[i, j] = m[i, j];
+                }
+            }
+        }
+
+        /// <summary>コンストラクタ</summary>
+        /// <param name="m">行列要素配列</param>
+        public Matrix(ddouble[,] m) {
+            if (m is null) {
+                throw new ArgumentNullException(nameof(m));
+            }
+
+            this.e = (ddouble[,])m.Clone();
         }
 
         /// <summary>コンストラクタ </summary>
@@ -24,19 +40,15 @@ namespace Algebra {
                 throw new ArgumentOutOfRangeException($"{rows},{columns}");
             }
 
-            this.e = new double[rows, columns];
+            this.e = new ddouble[rows, columns];
         }
 
         /// <summary>インデクサ </summary>
         /// <param name="row_index">行</param>
         /// <param name="column_index">列</param>
-        public double this[int row_index, int column_index] {
-            get {
-                return e[row_index, column_index];
-            }
-            set {
-                e[row_index, column_index] = value;
-            }
+        public ddouble this[int row_index, int column_index] {
+            get => e[row_index, column_index];
+            set => e[row_index, column_index] = value;
         }
 
         /// <summary>行数</summary>
@@ -65,9 +77,9 @@ namespace Algebra {
         public static Matrix operator -(Matrix matrix) {
             Matrix ret = matrix.Copy();
 
-            for (int i = 0, j; i < ret.Rows; i++) {
-                for (j = 0; j < ret.Columns; j++) {
-                    ret[i, j] = -ret[i, j];
+            for (int i = 0; i < ret.Rows; i++) {
+                for (int j = 0; j < ret.Columns; j++) {
+                    ret.e[i, j] = -ret.e[i, j];
                 }
             }
 
@@ -84,7 +96,7 @@ namespace Algebra {
 
             for (int i = 0, j; i < ret.Rows; i++) {
                 for (j = 0; j < ret.Columns; j++) {
-                    ret[i, j] = matrix1[i, j] + matrix2[i, j];
+                    ret.e[i, j] = matrix1.e[i, j] + matrix2.e[i, j];
                 }
             }
 
@@ -101,7 +113,7 @@ namespace Algebra {
 
             for (int i = 0, j; i < ret.Rows; i++) {
                 for (j = 0; j < ret.Columns; j++) {
-                    ret[i, j] = matrix1[i, j] - matrix2[i, j];
+                    ret.e[i, j] = matrix1.e[i, j] - matrix2.e[i, j];
                 }
             }
 
@@ -120,7 +132,7 @@ namespace Algebra {
             for (int i = 0, j, k; i < ret.Rows; i++) {
                 for (j = 0; j < ret.Columns; j++) {
                     for (k = 0; k < c; k++) {
-                        ret[i, j] += matrix1[i, k] * matrix2[k, j];
+                        ret.e[i, j] += matrix1.e[i, k] * matrix2.e[k, j];
                     }
                 }
             }
@@ -138,7 +150,7 @@ namespace Algebra {
 
             for (int i = 0, j; i < matrix.Rows; i++) {
                 for (j = 0; j < matrix.Columns; j++) {
-                    ret[i] += matrix[i, j] * vector[j];
+                    ret.v[i] += matrix.e[i, j] * vector.v[j];
                 }
             }
 
@@ -155,7 +167,7 @@ namespace Algebra {
 
             for (int j = 0, i; j < matrix.Columns; j++) {
                 for (i = 0; i < matrix.Rows; i++) {
-                    ret[j] += vector[i] * matrix[i, j];
+                    ret.v[j] += vector.v[i] * matrix.e[i, j];
                 }
             }
 
@@ -163,12 +175,12 @@ namespace Algebra {
         }
 
         /// <summary>行列スカラー倍</summary>
-        public static Matrix operator *(double r, Matrix matrix) {
+        public static Matrix operator *(ddouble r, Matrix matrix) {
             Matrix ret = new(matrix.Rows, matrix.Columns);
 
             for (int i = 0, j; i < ret.Rows; i++) {
                 for (j = 0; j < ret.Columns; j++) {
-                    ret[i, j] = matrix[i, j] * r;
+                    ret.e[i, j] = matrix.e[i, j] * r;
                 }
             }
 
@@ -176,13 +188,13 @@ namespace Algebra {
         }
 
         /// <summary>行列スカラー倍</summary>
-        public static Matrix operator *(Matrix matrix, double r) {
+        public static Matrix operator *(Matrix matrix, ddouble r) {
             return r * matrix;
         }
 
         /// <summary>行列スカラー逆数倍</summary>
-        public static Matrix operator /(Matrix matrix, double r) {
-            return (1 / r) * matrix;
+        public static Matrix operator /(Matrix matrix, ddouble r) {
+            return (1d / r) * matrix;
         }
 
         /// <summary>行列が等しいか</summary>
@@ -200,7 +212,7 @@ namespace Algebra {
 
             for (int i = 0, j; i < matrix1.Rows; i++) {
                 for (j = 0; j < matrix2.Columns; j++) {
-                    if (matrix1[i, j] != matrix2[i, j]) {
+                    if (matrix1.e[i, j] != matrix2.e[i, j]) {
                         return false;
                     }
                 }
@@ -216,12 +228,12 @@ namespace Algebra {
 
         /// <summary>等しいか判定</summary>
         public override bool Equals(object obj) {
-            return (!(obj is null)) && obj is Matrix matrix && matrix == this;
+            return (obj is not null) && obj is Matrix matrix && matrix == this;
         }
 
         /// <summary>ハッシュ値</summary>
         public override int GetHashCode() {
-            return base.GetHashCode();
+            return e[0, 0].GetHashCode();
         }
 
         /// <summary>クローン</summary>
@@ -256,9 +268,7 @@ namespace Algebra {
                     return Invalid(Columns, Rows);
                 }
                 if (Rows == Columns) {
-                    Matrix m = Copy(), d = Identity(Rows);
-                    GaussianEliminate(m, ref d);
-                    return d;
+                    return GaussianEliminate(this);
                 }
                 else if (Rows < Columns) {
                     Matrix m = this * Transpose;
@@ -272,25 +282,25 @@ namespace Algebra {
         }
 
         /// <summary>行列ノルム</summary>
-        public double Norm {
+        public ddouble Norm {
             get {
-                double sum_sq = 0;
+                ddouble sum_sq = 0;
                 for (int i = 0, j; i < Rows; i++) {
                     for (j = 0; j < Columns; j++) {
                         sum_sq += e[i, j] * e[i, j];
                     }
                 }
 
-                return Math.Sqrt(sum_sq);
+                return ddouble.Sqrt(sum_sq);
             }
         }
 
         /// <summary>行ベクトル</summary>
         /// <param name="row_index">行</param>
         public Vector Horizontal(int row_index) {
-            Vector ret = Vector.Zero(Columns);
+            Vector ret = new(Columns);
             for (int i = 0; i < Columns; i++) {
-                ret[i] = e[row_index, i];
+                ret.v[i] = e[row_index, i];
             }
 
             return ret;
@@ -299,9 +309,9 @@ namespace Algebra {
         /// <summary>列ベクトル</summary>
         /// <param name="column_index">列</param>
         public Vector Vertical(int column_index) {
-            Vector ret = Vector.Zero(Rows);
+            Vector ret = new(Rows);
             for (int i = 0; i < Rows; i++) {
-                ret[i] = e[i, column_index];
+                ret.v[i] = e[i, column_index];
             }
 
             return ret;
@@ -335,7 +345,7 @@ namespace Algebra {
             Matrix ret = new(rows, columns);
             for (int i = 0, j; i < ret.Rows; i++) {
                 for (j = 0; j < ret.Columns; j++) {
-                    ret.e[i, j] = double.NaN;
+                    ret.e[i, j] = ddouble.NaN;
                 }
             }
 
@@ -373,7 +383,7 @@ namespace Algebra {
         public static bool IsZero(Matrix matrix) {
             for (int i = 0, j; i < matrix.Rows; i++) {
                 for (j = 0; j < matrix.Columns; j++) {
-                    if (matrix[i, j] != 0) {
+                    if (matrix.e[i, j] != 0d) {
                         return false;
                     }
                 }
@@ -391,12 +401,12 @@ namespace Algebra {
             for (int i = 0, j; i < matrix.Rows; i++) {
                 for (j = 0; j < matrix.Columns; j++) {
                     if (i == j) {
-                        if (matrix[i, j] != 1) {
+                        if (matrix.e[i, j] != 1d) {
                             return false;
                         }
                     }
                     else {
-                        if (matrix[i, j] != 0) {
+                        if (matrix.e[i, j] != 0d) {
                             return false;
                         }
                     }
@@ -414,7 +424,7 @@ namespace Algebra {
 
             for (int i = 0, j; i < matrix.Rows; i++) {
                 for (j = i + 1; j < matrix.Columns; j++) {
-                    if (matrix[i, j] != matrix[j, i]) {
+                    if (matrix.e[i, j] != matrix.e[j, i]) {
                         return false;
                     }
                 }
@@ -431,7 +441,7 @@ namespace Algebra {
 
             for (int i = 0, j; i < matrix.Rows; i++) {
                 for (j = 0; j < matrix.Columns; j++) {
-                    if (double.IsNaN(matrix[i, j]) || double.IsInfinity(matrix[i, j])) {
+                    if (ddouble.IsNaN(matrix.e[i, j]) || ddouble.IsInfinity(matrix.e[i, j])) {
                         return false;
                     }
                 }
@@ -446,13 +456,13 @@ namespace Algebra {
         }
 
         /// <summary>対角成分</summary>
-        public double[] Diagonals {
+        public ddouble[] Diagonals {
             get {
                 if (!IsSquare(this)) {
                     throw new InvalidOperationException();
                 }
 
-                double[] diagonals = new double[Size];
+                ddouble[] diagonals = new ddouble[Size];
 
                 for (int i = 0; i < Size; i++) {
                     diagonals[i] = e[i, i];

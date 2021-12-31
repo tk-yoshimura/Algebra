@@ -12,4 +12,8 @@
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="TYoshimura.DoubleDouble" Version="1.6.1" />
+  </ItemGroup>
+
 </Project>

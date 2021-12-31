@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DoubleDouble;
+using System;
 
 namespace Algebra {
     /// <summary>行列クラス</summary>
@@ -10,35 +11,34 @@ namespace Algebra {
             }
 
             Matrix m = Copy();
-            Matrix lower_matrix = Matrix.Zero(Size, Size);
-            Matrix upper_matrix = Matrix.Zero(Size, Size);
+            Matrix l = Zero(Size, Size), u = Zero(Size, Size);
 
             int i, j, k, n = Size;
 
             //LU分解
             for (i = 0; i < n; i++) {
                 for (j = i + 1; j < n; j++) {
-                    double mul = m[j, i] /= m[i, i];
-                    m[j, i] = mul;
+                    ddouble mul = m.e[j, i] /= m.e[i, i];
+                    m.e[j, i] = mul;
 
                     for (k = i + 1; k < n; k++) {
-                        m[j, k] -= m[i, k] * mul;
+                        m.e[j, k] -= m.e[i, k] * mul;
                     }
                 }
             }
 
             //三角行列格納
             for (i = 0; i < n; i++) {
-                lower_matrix[i, i] = 1;
+                l.e[i, i] = 1;
                 for (j = 0; j < i; j++) {
-                    lower_matrix[i, j] = m[i, j];
+                    l.e[i, j] = m.e[i, j];
                 }
                 for (; j < n; j++) {
-                    upper_matrix[i, j] = m[i, j];
+                    u.e[i, j] = m.e[i, j];
                 }
             }
 
-            return (lower_matrix, upper_matrix);
+            return (l, u);
         }
     }
 }

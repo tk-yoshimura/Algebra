@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using DoubleDouble;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace Algebra.Tests {
@@ -33,7 +34,7 @@ namespace Algebra.Tests {
         public void NormTest() {
             Matrix matrix = new(new double[,] { { 1, 2 }, { 3, 4 } });
 
-            Assert.AreEqual(Math.Sqrt(30), matrix.Norm);
+            Assert.AreEqual(ddouble.Sqrt(30), matrix.Norm);
         }
 
         [TestMethod()]
@@ -53,10 +54,10 @@ namespace Algebra.Tests {
             Matrix matrix3 = new(new double[,] { { 1, 2 }, { 3, 4 } });
             Matrix matrix4 = new(new double[,] { { 0, 1 }, { 0, 0 } });
             Matrix matrix5 = new(new double[,] { { 2, 1, 1, 2 }, { 4, 2, 3, 1 }, { -2, -2, 0, -1 }, { 1, 1, 2, 6 } });
-            Matrix matrix6 = new(new double[,] { 
-                { 1, 0, 0, 0, 1, 0, 0, 0 }, 
-                { 0, 1, 0, 0, 1, 1, 0, 0 }, 
-                { 0, 0, 1, 0, 2, 1, 1, 0 }, 
+            Matrix matrix6 = new(new double[,] {
+                { 1, 0, 0, 0, 1, 0, 0, 0 },
+                { 0, 1, 0, 0, 1, 1, 0, 0 },
+                { 0, 0, 1, 0, 2, 1, 1, 0 },
                 { 0, 0, 0, 1, 4, 2, 1, 1 },
                 { 0, 0, 0, 0, 5, 4, 2, 1 },
                 { 0, 0, 0, 0, 7, 5, 4, 2 },
@@ -73,28 +74,30 @@ namespace Algebra.Tests {
             Assert.AreEqual(matrix3.Rows, matrix3.Transpose.Columns);
             Assert.AreEqual(matrix3.Columns, matrix3.Transpose.Rows);
 
-            Assert.IsTrue((matrix1 * matrix1.Inverse * matrix1 - matrix1).Norm < 1e-12);
-            Assert.IsTrue((matrix2 * matrix2.Inverse * matrix2 - matrix2).Norm < 1e-12);
-            Assert.IsTrue((matrix3 * matrix3.Inverse * matrix3 - matrix3).Norm < 1e-12);
+            Assert.IsTrue((matrix1 * matrix1.Inverse * matrix1 - matrix1).Norm < 1e-24);
+            Assert.IsTrue((matrix2 * matrix2.Inverse * matrix2 - matrix2).Norm < 1e-24);
+            Assert.IsTrue((matrix3 * matrix3.Inverse * matrix3 - matrix3).Norm < 1e-24);
 
-            Assert.IsTrue((matrix1.Inverse * matrix1 * matrix1.Inverse - matrix1.Inverse).Norm < 1e-12);
-            Assert.IsTrue((matrix2.Inverse * matrix2 * matrix2.Inverse - matrix2.Inverse).Norm < 1e-12);
-            Assert.IsTrue((matrix3.Inverse * matrix3 * matrix3.Inverse - matrix3.Inverse).Norm < 1e-12);
+            Assert.IsTrue((matrix1.Inverse * matrix1 * matrix1.Inverse - matrix1.Inverse).Norm < 1e-24);
+            Assert.IsTrue((matrix2.Inverse * matrix2 * matrix2.Inverse - matrix2.Inverse).Norm < 1e-24);
+            Assert.IsTrue((matrix3.Inverse * matrix3 * matrix3.Inverse - matrix3.Inverse).Norm < 1e-24);
 
-            Assert.IsTrue(((matrix1 * matrix1.Inverse).Transpose - matrix1 * matrix1.Inverse).Norm < 1e-12);
-            Assert.IsTrue(((matrix2 * matrix2.Inverse).Transpose - matrix2 * matrix2.Inverse).Norm < 1e-12);
-            Assert.IsTrue(((matrix3 * matrix3.Inverse).Transpose - matrix3 * matrix3.Inverse).Norm < 1e-12);
+            Assert.IsTrue(((matrix1 * matrix1.Inverse).Transpose - matrix1 * matrix1.Inverse).Norm < 1e-24);
+            Assert.IsTrue(((matrix2 * matrix2.Inverse).Transpose - matrix2 * matrix2.Inverse).Norm < 1e-24);
+            Assert.IsTrue(((matrix3 * matrix3.Inverse).Transpose - matrix3 * matrix3.Inverse).Norm < 1e-24);
 
-            Assert.IsTrue(((matrix1.Inverse * matrix1).Transpose - matrix1.Inverse * matrix1).Norm < 1e-12);
-            Assert.IsTrue(((matrix2.Inverse * matrix2).Transpose - matrix2.Inverse * matrix2).Norm < 1e-12);
-            Assert.IsTrue(((matrix3.Inverse * matrix3).Transpose - matrix3.Inverse * matrix3).Norm < 1e-12);
+            Assert.IsTrue(((matrix1.Inverse * matrix1).Transpose - matrix1.Inverse * matrix1).Norm < 1e-24);
+            Assert.IsTrue(((matrix2.Inverse * matrix2).Transpose - matrix2.Inverse * matrix2).Norm < 1e-24);
+            Assert.IsTrue(((matrix3.Inverse * matrix3).Transpose - matrix3.Inverse * matrix3).Norm < 1e-24);
 
             Assert.IsFalse(Matrix.IsValid(matrix4.Inverse));
             Assert.IsFalse(Matrix.IsValid(Matrix.Zero(2, 2).Inverse));
             Assert.IsTrue(Matrix.IsIdentity(Matrix.Identity(2).Inverse));
 
-            Assert.IsTrue((matrix5.Inverse.Inverse - matrix5).Norm < 1e-12);
-            Assert.IsTrue((matrix6.Inverse.Inverse - matrix6).Norm < 1e-12);
+            Assert.IsTrue((matrix5.Inverse.Inverse - matrix5).Norm < 1e-24);
+            Assert.IsTrue((matrix6.Inverse.Inverse - matrix6).Norm < 1e-24);
+
+            Console.WriteLine(matrix6.Inverse);
         }
 
         [TestMethod()]
@@ -200,8 +203,8 @@ namespace Algebra.Tests {
         public void InvalidTest() {
             Matrix matrix = Matrix.Invalid(2, 1);
 
-            Assert.IsTrue(double.IsNaN(matrix[0, 0]));
-            Assert.IsTrue(double.IsNaN(matrix[1, 0]));
+            Assert.IsTrue(ddouble.IsNaN(matrix[0, 0]));
+            Assert.IsTrue(ddouble.IsNaN(matrix[1, 0]));
         }
 
         [TestMethod()]
@@ -291,7 +294,7 @@ namespace Algebra.Tests {
         public void DiagonalsTest() {
             Matrix matrix = new(new double[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } });
 
-            double[] diagonals = matrix.Diagonals;
+            ddouble[] diagonals = matrix.Diagonals;
 
             Assert.AreEqual(1, diagonals[0]);
             Assert.AreEqual(5, diagonals[1]);
@@ -308,7 +311,7 @@ namespace Algebra.Tests {
                 Assert.AreEqual(1, diagonal);
             }
 
-            Assert.IsTrue((matrix - lower * upper).Norm < 1e-12);
+            Assert.IsTrue((matrix - lower * upper).Norm < 1e-24);
         }
 
         [TestMethod()]
@@ -318,29 +321,29 @@ namespace Algebra.Tests {
             (Matrix q, Matrix r) = matrix.QRDecomposition();
 
             Assert.IsTrue((matrix - q * r).Norm < 1e-12);
-            Assert.IsTrue((q * q.Transpose - Matrix.Identity(matrix.Size)).Norm < 1e-12);
+            Assert.IsTrue((q * q.Transpose - Matrix.Identity(matrix.Size)).Norm < 1e-24);
         }
 
         [TestMethod()]
         public void CalculateEigenValuesTest() {
             Matrix matrix = new(new double[,] { { 1, 2 }, { 4, 5 } });
-            double[] eigen_values = matrix.CalculateEigenValues();
+            ddouble[] eigen_values = matrix.CalculateEigenValues();
 
-            Assert.IsTrue(Math.Abs(eigen_values[0] - (3 + 2 * Math.Sqrt(3))) < 1e-12);
-            Assert.IsTrue(Math.Abs(eigen_values[1] - (3 - 2 * Math.Sqrt(3))) < 1e-12);
+            Assert.IsTrue(ddouble.Abs(eigen_values[0] - (3 + 2 * ddouble.Sqrt(3))) < 1e-20);
+            Assert.IsTrue(ddouble.Abs(eigen_values[1] - (3 - 2 * ddouble.Sqrt(3))) < 1e-20);
         }
 
         [TestMethod()]
         public void CalculateEigenVectorTest() {
             Matrix matrix = new(new double[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 8, 7, 9 } });
 
-            (double[] eigen_values, Vector[] eigen_vectors) = matrix.CalculateEigenValueVectors();
+            (ddouble[] eigen_values, Vector[] eigen_vectors) = matrix.CalculateEigenValueVectors();
 
             for (int i = 0; i < matrix.Size; i++) {
-                double eigen_value = eigen_values[i];
+                ddouble eigen_value = eigen_values[i];
                 Vector eigen_vector = eigen_vectors[i];
 
-                Assert.IsTrue((matrix * eigen_vector - eigen_value * eigen_vector).Norm < 1e-6);
+                Assert.IsTrue((matrix * eigen_vector - eigen_value * eigen_vector).Norm < 1e-15);
             }
         }
 
@@ -380,9 +383,9 @@ namespace Algebra.Tests {
             Matrix matrix3 = new(new double[,] { { 1 }, { 2 }, { 3 } });
             Matrix matrix4 = Matrix.Invalid(2, 2);
 
-            Assert.AreEqual("{ { 1, 2, 3 }, { 4, 5, 6 } }", matrix1.ToString());
-            Assert.AreEqual("{ { 1, 2, 3 } }", matrix2.ToString());
-            Assert.AreEqual("{ { 1 }, { 2 }, { 3 } }", matrix3.ToString());
+            Assert.AreEqual("[ [ 1, 2, 3 ], [ 4, 5, 6 ] ]", matrix1.ToString());
+            Assert.AreEqual("[ [ 1, 2, 3 ] ]", matrix2.ToString());
+            Assert.AreEqual("[ [ 1 ], [ 2 ], [ 3 ] ]", matrix3.ToString());
             Assert.AreEqual("Invalid Matrix", matrix4.ToString());
         }
     }

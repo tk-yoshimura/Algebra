@@ -9,8 +9,7 @@ namespace Algebra {
                 throw new InvalidOperationException();
             }
 
-            Matrix orthogonal_matrix = new(Size, Size);
-            Matrix triangular_matrix = new(Size, Size);
+            Matrix q = new(Size, Size), r = new(Size, Size);
 
             int i, j, n = Size;
 
@@ -31,15 +30,15 @@ namespace Algebra {
                 e[i] = u[i].Normal;
 
                 for (j = 0; j <= i; j++) {
-                    triangular_matrix[j, i] = Vector.InnerProduct(ai, e[j]);
+                    r.e[j, i] = Vector.InnerProduct(ai, e[j]);
                 }
 
                 for (j = 0; j < n; j++) {
-                    orthogonal_matrix[j, i] = e[i][j];
+                    q.e[j, i] = e[i].v[j];
                 }
             }
 
-            return (orthogonal_matrix, triangular_matrix);
+            return (q, r);
         }
     }
 }

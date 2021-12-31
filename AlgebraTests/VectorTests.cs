@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using DoubleDouble;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Algebra.Tests {
     [TestClass()]
@@ -53,9 +53,9 @@ namespace Algebra.Tests {
         public void NormalTest() {
             Vector vector = new(1, 2, -3);
 
-            Assert.AreEqual(1 / Math.Sqrt(1 + 4 + 9), vector.Normal.X);
-            Assert.AreEqual(2 / Math.Sqrt(1 + 4 + 9), vector.Normal.Y);
-            Assert.AreEqual(-3 / Math.Sqrt(1 + 4 + 9), vector.Normal.Z);
+            Assert.AreEqual(1 / ddouble.Sqrt(1 + 4 + 9), vector.Normal.X);
+            Assert.AreEqual(2 / ddouble.Sqrt(1 + 4 + 9), vector.Normal.Y);
+            Assert.AreEqual(-3 / ddouble.Sqrt(1 + 4 + 9), vector.Normal.Z);
         }
 
         [TestMethod()]
@@ -79,7 +79,7 @@ namespace Algebra.Tests {
             Vector vector1 = new(1, 2);
             Vector vector2 = new(2, 1);
 
-            Assert.AreEqual(Math.Sqrt(2), Vector.Distance(vector1, vector2));
+            Assert.AreEqual(ddouble.Sqrt(2), Vector.Distance(vector1, vector2));
             Assert.AreEqual(2, Vector.SquareDistance(vector1, vector2));
         }
 
@@ -119,9 +119,9 @@ namespace Algebra.Tests {
         public void InvalidTest() {
             Vector vector = Vector.Invalid(3);
 
-            Assert.IsTrue(double.IsNaN(vector.X));
-            Assert.IsTrue(double.IsNaN(vector.Y));
-            Assert.IsTrue(double.IsNaN(vector.Z));
+            Assert.IsTrue(ddouble.IsNaN(vector.X));
+            Assert.IsTrue(ddouble.IsNaN(vector.Y));
+            Assert.IsTrue(ddouble.IsNaN(vector.Z));
         }
 
         [TestMethod()]
@@ -163,8 +163,8 @@ namespace Algebra.Tests {
         [TestMethod()]
         public void ToStringTest() {
             Vector vector1 = new(1, 2, 3);
-            Vector vector2 = new();
-            Vector vector3 = new(1);
+            Vector vector2 = new(new double[0]);
+            Vector vector3 = new(1d);
 
             Assert.AreEqual("1,2,3", vector1.ToString());
             Assert.AreEqual(string.Empty, vector2.ToString());
