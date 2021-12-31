@@ -53,6 +53,16 @@ namespace Algebra.Tests {
             Matrix matrix3 = new(new double[,] { { 1, 2 }, { 3, 4 } });
             Matrix matrix4 = new(new double[,] { { 0, 1 }, { 0, 0 } });
             Matrix matrix5 = new(new double[,] { { 2, 1, 1, 2 }, { 4, 2, 3, 1 }, { -2, -2, 0, -1 }, { 1, 1, 2, 6 } });
+            Matrix matrix6 = new(new double[,] { 
+                { 1, 0, 0, 0, 1, 0, 0, 0 }, 
+                { 0, 1, 0, 0, 1, 1, 0, 0 }, 
+                { 0, 0, 1, 0, 2, 1, 1, 0 }, 
+                { 0, 0, 0, 1, 4, 2, 1, 1 },
+                { 0, 0, 0, 0, 5, 4, 2, 1 },
+                { 0, 0, 0, 0, 7, 5, 4, 2 },
+                { 0, 0, 0, 0, 6, 7, 5, 4 },
+                { 0, 0, 0, 0, 8, 6, 7, 5 },
+            });
 
             Assert.AreEqual(matrix1.Rows, matrix1.Transpose.Columns);
             Assert.AreEqual(matrix1.Columns, matrix1.Transpose.Rows);
@@ -84,6 +94,7 @@ namespace Algebra.Tests {
             Assert.IsTrue(Matrix.IsIdentity(Matrix.Identity(2).Inverse));
 
             Assert.IsTrue((matrix5.Inverse.Inverse - matrix5).Norm < 1e-12);
+            Assert.IsTrue((matrix6.Inverse.Inverse - matrix6).Norm < 1e-12);
         }
 
         [TestMethod()]

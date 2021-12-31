@@ -18,8 +18,8 @@ namespace Algebra {
 
                 //ピボット選択
                 for (j = i + 1; j < n; j++) {
-                    if (Math.Abs(m[i, j]) > pivot) {
-                        pivot = Math.Abs(m[i, j]);
+                    if (Math.Abs(m[j, i]) > pivot) {
+                        pivot = Math.Abs(m[j, i]);
                         p = j;
                     }
                 }
