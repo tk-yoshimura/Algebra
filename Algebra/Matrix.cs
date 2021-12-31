@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Algebra {
     /// <summary>行列クラス</summary>
+    [DebuggerDisplay("{ToString(),nq}")]
     public partial class Matrix : ICloneable {
         private readonly double[,] e;
 
@@ -466,25 +468,25 @@ namespace Algebra {
                 return "Invalid Matrix";
             }
 
-            string str = "{ ";
+            string str = "[ ";
 
-            str += "{ ";
+            str += "[ ";
             str += $"{e[0, 0]}";
             for (int j = 1; j < Columns; j++) {
                 str += $", {e[0, j]}";
             }
-            str += " }";
+            str += " ]";
 
             for (int i = 1, j; i < Rows; i++) {
-                str += ", { ";
+                str += ", [ ";
                 str += $"{e[i, 0]}";
                 for (j = 1; j < Columns; j++) {
                     str += $", {e[i, j]}";
                 }
-                str += " }";
+                str += " ]";
             }
 
-            str += " }";
+            str += " ]";
 
             return str;
         }
