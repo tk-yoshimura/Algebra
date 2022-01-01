@@ -96,8 +96,6 @@ namespace Algebra.Tests {
 
             Assert.IsTrue((matrix5.Inverse.Inverse - matrix5).Norm < 1e-24);
             Assert.IsTrue((matrix6.Inverse.Inverse - matrix6).Norm < 1e-24);
-
-            Console.WriteLine(matrix6.Inverse);
         }
 
         [TestMethod()]
