@@ -68,6 +68,16 @@ namespace Algebra {
             }
         }
 
+        /// <summary>キャスト</summary>
+        public static implicit operator ddouble[,](Matrix matrix) {
+            return (ddouble[,])matrix.e.Clone();
+        }
+
+        /// <summary>キャスト</summary>
+        public static implicit operator Matrix(ddouble[,] arr) {
+            return new Matrix(arr);
+        }
+
         /// <summary>単項プラス</summary>
         public static Matrix operator +(Matrix matrix) {
             return matrix.Copy();

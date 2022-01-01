@@ -59,6 +59,16 @@ namespace Algebra {
         /// <summary>次元数</summary>
         public int Dim => v.Length;
 
+        /// <summary>キャスト</summary>
+        public static implicit operator ddouble[](Vector vector) {
+            return (ddouble[])vector.v.Clone();
+        }
+
+        /// <summary>キャスト</summary>
+        public static implicit operator Vector(ddouble[] arr) {
+            return new Vector(arr);
+        }
+
         /// <summary>ノルム</summary>
         public ddouble Norm => ddouble.Sqrt(SquareNorm);
 

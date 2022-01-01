@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Algebra")]
-[assembly: AssemblyCopyright("Copyright © T.Yoshimura 2019-2021")]
+[assembly: AssemblyCopyright("Copyright © T.Yoshimura 2019-2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -14,4 +14,4 @@ using System.Runtime.InteropServices;
 
 [assembly: Guid("094b6b38-3a54-4001-8107-93aa4e5b1fc9")]
 
-[assembly: AssemblyVersion("1.2.0.*")]
+[assembly: AssemblyVersion("1.2.1.*")]
