@@ -2,9 +2,9 @@
  Linear algebra 
 
 ## Requirement
- .NET 5.0
+ .NET 6.0
  
- ## Install
+## Install
 [Download DLL](https://github.com/tk-yoshimura/Algebra/releases)
 [Download Nuget](https://www.nuget.org/packages/tyoshimura.algebra/)  
 
