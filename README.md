@@ -5,7 +5,7 @@
  .NET 6.0
  
 ## Install
-[Download DLL](https://github.com/tk-yoshimura/Algebra/releases)
+[Download DLL](https://github.com/tk-yoshimura/Algebra/releases)  
 [Download Nuget](https://www.nuget.org/packages/tyoshimura.algebra/)  
 
 - Import DoubleDouble(https://github.com/tk-yoshimura/DoubleDouble)
