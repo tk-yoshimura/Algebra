@@ -8,6 +8,16 @@ namespace Algebra {
     [DebuggerDisplay("{ToString(),nq}")]
     public class Vector : ICloneable {
         internal readonly ddouble[] v;
+        
+        /// <summary>コンストラクタ</summary>
+        protected Vector(int size) {
+            this.v = new ddouble[size];
+        }
+
+		/// <summary>コンストラクタ</summary>
+        public Vector(params ddouble[] v) {
+            this.v = (ddouble[])v.Clone();
+        }
 
         /// <summary>コンストラクタ</summary>
         public Vector(params double[] v) : this(v.Length) {
@@ -16,20 +26,36 @@ namespace Algebra {
             }
         }
 
-        /// <summary>コンストラクタ</summary>
-        public Vector(params ddouble[] v) {
-            this.v = (ddouble[])v.Clone();
-        }
-
-        /// <summary>コンストラクタ</summary>
-        public Vector(int size) {
-            this.v = new ddouble[size];
-        }
-
         /// <summary>インデクサ</summary>
         public ddouble this[int index] {
             get => v[index];
             set => v[index] = value;
+        }
+
+        /// <summary>領域インデクサ</summary>
+        public Vector this[Range range] {
+            get {
+                (int index, int counts) = range.GetOffsetAndLength(Dim);
+
+                ddouble[] ret = new ddouble[counts];
+                for (int i = 0; i < counts; i++) {
+                    ret[i] = v[i + index];
+                }
+
+                return new(ret);
+            }
+
+            set {
+                (int index, int counts) = range.GetOffsetAndLength(Dim);
+
+                if (value.Dim != counts) {
+                    throw new ArgumentOutOfRangeException(nameof(range));
+                }
+
+                for (int i = 0; i < counts; i++) {
+                    v[i + index] = value.v[i];
+                }
+            }
         }
 
         /// <summary>X成分</summary>
@@ -87,7 +113,7 @@ namespace Algebra {
         /// <summary>行ベクトル</summary>
         public Matrix Horizontal {
             get {
-                Matrix ret = new(1, Dim);
+                Matrix ret = Matrix.Zero(1, Dim);
                 for (int i = 0; i < Dim; i++) {
                     ret.e[0, i] = v[i];
                 }
@@ -99,7 +125,7 @@ namespace Algebra {
         /// <summary>列ベクトル</summary>
         public Matrix Vertical {
             get {
-                Matrix ret = new(Dim, 1);
+                Matrix ret = Matrix.Zero(Dim, 1);
                 for (int i = 0; i < Dim; i++) {
                     ret.e[i, 0] = v[i];
                 }
@@ -129,7 +155,7 @@ namespace Algebra {
         /// <summary>ベクトル加算</summary>
         public static Vector operator +(Vector vector1, Vector vector2) {
             if (vector1.Dim != vector2.Dim) {
-                throw new ArgumentException("unmatch size", $"{vector1},{vector2}");
+                throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
             }
 
             int size = vector1.Dim;
@@ -145,7 +171,7 @@ namespace Algebra {
         /// <summary>ベクトル減算</summary>
         public static Vector operator -(Vector vector1, Vector vector2) {
             if (vector1.Dim != vector2.Dim) {
-                throw new ArgumentException("unmatch size", $"{vector1},{vector2}");
+                throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
             }
 
             int size = vector1.Dim;
@@ -153,6 +179,38 @@ namespace Algebra {
 
             for (int i = 0; i < size; i++) {
                 v[i] = vector1.v[i] - vector2.v[i];
+            }
+
+            return new Vector(v);
+        }
+
+        /// <summary>ベクトル乗算</summary>
+        public static Vector operator *(Vector vector1, Vector vector2) {
+            if (vector1.Dim != vector2.Dim) {
+                throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
+            }
+
+            int size = vector1.Dim;
+            ddouble[] v = new ddouble[size];
+
+            for (int i = 0; i < size; i++) {
+                v[i] = vector1.v[i] * vector2.v[i];
+            }
+
+            return new Vector(v);
+        }
+
+        /// <summary>ベクトル除算</summary>
+        public static Vector operator /(Vector vector1, Vector vector2) {
+            if (vector1.Dim != vector2.Dim) {
+                throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
+            }
+
+            int size = vector1.Dim;
+            ddouble[] v = new ddouble[size];
+
+            for (int i = 0; i < size; i++) {
+                v[i] = vector1.v[i] / vector2.v[i];
             }
 
             return new Vector(v);
@@ -192,7 +250,7 @@ namespace Algebra {
         /// <summary>ベクトル内積</summary>
         public static ddouble InnerProduct(Vector vector1, Vector vector2) {
             if (vector1.Dim != vector2.Dim) {
-                throw new ArgumentException("unmatch size", $"{vector1},{vector2}");
+                throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
             }
 
             ddouble sum = 0;
@@ -203,9 +261,35 @@ namespace Algebra {
             return sum;
         }
 
+        /// <summary>最大指数</summary>
+        public int MaxExponent {
+            get {
+                int max_exponent = int.MinValue;
+
+                for (int i = 0; i < Dim; i++) {
+                    if (ddouble.IsFinite(v[i])) {
+                        max_exponent = Math.Max(Math.ILogB((double)v[i]), max_exponent);
+                    }
+                }
+
+                return max_exponent;
+            }
+        }
+
+        /// <summary>2べき乗スケーリング</summary>
+        public static Vector ScaleB(Vector vector, int n) {
+            Vector ret = vector.Copy();
+
+            for (int i = 0; i < ret.Dim; i++) {
+                ret.v[i] = ddouble.Ldexp(ret.v[i], n);
+            }
+
+            return ret;
+        }
+
         /// <summary>ゼロベクトル</summary>
         public static Vector Zero(int size) {
-            return new Vector(new ddouble[size]);
+            return new Vector(size);
         }
 
         /// <summary>ゼロベクトルか判定</summary>
@@ -232,7 +316,7 @@ namespace Algebra {
         /// <summary>有効なベクトルか判定</summary>
         public static bool IsValid(Vector vector) {
             for (int i = 0; i < vector.Dim; i++) {
-                if (ddouble.IsNaN(vector.v[i]) || ddouble.IsInfinity(vector.v[i])) {
+                if (!ddouble.IsFinite(vector.v[i])) {
                     return false;
                 }
             }

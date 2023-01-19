@@ -8,6 +8,17 @@ namespace Algebra {
     public partial class Matrix : ICloneable {
         internal readonly ddouble[,] e;
 
+        /// <summary>コンストラクタ </summary>
+        /// <param name="rows">行数</param>
+        /// <param name="columns">列数</param>
+        protected Matrix(int rows, int columns) {
+            if (rows <= 0 || columns <= 0) {
+                throw new ArgumentOutOfRangeException($"{nameof(rows)},{nameof(columns)}");
+            }
+
+            this.e = new ddouble[rows, columns];
+        }
+
         /// <summary>コンストラクタ</summary>
         /// <param name="m">行列要素配列</param>
         public Matrix(double[,] m) : this(m.GetLength(0), m.GetLength(1)) {
@@ -32,23 +43,102 @@ namespace Algebra {
             this.e = (ddouble[,])m.Clone();
         }
 
-        /// <summary>コンストラクタ </summary>
-        /// <param name="rows">行数</param>
-        /// <param name="columns">列数</param>
-        public Matrix(int rows, int columns) {
-            if (rows <= 0 || columns <= 0) {
-                throw new ArgumentOutOfRangeException($"{rows},{columns}");
-            }
-
-            this.e = new ddouble[rows, columns];
-        }
-
-        /// <summary>インデクサ </summary>
+        /// <summary>インデクサ</summary>
         /// <param name="row_index">行</param>
         /// <param name="column_index">列</param>
         public ddouble this[int row_index, int column_index] {
             get => e[row_index, column_index];
             set => e[row_index, column_index] = value;
+        }
+
+        /// <summary>領域インデクサ</summary>
+        /// <param name="row_range">行</param>
+        /// <param name="column_range">列</param>
+        public Matrix this[Range row_range, Range column_range] {
+            get {
+                (int ri, int rn) = row_range.GetOffsetAndLength(Rows);
+                (int ci, int cn) = column_range.GetOffsetAndLength(Columns);
+
+                ddouble[,] m = new ddouble[rn, cn];
+                for (int i = 0; i < rn; i++) {
+                    for (int j = 0; j < cn; j++) {
+                        m[i, j] = e[i + ri, j + ci];
+                    }
+                }
+
+                return new(m);
+            }
+
+            set {
+                (int ri, int rn) = row_range.GetOffsetAndLength(Rows);
+                (int ci, int cn) = column_range.GetOffsetAndLength(Columns);
+
+                if (value.Rows != rn || value.Columns != cn) {
+                    throw new ArgumentOutOfRangeException($"{nameof(row_range)},{nameof(column_range)}");
+                }
+
+                for (int i = 0; i < rn; i++) {
+                    for (int j = 0; j < cn; j++) {
+                        e[i + ri, j + ci] = value.e[i, j];
+                    }
+                }
+            }
+        }
+
+        /// <summary>領域インデクサ</summary>
+        /// <param name="row_range">行</param>
+        /// <param name="column_index">列</param>
+        public Vector this[Range row_range, int column_index] {
+            get {
+                (int ri, int rn) = row_range.GetOffsetAndLength(Rows);
+
+                ddouble[] m = new ddouble[rn];
+                for (int i = 0; i < rn; i++) {
+                    m[i] = e[i + ri, column_index];
+                }
+
+                return new(m);
+            }
+
+            set {
+                (int ri, int rn) = row_range.GetOffsetAndLength(Rows);
+
+                if (value.Dim != rn) {
+                    throw new ArgumentOutOfRangeException($"{nameof(row_range)}");
+                }
+
+                for (int i = 0; i < rn; i++) {
+                    e[i + ri, column_index] = value.v[i];
+                }
+            }
+        }
+
+        /// <summary>領域インデクサ</summary>
+        /// <param name="row_index">行</param>
+        /// <param name="column_range">列</param>
+        public Vector this[int row_index, Range column_range] {
+            get {
+                (int ci, int cn) = column_range.GetOffsetAndLength(Columns);
+
+                ddouble[] m = new ddouble[cn];
+                for (int j = 0; j < cn; j++) {
+                    m[j] = e[row_index, j + ci];
+                }
+
+                return new(m);
+            }
+
+            set {
+                (int ci, int cn) = column_range.GetOffsetAndLength(Columns);
+
+                if (value.Dim != cn) {
+                    throw new ArgumentOutOfRangeException($"{nameof(column_range)}");
+                }
+
+                for (int j = 0; j < cn; j++) {
+                    e[row_index, j + ci] = value.v[j];
+                }
+            }
         }
 
         /// <summary>行数</summary>
@@ -61,7 +151,7 @@ namespace Algebra {
         public int Size {
             get {
                 if (!IsSquare(this)) {
-                    throw new InvalidOperationException();
+                    throw new InvalidOperationException("not square matrix");
                 }
 
                 return Rows;
@@ -99,7 +189,7 @@ namespace Algebra {
         /// <summary>行列加算</summary>
         public static Matrix operator +(Matrix matrix1, Matrix matrix2) {
             if (!IsEqualSize(matrix1, matrix2)) {
-                throw new ArgumentException("unmatch size", $"{matrix1},{matrix2}");
+                throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)}");
             }
 
             Matrix ret = new(matrix1.Rows, matrix1.Columns);
@@ -116,7 +206,7 @@ namespace Algebra {
         /// <summary>行列減算</summary>
         public static Matrix operator -(Matrix matrix1, Matrix matrix2) {
             if (!IsEqualSize(matrix1, matrix2)) {
-                throw new ArgumentException("unmatch size", $"{matrix1},{matrix2}");
+                throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)}");
             }
 
             Matrix ret = new(matrix1.Rows, matrix1.Columns);
@@ -130,10 +220,44 @@ namespace Algebra {
             return ret;
         }
 
+        /// <summary>要素ごとに積算</summary>
+        public static Matrix ElementwiseMul(Matrix matrix1, Matrix matrix2) {
+            if (!IsEqualSize(matrix1, matrix2)) {
+                throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)}");
+            }
+
+            Matrix ret = new(matrix1.Rows, matrix1.Columns);
+
+            for (int i = 0, j; i < ret.Rows; i++) {
+                for (j = 0; j < ret.Columns; j++) {
+                    ret.e[i, j] = matrix1.e[i, j] * matrix2.e[i, j];
+                }
+            }
+
+            return ret;
+        }
+
+        /// <summary>要素ごとに除算</summary>
+        public static Matrix ElementwiseDiv(Matrix matrix1, Matrix matrix2) {
+            if (!IsEqualSize(matrix1, matrix2)) {
+                throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)}");
+            }
+
+            Matrix ret = new(matrix1.Rows, matrix1.Columns);
+
+            for (int i = 0, j; i < ret.Rows; i++) {
+                for (j = 0; j < ret.Columns; j++) {
+                    ret.e[i, j] = matrix1.e[i, j] / matrix2.e[i, j];
+                }
+            }
+
+            return ret;
+        }
+
         /// <summary>行列乗算</summary>
         public static Matrix operator *(Matrix matrix1, Matrix matrix2) {
             if (matrix1.Columns != matrix2.Rows) {
-                throw new ArgumentException($"unmatch {matrix1.Columns} {matrix2.Rows}", $"{matrix1},{matrix2}");
+                throw new ArgumentException($"mismatch {nameof(matrix1.Columns)} {nameof(matrix2.Rows)}", $"{nameof(matrix1)},{nameof(matrix2)}");
             }
 
             Matrix ret = new(matrix1.Rows, matrix2.Columns);
@@ -153,7 +277,7 @@ namespace Algebra {
         /// <summary>行列・列ベクトル乗算</summary>
         public static Vector operator *(Matrix matrix, Vector vector) {
             if (matrix.Columns != vector.Dim) {
-                throw new ArgumentException($"unmatch {matrix.Columns} {vector.Dim}", $"{matrix},{vector}");
+                throw new ArgumentException($"mismatch {nameof(matrix.Columns)} {nameof(vector.Dim)}", $"{nameof(matrix)},{nameof(vector)}");
             }
 
             Vector ret = Vector.Zero(matrix.Rows);
@@ -170,7 +294,7 @@ namespace Algebra {
         /// <summary>行列・行ベクトル乗算</summary>
         public static Vector operator *(Vector vector, Matrix matrix) {
             if (vector.Dim != matrix.Rows) {
-                throw new ArgumentException($"unmatch {vector.Dim} {matrix.Rows} ", $"{vector},{matrix}");
+                throw new ArgumentException($"mismatch {nameof(vector.Dim)} {nameof(matrix.Rows)}", $"{nameof(vector)},{nameof(matrix)}");
             }
 
             Vector ret = Vector.Zero(matrix.Columns);
@@ -305,10 +429,40 @@ namespace Algebra {
             }
         }
 
+        /// <summary>最大指数</summary>
+        public int MaxExponent {
+            get {
+                int max_exponent = int.MinValue;
+
+                for (int i = 0, j; i < Rows; i++) {
+                    for (j = 0; j < Columns; j++) {
+                        if (ddouble.IsFinite(e[i, j])) {
+                            max_exponent = Math.Max(Math.ILogB((double)e[i, j]), max_exponent);
+                        }
+                    }
+                }
+
+                return max_exponent;
+            }
+        }
+
+        /// <summary>2べき乗スケーリング</summary>
+        public static Matrix ScaleB(Matrix matrix, int n) {
+            Matrix ret = matrix.Copy();
+
+            for (int i = 0, j; i < ret.Rows; i++) {
+                for (j = 0; j < ret.Columns; j++) {
+                    ret.e[i, j] = ddouble.Ldexp(ret.e[i, j], n);
+                }
+            }
+
+            return ret;
+        }
+
         /// <summary>行ベクトル</summary>
         /// <param name="row_index">行</param>
         public Vector Horizontal(int row_index) {
-            Vector ret = new(Columns);
+            Vector ret = Vector.Zero(Columns);
             for (int i = 0; i < Columns; i++) {
                 ret.v[i] = e[row_index, i];
             }
@@ -319,7 +473,7 @@ namespace Algebra {
         /// <summary>列ベクトル</summary>
         /// <param name="column_index">列</param>
         public Vector Vertical(int column_index) {
-            Vector ret = new(Rows);
+            Vector ret = Vector.Zero(Rows);
             for (int i = 0; i < Rows; i++) {
                 ret.v[i] = e[i, column_index];
             }
@@ -451,7 +605,7 @@ namespace Algebra {
 
             for (int i = 0, j; i < matrix.Rows; i++) {
                 for (j = 0; j < matrix.Columns; j++) {
-                    if (ddouble.IsNaN(matrix.e[i, j]) || ddouble.IsInfinity(matrix.e[i, j])) {
+                    if (!ddouble.IsFinite(matrix.e[i, j])) {
                         return false;
                     }
                 }
@@ -469,7 +623,7 @@ namespace Algebra {
         public ddouble[] Diagonals {
             get {
                 if (!IsSquare(this)) {
-                    throw new InvalidOperationException();
+                    throw new InvalidOperationException("not square matrix");
                 }
 
                 ddouble[] diagonals = new ddouble[Size];

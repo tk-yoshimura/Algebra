@@ -6,7 +6,7 @@ namespace Algebra {
         /// <summary>QR分解</summary>
         public (Matrix orthogonal_matrix, Matrix triangular_matrix) QRDecomposition() {
             if (!IsSquare(this)) {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("not square matrix");
             }
 
             Matrix q = new(Size, Size), r = new(Size, Size);

@@ -6,7 +6,7 @@ namespace Algebra {
     public partial class Matrix {
         /// <summary>固有値計算</summary>
         /// <param name="precision_level">精度(収束ループを回す回数)</param>
-        public ddouble[] CalculateEigenValues(int precision_level = 28) {
+        public ddouble[] CalculateEigenValues(int precision_level = 32) {
             Matrix m = Copy();
             for (int i = 0; i < precision_level; i++) {
                 (Matrix q, Matrix r) = m.QRDecomposition();
@@ -22,7 +22,7 @@ namespace Algebra {
         /// <param name="precision_level">精度(収束ループを回す回数)</param>
         public (ddouble[] eigen_values, Vector[] eigen_vectors) CalculateEigenValueVectors(int precision_level = 32) {
             if (!IsSquare(this)) {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("not square matrix");
             }
 
             ddouble[] eigen_values = null;

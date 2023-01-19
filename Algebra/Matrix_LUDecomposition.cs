@@ -7,7 +7,7 @@ namespace Algebra {
         /// <summary>LU分解</summary>
         public (Matrix lower_matrix, Matrix upper_matrix) LUDecomposition() {
             if (!IsSquare(this)) {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("not square matrix");
             }
 
             Matrix m = Copy();

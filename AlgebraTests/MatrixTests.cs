@@ -8,7 +8,7 @@ namespace Algebra.Tests {
         [TestMethod()]
         public void MatrixTest() {
             Matrix matrix1 = new(new double[,] { { 1, 2 }, { 3, 4 } });
-            Matrix matrix2 = new(3, 2);
+            Matrix matrix2 = Matrix.Zero(3, 2);
 
             Assert.AreEqual(1, matrix1[0, 0]);
             Assert.AreEqual(2, matrix1[0, 1]);
@@ -28,6 +28,147 @@ namespace Algebra.Tests {
 
             Assert.AreEqual(3, matrix2.Rows);
             Assert.AreEqual(2, matrix2.Columns);
+        }
+
+        [TestMethod()]
+        public void RangeIndexerGetterTest() {
+            Matrix matrix = new(new double[,] { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 }, { 11, 12, 13, 14, 15 }, { 16, 17, 18, 19, 20 } });
+
+            Assert.AreEqual(new Matrix(new double[,] { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 }, { 11, 12, 13, 14, 15 }, { 16, 17, 18, 19, 20 } }), matrix[.., ..]);
+
+            Assert.AreEqual(new Matrix(new double[,] { { 6, 7, 8, 9, 10 }, { 11, 12, 13, 14, 15 }, { 16, 17, 18, 19, 20 } }), matrix[1.., ..]);
+            Assert.AreEqual(new Matrix(new double[,] { { 11, 12, 13, 14, 15 }, { 16, 17, 18, 19, 20 } }), matrix[2.., ..]);
+            Assert.AreEqual(new Matrix(new double[,] { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 }, { 11, 12, 13, 14, 15 } }), matrix[..^1, ..]);
+            Assert.AreEqual(new Matrix(new double[,] { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 }, { 11, 12, 13, 14, 15 } }), matrix[..3, ..]);
+            Assert.AreEqual(new Matrix(new double[,] { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 } }), matrix[..^2, ..]);
+            Assert.AreEqual(new Matrix(new double[,] { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 } }), matrix[..2, ..]);
+
+            Assert.AreEqual(new Matrix(new double[,] { { 11, 12, 13, 14, 15 } }), matrix[2..3, ..]);
+            Assert.AreEqual(new Matrix(new double[,] { { 11, 12, 13, 14, 15 } }), matrix[2..^1, ..]);
+
+            Assert.AreEqual(new Matrix(new double[,] { { 2, 3, 4, 5 }, { 7, 8, 9, 10 }, { 12, 13, 14, 15 }, { 17, 18, 19, 20 } }), matrix[.., 1..]);
+            Assert.AreEqual(new Matrix(new double[,] { { 3, 4, 5 }, { 8, 9, 10 }, { 13, 14, 15 }, { 18, 19, 20 } }), matrix[.., 2..]);
+            Assert.AreEqual(new Matrix(new double[,] { { 1, 2, 3, 4 }, { 6, 7, 8, 9 }, { 11, 12, 13, 14 }, { 16, 17, 18, 19 } }), matrix[.., ..^1]);
+            Assert.AreEqual(new Matrix(new double[,] { { 1, 2, 3, 4 }, { 6, 7, 8, 9 }, { 11, 12, 13, 14 }, { 16, 17, 18, 19 } }), matrix[.., ..4]);
+            Assert.AreEqual(new Matrix(new double[,] { { 1, 2, 3 }, { 6, 7, 8 }, { 11, 12, 13 }, { 16, 17, 18 } }), matrix[.., ..^2]);
+            Assert.AreEqual(new Matrix(new double[,] { { 1, 2, 3 }, { 6, 7, 8 }, { 11, 12, 13 }, { 16, 17, 18 } }), matrix[.., ..3]);
+
+            Assert.AreEqual(new Matrix(new double[,] { { 2, 3, 4 }, { 7, 8, 9 }, { 12, 13, 14 }, { 17, 18, 19 } }), matrix[.., 1..4]);
+            Assert.AreEqual(new Matrix(new double[,] { { 2, 3, 4 }, { 7, 8, 9 }, { 12, 13, 14 }, { 17, 18, 19 } }), matrix[.., 1..^1]);
+
+            Assert.AreEqual(new Matrix(new double[,] { { 7, 8, 9 }, { 12, 13, 14 } }), matrix[1..^1, 1..^1]);
+
+            Assert.AreEqual(new Vector(6, 7, 8, 9, 10), matrix[1, ..]);
+            Assert.AreEqual(new Vector(7, 8, 9, 10), matrix[1, 1..]);
+            Assert.AreEqual(new Vector(6, 7, 8, 9), matrix[1, ..^1]);
+            Assert.AreEqual(new Vector(7, 8, 9), matrix[1, 1..^1]);
+
+            Assert.AreEqual(new Vector(3, 8, 13, 18), matrix[.., 2]);
+            Assert.AreEqual(new Vector(8, 13, 18), matrix[1.., 2]);
+            Assert.AreEqual(new Vector(3, 8, 13), matrix[..^1, 2]);
+            Assert.AreEqual(new Vector(8, 13), matrix[1..^1, 2]);
+        }
+
+        [TestMethod()]
+        public void RangeIndexerSetterTest() {
+            Matrix matrix_src = new(new double[,] { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 }, { 11, 12, 13, 14, 15 }, { 16, 17, 18, 19, 20 } });
+            Matrix matrix_dst;
+
+            matrix_dst = Matrix.Zero(matrix_src.Rows, matrix_src.Columns);
+            matrix_dst[.., ..] = matrix_src;
+            Assert.AreEqual(new Matrix(new double[,] { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 }, { 11, 12, 13, 14, 15 }, { 16, 17, 18, 19, 20 } }), matrix_dst);
+
+            matrix_dst = Matrix.Zero(matrix_src.Rows, matrix_src.Columns);
+            matrix_dst[1.., ..] = matrix_src[1.., ..];
+            Assert.AreEqual(new Matrix(new double[,] { { 0, 0, 0, 0, 0 }, { 6, 7, 8, 9, 10 }, { 11, 12, 13, 14, 15 }, { 16, 17, 18, 19, 20 } }), matrix_dst);
+
+            matrix_dst = Matrix.Zero(matrix_src.Rows, matrix_src.Columns);
+            matrix_dst[2.., ..] = matrix_src[2.., ..];
+            Assert.AreEqual(new Matrix(new double[,] { { 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0 }, { 11, 12, 13, 14, 15 }, { 16, 17, 18, 19, 20 } }), matrix_dst);
+
+            matrix_dst = Matrix.Zero(matrix_src.Rows, matrix_src.Columns);
+            matrix_dst[..^1, ..] = matrix_src[..^1, ..];
+            Assert.AreEqual(new Matrix(new double[,] { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 }, { 11, 12, 13, 14, 15 }, { 0, 0, 0, 0, 0 } }), matrix_dst);
+
+            matrix_dst = Matrix.Zero(matrix_src.Rows, matrix_src.Columns);
+            matrix_dst[..3, ..] = matrix_src[..3, ..];
+            Assert.AreEqual(new Matrix(new double[,] { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 }, { 11, 12, 13, 14, 15 }, { 0, 0, 0, 0, 0 } }), matrix_dst);
+
+            matrix_dst = Matrix.Zero(matrix_src.Rows, matrix_src.Columns);
+            matrix_dst[..^2, ..] = matrix_src[..^2, ..];
+            Assert.AreEqual(new Matrix(new double[,] { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 }, { 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0 } }), matrix_dst);
+
+            matrix_dst = Matrix.Zero(matrix_src.Rows, matrix_src.Columns);
+            matrix_dst[..2, ..] = matrix_src[..2, ..];
+            Assert.AreEqual(new Matrix(new double[,] { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 }, { 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0 } }), matrix_dst);
+
+            matrix_dst = Matrix.Zero(matrix_src.Rows, matrix_src.Columns);
+            matrix_dst[2..3, ..] = matrix_src[2..3, ..];
+            Assert.AreEqual(new Matrix(new double[,] { { 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0 }, { 11, 12, 13, 14, 15 }, { 0, 0, 0, 0, 0 } }), matrix_dst);
+
+            matrix_dst = Matrix.Zero(matrix_src.Rows, matrix_src.Columns);
+            matrix_dst[2..^1, ..] = matrix_src[2..^1, ..];
+            Assert.AreEqual(new Matrix(new double[,] { { 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0 }, { 11, 12, 13, 14, 15 }, { 0, 0, 0, 0, 0 } }), matrix_dst);
+
+            matrix_dst = Matrix.Zero(matrix_src.Rows, matrix_src.Columns);
+            matrix_dst[.., 1..] = matrix_src[.., 1..];
+            Assert.AreEqual(new Matrix(new double[,] { { 0, 2, 3, 4, 5 }, { 0, 7, 8, 9, 10 }, { 0, 12, 13, 14, 15 }, { 0, 17, 18, 19, 20 } }), matrix_dst);
+
+            matrix_dst = Matrix.Zero(matrix_src.Rows, matrix_src.Columns);
+            matrix_dst[.., 2..] = matrix_src[.., 2..];
+            Assert.AreEqual(new Matrix(new double[,] { { 0, 0, 3, 4, 5 }, { 0, 0, 8, 9, 10 }, { 0, 0, 13, 14, 15 }, { 0, 0, 18, 19, 20 } }), matrix_dst);
+
+            matrix_dst = Matrix.Zero(matrix_src.Rows, matrix_src.Columns);
+            matrix_dst[.., ..^1] = matrix_src[.., ..^1];
+            Assert.AreEqual(new Matrix(new double[,] { { 1, 2, 3, 4, 0 }, { 6, 7, 8, 9, 0 }, { 11, 12, 13, 14, 0 }, { 16, 17, 18, 19, 0 } }), matrix_dst);
+
+            matrix_dst = Matrix.Zero(matrix_src.Rows, matrix_src.Columns);
+            matrix_dst[.., ..4] = matrix_src[.., ..4];
+            Assert.AreEqual(new Matrix(new double[,] { { 1, 2, 3, 4, 0 }, { 6, 7, 8, 9, 0 }, { 11, 12, 13, 14, 0 }, { 16, 17, 18, 19, 0 } }), matrix_dst);
+
+            matrix_dst = Matrix.Zero(matrix_src.Rows, matrix_src.Columns);
+            matrix_dst[.., ..^2] = matrix_src[.., ..^2];
+            Assert.AreEqual(new Matrix(new double[,] { { 1, 2, 3, 0, 0 }, { 6, 7, 8, 0, 0 }, { 11, 12, 13, 0, 0 }, { 16, 17, 18, 0, 0 } }), matrix_dst);
+
+            matrix_dst = Matrix.Zero(matrix_src.Rows, matrix_src.Columns);
+            matrix_dst[.., ..3] = matrix_src[.., ..3];
+            Assert.AreEqual(new Matrix(new double[,] { { 1, 2, 3, 0, 0 }, { 6, 7, 8, 0, 0 }, { 11, 12, 13, 0, 0 }, { 16, 17, 18, 0, 0 } }), matrix_dst);
+
+            matrix_dst = Matrix.Zero(matrix_src.Rows, matrix_src.Columns);
+            matrix_dst[.., 1..4] = matrix_src[.., 1..4];
+            Assert.AreEqual(new Matrix(new double[,] { { 0, 2, 3, 4, 0 }, { 0, 7, 8, 9, 0 }, { 0, 12, 13, 14, 0 }, { 0, 17, 18, 19, 0 } }), matrix_dst);
+
+            matrix_dst = Matrix.Zero(matrix_src.Rows, matrix_src.Columns);
+            matrix_dst[.., 1..^1] = matrix_src[.., 1..^1];
+            Assert.AreEqual(new Matrix(new double[,] { { 0, 2, 3, 4, 0 }, { 0, 7, 8, 9, 0 }, { 0, 12, 13, 14, 0 }, { 0, 17, 18, 19, 0 } }), matrix_dst);
+
+            matrix_dst = Matrix.Zero(matrix_src.Rows, matrix_src.Columns);
+            matrix_dst[1..^1, 1..^1] = matrix_src[1..^1, 1..^1];
+            Assert.AreEqual(new Matrix(new double[,] { { 0, 0, 0, 0, 0 }, { 0, 7, 8, 9, 0 }, { 0, 12, 13, 14, 0 }, { 0, 0, 0, 0, 0 } }), matrix_dst);
+
+            matrix_dst = Matrix.Zero(matrix_src.Rows, matrix_src.Columns);
+            matrix_dst[0..^2, 0..^2] = matrix_src[1..^1, 1..^1];
+            Assert.AreEqual(new Matrix(new double[,] { { 7, 8, 9, 0, 0 }, { 12, 13, 14, 0, 0 }, { 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0 } }), matrix_dst);
+
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => {
+                matrix_dst = Matrix.Zero(matrix_src.Rows, matrix_src.Columns);
+                matrix_dst[0..^2, 0..^2] = matrix_src[1..^2, 1..^1];
+            });
+
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => {
+                matrix_dst = Matrix.Zero(matrix_src.Rows, matrix_src.Columns);
+                matrix_dst[0..^2, 0..^2] = matrix_src[1.., 1..^1];
+            });
+
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => {
+                matrix_dst = Matrix.Zero(matrix_src.Rows, matrix_src.Columns);
+                matrix_dst[0..^2, 0..^2] = matrix_src[1..^1, 1..^2];
+            });
+
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => {
+                matrix_dst = Matrix.Zero(matrix_src.Rows, matrix_src.Columns);
+                matrix_dst[0..^2, 0..^2] = matrix_src[1..^1, 1..];
+            });
         }
 
         [TestMethod()]
@@ -74,28 +215,34 @@ namespace Algebra.Tests {
             Assert.AreEqual(matrix3.Rows, matrix3.Transpose.Columns);
             Assert.AreEqual(matrix3.Columns, matrix3.Transpose.Rows);
 
-            Assert.IsTrue((matrix1 * matrix1.Inverse * matrix1 - matrix1).Norm < 1e-24);
-            Assert.IsTrue((matrix2 * matrix2.Inverse * matrix2 - matrix2).Norm < 1e-24);
-            Assert.IsTrue((matrix3 * matrix3.Inverse * matrix3 - matrix3).Norm < 1e-24);
+            Assert.IsTrue((matrix1 * matrix1.Inverse * matrix1 - matrix1).Norm < 1e-28);
+            Assert.IsTrue((matrix2 * matrix2.Inverse * matrix2 - matrix2).Norm < 1e-28);
+            Assert.IsTrue((matrix3 * matrix3.Inverse * matrix3 - matrix3).Norm < 1e-28);
 
-            Assert.IsTrue((matrix1.Inverse * matrix1 * matrix1.Inverse - matrix1.Inverse).Norm < 1e-24);
-            Assert.IsTrue((matrix2.Inverse * matrix2 * matrix2.Inverse - matrix2.Inverse).Norm < 1e-24);
-            Assert.IsTrue((matrix3.Inverse * matrix3 * matrix3.Inverse - matrix3.Inverse).Norm < 1e-24);
+            Assert.IsTrue((matrix1.Inverse * matrix1 * matrix1.Inverse - matrix1.Inverse).Norm < 1e-28);
+            Assert.IsTrue((matrix2.Inverse * matrix2 * matrix2.Inverse - matrix2.Inverse).Norm < 1e-28);
+            Assert.IsTrue((matrix3.Inverse * matrix3 * matrix3.Inverse - matrix3.Inverse).Norm < 1e-28);
 
-            Assert.IsTrue(((matrix1 * matrix1.Inverse).Transpose - matrix1 * matrix1.Inverse).Norm < 1e-24);
-            Assert.IsTrue(((matrix2 * matrix2.Inverse).Transpose - matrix2 * matrix2.Inverse).Norm < 1e-24);
-            Assert.IsTrue(((matrix3 * matrix3.Inverse).Transpose - matrix3 * matrix3.Inverse).Norm < 1e-24);
+            Assert.IsTrue(((matrix1 * matrix1.Inverse).Transpose - matrix1 * matrix1.Inverse).Norm < 1e-28);
+            Assert.IsTrue(((matrix2 * matrix2.Inverse).Transpose - matrix2 * matrix2.Inverse).Norm < 1e-28);
+            Assert.IsTrue(((matrix3 * matrix3.Inverse).Transpose - matrix3 * matrix3.Inverse).Norm < 1e-28);
 
-            Assert.IsTrue(((matrix1.Inverse * matrix1).Transpose - matrix1.Inverse * matrix1).Norm < 1e-24);
-            Assert.IsTrue(((matrix2.Inverse * matrix2).Transpose - matrix2.Inverse * matrix2).Norm < 1e-24);
-            Assert.IsTrue(((matrix3.Inverse * matrix3).Transpose - matrix3.Inverse * matrix3).Norm < 1e-24);
+            Assert.IsTrue(((matrix1.Inverse * matrix1).Transpose - matrix1.Inverse * matrix1).Norm < 1e-28);
+            Assert.IsTrue(((matrix2.Inverse * matrix2).Transpose - matrix2.Inverse * matrix2).Norm < 1e-28);
+            Assert.IsTrue(((matrix3.Inverse * matrix3).Transpose - matrix3.Inverse * matrix3).Norm < 1e-28);
 
             Assert.IsFalse(Matrix.IsValid(matrix4.Inverse));
             Assert.IsFalse(Matrix.IsValid(Matrix.Zero(2, 2).Inverse));
             Assert.IsTrue(Matrix.IsIdentity(Matrix.Identity(2).Inverse));
 
-            Assert.IsTrue((matrix5.Inverse.Inverse - matrix5).Norm < 1e-24);
-            Assert.IsTrue((matrix6.Inverse.Inverse - matrix6).Norm < 1e-24);
+            Assert.IsTrue((matrix5.Inverse.Inverse - matrix5).Norm < 1e-28);
+            Assert.IsTrue((matrix6.Inverse.Inverse - matrix6).Norm < 1e-28);
+
+            Assert.IsTrue(((matrix5 * 1e+100).Inverse.Inverse - (matrix5 * 1e+100)).Norm < 1e+72);
+            Assert.IsTrue(((matrix6 * 1e+100).Inverse.Inverse - (matrix6 * 1e+100)).Norm < 1e+72);
+
+            Assert.IsTrue(((matrix5 * 1e-100).Inverse.Inverse - (matrix5 * 1e-100)).Norm < 1e-128);
+            Assert.IsTrue(((matrix6 * 1e-100).Inverse.Inverse - (matrix6 * 1e-100)).Norm < 1e-128);
         }
 
         [TestMethod()]
@@ -139,6 +286,9 @@ namespace Algebra.Tests {
             Assert.AreEqual(new Matrix(new double[,] { { 6, 6, 6 }, { -3, -3, -3 } }), matrix2 - matrix1);
             Assert.AreEqual(new Matrix(new double[,] { { 22, 28 }, { 49, 64 } }), matrix1 * matrix3);
             Assert.AreEqual(new Matrix(new double[,] { { 9, 12, 15 }, { 19, 26, 33 }, { 29, 40, 51 } }), matrix3 * matrix1);
+
+			Assert.AreEqual(new Matrix(new double[,] { { 7, 16, 27 }, { 4, 10, 18 } }), Matrix.ElementwiseMul(matrix1, matrix2));
+            Assert.AreEqual(new Matrix(new ddouble[,] { { 7, 4, 3 }, { 0.25, "0.4", 0.5 } }), Matrix.ElementwiseDiv(matrix2, matrix1)); ;
 
             Assert.AreEqual(new Vector(22, 58), matrix1 * vector1);
             Assert.AreEqual(new Vector(32, 44), vector1 * matrix3);
@@ -207,8 +357,8 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void IsEqualSizeTest() {
-            Matrix matrix1 = new(2, 2);
-            Matrix matrix2 = new(2, 3);
+            Matrix matrix1 = Matrix.Zero(2, 2);
+            Matrix matrix2 = Matrix.Zero(2, 3);
 
             Assert.IsTrue(Matrix.IsEqualSize(matrix1, matrix1));
             Assert.IsFalse(Matrix.IsEqualSize(matrix1, matrix2));
@@ -216,8 +366,8 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void IsSquareTest() {
-            Matrix matrix1 = new(2, 2);
-            Matrix matrix2 = new(2, 3);
+            Matrix matrix1 = Matrix.Zero(2, 2);
+            Matrix matrix2 = Matrix.Zero(2, 3);
 
             Assert.IsTrue(Matrix.IsSquare(matrix1));
             Assert.IsFalse(Matrix.IsSquare(matrix2));
@@ -309,7 +459,7 @@ namespace Algebra.Tests {
                 Assert.AreEqual(1, diagonal);
             }
 
-            Assert.IsTrue((matrix - lower * upper).Norm < 1e-24);
+            Assert.IsTrue((matrix - lower * upper).Norm < 1e-28);
         }
 
         [TestMethod()]
@@ -319,7 +469,7 @@ namespace Algebra.Tests {
             (Matrix q, Matrix r) = matrix.QRDecomposition();
 
             Assert.IsTrue((matrix - q * r).Norm < 1e-12);
-            Assert.IsTrue((q * q.Transpose - Matrix.Identity(matrix.Size)).Norm < 1e-24);
+            Assert.IsTrue((q * q.Transpose - Matrix.Identity(matrix.Size)).Norm < 1e-28);
         }
 
         [TestMethod()]
@@ -327,8 +477,8 @@ namespace Algebra.Tests {
             Matrix matrix = new(new double[,] { { 1, 2 }, { 4, 5 } });
             ddouble[] eigen_values = matrix.CalculateEigenValues();
 
-            Assert.IsTrue(ddouble.Abs(eigen_values[0] - (3 + 2 * ddouble.Sqrt(3))) < 1e-20);
-            Assert.IsTrue(ddouble.Abs(eigen_values[1] - (3 - 2 * ddouble.Sqrt(3))) < 1e-20);
+            Assert.IsTrue(ddouble.Abs(eigen_values[0] - (3 + 2 * ddouble.Sqrt(3))) < 1e-28);
+            Assert.IsTrue(ddouble.Abs(eigen_values[1] - (3 - 2 * ddouble.Sqrt(3))) < 1e-28);
         }
 
         [TestMethod()]
