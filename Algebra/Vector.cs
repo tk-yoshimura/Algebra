@@ -8,13 +8,13 @@ namespace Algebra {
     [DebuggerDisplay("{ToString(),nq}")]
     public class Vector : ICloneable {
         internal readonly ddouble[] v;
-        
+
         /// <summary>コンストラクタ</summary>
         protected Vector(int size) {
             this.v = new ddouble[size];
         }
 
-		/// <summary>コンストラクタ</summary>
+        /// <summary>コンストラクタ</summary>
         public Vector(params ddouble[] v) {
             this.v = (ddouble[])v.Clone();
         }
