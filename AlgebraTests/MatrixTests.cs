@@ -15,6 +15,16 @@ namespace Algebra.Tests {
             Assert.AreEqual(3, matrix1[1, 0]);
             Assert.AreEqual(4, matrix1[1, 1]);
 
+            Assert.AreEqual(1, matrix1[^2, ^2]);
+            Assert.AreEqual(2, matrix1[^2, ^1]);
+            Assert.AreEqual(3, matrix1[^1, ^2]);
+            Assert.AreEqual(4, matrix1[^1, ^1]);
+
+            Assert.AreEqual(1, matrix1[0, ^2]);
+            Assert.AreEqual(2, matrix1[^2, 1]);
+            Assert.AreEqual(3, matrix1[1, ^2]);
+            Assert.AreEqual(4, matrix1[^1, 1]);
+
             Assert.AreEqual(2, matrix1.Columns);
             Assert.AreEqual(2, matrix1.Rows);
             Assert.AreEqual(2, matrix1.Size);
