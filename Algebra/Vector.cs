@@ -65,24 +65,28 @@ namespace Algebra {
         }
 
         /// <summary>X成分</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ddouble X {
             get => v[0];
             set => v[0] = value;
         }
 
         /// <summary>Y成分</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ddouble Y {
             get => v[1];
             set => v[1] = value;
         }
 
         /// <summary>Z成分</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ddouble Z {
             get => v[2];
             set => v[2] = value;
         }
 
         /// <summary>W成分</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ddouble W {
             get => v[3];
             set => v[3] = value;
@@ -102,9 +106,11 @@ namespace Algebra {
         }
 
         /// <summary>ノルム</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ddouble Norm => ddouble.Sqrt(SquareNorm);
 
         /// <summary>ノルム2乗</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ddouble SquareNorm {
             get {
                 ddouble norm = 0;
@@ -117,6 +123,7 @@ namespace Algebra {
         }
 
         /// <summary>行ベクトル</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Matrix Horizontal {
             get {
                 Matrix ret = Matrix.Zero(1, Dim);
@@ -129,6 +136,7 @@ namespace Algebra {
         }
 
         /// <summary>列ベクトル</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Matrix Vertical {
             get {
                 Matrix ret = Matrix.Zero(Dim, 1);
@@ -141,6 +149,7 @@ namespace Algebra {
         }
 
         /// <summary>正規化</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Vector Normal => this / Norm;
 
         /// <summary>単項プラス</summary>
@@ -268,6 +277,7 @@ namespace Algebra {
         }
 
         /// <summary>最大指数</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public int MaxExponent {
             get {
                 int max_exponent = int.MinValue;

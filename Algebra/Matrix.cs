@@ -160,6 +160,7 @@ namespace Algebra {
         public int Columns => e.GetLength(1);
 
         /// <summary>サイズ(正方行列のときのみ有効)</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public int Size {
             get {
                 if (!IsSquare(this)) {
@@ -393,6 +394,7 @@ namespace Algebra {
         }
 
         /// <summary>転置</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Matrix Transpose {
             get {
                 Matrix ret = new(Columns, Rows);
@@ -408,6 +410,7 @@ namespace Algebra {
         }
 
         /// <summary>逆行列</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Matrix Inverse {
             get {
                 if (IsZero(this) || !IsValid(this)) {
@@ -428,6 +431,7 @@ namespace Algebra {
         }
 
         /// <summary>行列ノルム</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ddouble Norm {
             get {
                 ddouble sum_sq = 0;
@@ -442,6 +446,7 @@ namespace Algebra {
         }
 
         /// <summary>最大指数</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public int MaxExponent {
             get {
                 int max_exponent = int.MinValue;
@@ -632,6 +637,7 @@ namespace Algebra {
         }
 
         /// <summary>対角成分</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ddouble[] Diagonals {
             get {
                 if (!IsSquare(this)) {
