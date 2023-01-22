@@ -32,6 +32,12 @@ namespace Algebra {
             set => v[index] = value;
         }
 
+        /// <summary>インデクサ</summary>
+        public ddouble this[Index index] {
+            get => v[index.GetOffset(Dim)];
+            set => v[index.GetOffset(Dim)] = value;
+        }
+
         /// <summary>領域インデクサ</summary>
         public Vector this[Range range] {
             get {

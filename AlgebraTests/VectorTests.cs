@@ -40,6 +40,16 @@ namespace Algebra.Tests {
             Assert.AreEqual(2, vector[1]);
             Assert.AreEqual(3, vector[2]);
             Assert.AreEqual(4, vector[3]);
+
+            vector[^1] = 1;
+            vector[^2] = 2;
+            vector[^3] = 3;
+            vector[^4] = 4;
+
+            Assert.AreEqual(1, vector[^1]);
+            Assert.AreEqual(2, vector[^2]);
+            Assert.AreEqual(3, vector[^3]);
+            Assert.AreEqual(4, vector[^4]);
         }
 
         [TestMethod()]
