@@ -9,7 +9,7 @@ namespace Algebra {
         public ddouble[] CalculateEigenValues(int precision_level = 32) {
             Matrix m = Copy();
             for (int i = 0; i < precision_level; i++) {
-                (Matrix q, Matrix r) = m.QRDecomposition();
+                (Matrix q, Matrix r) = m.QRDecompose();
                 m = r * q;
             }
 
@@ -42,7 +42,7 @@ namespace Algebra {
             x_init /= x_init.Norm;
 
             for (int i = 0; i < precision_level; i++) {
-                (Matrix q, Matrix r) = m.QRDecomposition();
+                (Matrix q, Matrix r) = m.QRDecompose();
                 m = r * q;
 
                 eigen_values = m.Diagonals;

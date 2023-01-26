@@ -1,12 +1,14 @@
 ﻿using DoubleDouble;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
 namespace Algebra {
     ///<summary>ベクトルクラス</summary>
     [DebuggerDisplay("{ToString(),nq}")]
-    public class Vector : ICloneable {
+    public partial class Vector : ICloneable, IEnumerable<(int index, ddouble val)> {
         internal readonly ddouble[] v;
 
         /// <summary>コンストラクタ</summary>
@@ -26,43 +28,13 @@ namespace Algebra {
             }
         }
 
-        /// <summary>インデクサ</summary>
-        public ddouble this[int index] {
-            get => v[index];
-            set => v[index] = value;
+        /// <summary>コンストラクタ</summary>
+        public Vector(IEnumerable<ddouble> v) {
+            this.v = v.ToArray();
         }
 
-        /// <summary>インデクサ</summary>
-        public ddouble this[Index index] {
-            get => v[index.GetOffset(Dim)];
-            set => v[index.GetOffset(Dim)] = value;
-        }
-
-        /// <summary>領域インデクサ</summary>
-        public Vector this[Range range] {
-            get {
-                (int index, int counts) = range.GetOffsetAndLength(Dim);
-
-                ddouble[] ret = new ddouble[counts];
-                for (int i = 0; i < counts; i++) {
-                    ret[i] = v[i + index];
-                }
-
-                return new(ret);
-            }
-
-            set {
-                (int index, int counts) = range.GetOffsetAndLength(Dim);
-
-                if (value.Dim != counts) {
-                    throw new ArgumentOutOfRangeException(nameof(range));
-                }
-
-                for (int i = 0; i < counts; i++) {
-                    v[i + index] = value.v[i];
-                }
-            }
-        }
+        /// <summary>コンストラクタ</summary>
+        public Vector(IEnumerable<double> v) : this(v.ToArray()) { }
 
         /// <summary>X成分</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -105,23 +77,6 @@ namespace Algebra {
             return new Vector(arr);
         }
 
-        /// <summary>ノルム</summary>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public ddouble Norm => ddouble.Sqrt(SquareNorm);
-
-        /// <summary>ノルム2乗</summary>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public ddouble SquareNorm {
-            get {
-                ddouble norm = 0;
-                foreach (var vi in v) {
-                    norm += vi * vi;
-                }
-
-                return norm;
-            }
-        }
-
         /// <summary>行ベクトル</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Matrix Horizontal {
@@ -152,106 +107,6 @@ namespace Algebra {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Vector Normal => this / Norm;
 
-        /// <summary>単項プラス</summary>
-        public static Vector operator +(Vector vector) {
-            return (Vector)vector.Clone();
-        }
-
-        /// <summary>単項マイナス</summary>
-        public static Vector operator -(Vector vector) {
-            ddouble[] v = new ddouble[vector.Dim];
-
-            for (int i = 0; i < vector.Dim; i++) {
-                v[i] = -vector.v[i];
-            }
-            return new Vector(v);
-        }
-
-        /// <summary>ベクトル加算</summary>
-        public static Vector operator +(Vector vector1, Vector vector2) {
-            if (vector1.Dim != vector2.Dim) {
-                throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
-            }
-
-            int size = vector1.Dim;
-            ddouble[] v = new ddouble[size];
-
-            for (int i = 0; i < size; i++) {
-                v[i] = vector1.v[i] + vector2.v[i];
-            }
-
-            return new Vector(v);
-        }
-
-        /// <summary>ベクトル減算</summary>
-        public static Vector operator -(Vector vector1, Vector vector2) {
-            if (vector1.Dim != vector2.Dim) {
-                throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
-            }
-
-            int size = vector1.Dim;
-            ddouble[] v = new ddouble[size];
-
-            for (int i = 0; i < size; i++) {
-                v[i] = vector1.v[i] - vector2.v[i];
-            }
-
-            return new Vector(v);
-        }
-
-        /// <summary>ベクトル乗算</summary>
-        public static Vector operator *(Vector vector1, Vector vector2) {
-            if (vector1.Dim != vector2.Dim) {
-                throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
-            }
-
-            int size = vector1.Dim;
-            ddouble[] v = new ddouble[size];
-
-            for (int i = 0; i < size; i++) {
-                v[i] = vector1.v[i] * vector2.v[i];
-            }
-
-            return new Vector(v);
-        }
-
-        /// <summary>ベクトル除算</summary>
-        public static Vector operator /(Vector vector1, Vector vector2) {
-            if (vector1.Dim != vector2.Dim) {
-                throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
-            }
-
-            int size = vector1.Dim;
-            ddouble[] v = new ddouble[size];
-
-            for (int i = 0; i < size; i++) {
-                v[i] = vector1.v[i] / vector2.v[i];
-            }
-
-            return new Vector(v);
-        }
-
-        /// <summary>スカラー倍</summary>
-        public static Vector operator *(ddouble r, Vector vector) {
-            ddouble[] v = new ddouble[vector.Dim];
-
-            for (int i = 0; i < vector.Dim; i++) {
-                v[i] = vector.v[i] * r;
-            }
-
-            return new Vector(v);
-        }
-
-        /// <summary>スカラー倍</summary>
-        public static Vector operator *(Vector vector, ddouble r) {
-            return r * vector;
-        }
-
-        /// <summary>スカラー逆数倍</summary>
-        public static Vector operator /(Vector vector, ddouble r) {
-            return (1d / r) * vector;
-        }
-
         /// <summary>ベクトル間距離</summary>
         public static ddouble Distance(Vector vector1, Vector vector2) {
             return (vector1 - vector2).Norm;
@@ -275,6 +130,27 @@ namespace Algebra {
 
             return sum;
         }
+
+        /// <summary>ノルム</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public ddouble Norm => ddouble.Sqrt(SquareNorm);
+
+        /// <summary>ノルム2乗</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public ddouble SquareNorm {
+            get {
+                ddouble norm = 0;
+                foreach (var vi in v) {
+                    norm += vi * vi;
+                }
+
+                return norm;
+            }
+        }
+
+        /// <summary>合計</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public ddouble Sum => v.Sum();
 
         /// <summary>最大指数</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -340,23 +216,6 @@ namespace Algebra {
             return true;
         }
 
-        /// <summary>ベクトルが等しいか</summary>
-        public static bool operator ==(Vector vector1, Vector vector2) {
-            if (ReferenceEquals(vector1, vector2)) {
-                return true;
-            }
-            if (vector1 is null || vector2 is null) {
-                return false;
-            }
-
-            return vector1.v.SequenceEqual(vector2.v);
-        }
-
-        /// <summary>ベクトルが異なるか判定</summary>
-        public static bool operator !=(Vector vector1, Vector vector2) {
-            return !(vector1 == vector2);
-        }
-
         /// <summary>等しいか判定</summary>
         public override bool Equals(object obj) {
             return (obj is not null) && obj is Vector vector && vector == this;
@@ -391,5 +250,13 @@ namespace Algebra {
 
             return str;
         }
+
+        public IEnumerator<(int index, ddouble val)> GetEnumerator() {
+            for (int i = 0; i < Dim; i++) {
+                yield return (i, v[i]);
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

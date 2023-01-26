@@ -50,6 +50,13 @@ namespace Algebra.Tests {
             Assert.AreEqual(2, vector[^2]);
             Assert.AreEqual(3, vector[^3]);
             Assert.AreEqual(4, vector[^4]);
+
+            string str = string.Empty;
+            foreach ((int index, ddouble val) in vector) {
+                str += $"({index},{val}),";
+            }
+
+            Assert.AreEqual("(0,4),(1,3),(2,2),(3,1),", str);
         }
 
         [TestMethod()]
@@ -134,6 +141,13 @@ namespace Algebra.Tests {
         }
 
         [TestMethod()]
+        public void SumTest() {
+            Vector vector = new(1, 2, 3, 4);
+
+            Assert.AreEqual(10, vector.Sum);
+        }
+
+        [TestMethod()]
         public void NormalTest() {
             Vector vector = new(1, 2, -3);
 
@@ -151,11 +165,16 @@ namespace Algebra.Tests {
             Assert.AreEqual(new Vector(-1, -2), -vector1);
             Assert.AreEqual(new Vector(4, 6), vector1 + vector2);
             Assert.AreEqual(new Vector(4, 6), vector2 + vector1);
+            Assert.AreEqual(new Vector(4, 5), vector1 + 3);
+            Assert.AreEqual(new Vector(4, 5), 3 + vector1);
             Assert.AreEqual(new Vector(-2, -2), vector1 - vector2);
             Assert.AreEqual(new Vector(2, 2), vector2 - vector1);
+            Assert.AreEqual(new Vector(-2, -1), vector1 - 3);
+            Assert.AreEqual(new Vector(2, 1), 3 - vector1);
             Assert.AreEqual(new Vector(2, 4), vector1 * 2);
             Assert.AreEqual(new Vector(2, 4), 2 * vector1);
             Assert.AreEqual(new Vector(0.5, 1), vector1 / 2);
+            Assert.AreEqual(new Vector(2, 1), 2 / vector1);
             Assert.AreEqual(new Vector(3, 8), vector1 * vector2);
             Assert.AreEqual(new Vector((ddouble)1 / 3, 0.5), vector1 / vector2);
             Assert.AreEqual(new Vector(3, 2), vector2 / vector1);

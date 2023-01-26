@@ -4,7 +4,7 @@ namespace Algebra {
     /// <summary>行列クラス</summary>
     public partial class Matrix {
         /// <summary>QR分解</summary>
-        public (Matrix orthogonal_matrix, Matrix triangular_matrix) QRDecomposition() {
+        public (Matrix orthogonal_matrix, Matrix triangular_matrix) QRDecompose() {
             if (!IsSquare(this)) {
                 throw new InvalidOperationException("not square matrix");
             }

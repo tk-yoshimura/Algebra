@@ -1,7 +1,6 @@
 ﻿using DoubleDouble;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Numerics;
 
 namespace Algebra.Tests {
     [TestClass()]
@@ -57,6 +56,13 @@ namespace Algebra.Tests {
             Assert.ThrowsException<InvalidOperationException>(() => {
                 int n = Matrix.Zero(2, 3).Size;
             });
+
+            string str = string.Empty;
+            foreach ((int row_index, int col_index, ddouble val) in matrix1) {
+                str += $"({row_index},{col_index},{val}),";
+            }
+
+            Assert.AreEqual("(0,0,4),(0,1,5),(0,2,6),(1,0,1),(1,1,2),(1,2,3),", str);
         }
 
         [TestMethod()]
@@ -231,6 +237,14 @@ namespace Algebra.Tests {
             Matrix matrix = new(new double[,] { { 1, 2 }, { 3, 4 } });
 
             Assert.AreEqual(ddouble.Sqrt(30), matrix.Norm);
+            Assert.AreEqual(30, matrix.SquareNorm);
+        }
+
+        [TestMethod()]
+        public void SumTest() {
+            Matrix matrix = new(new double[,] { { 1, 2 }, { 3, 4 } });
+
+            Assert.AreEqual(10, matrix.Sum);
         }
 
         [TestMethod()]
@@ -337,13 +351,23 @@ namespace Algebra.Tests {
             Assert.AreEqual(new Matrix(new double[,] { { -1, -2, -3 }, { -4, -5, -6 } }), -matrix1);
             Assert.AreEqual(new Matrix(new double[,] { { 8, 10, 12 }, { 5, 7, 9 } }), matrix1 + matrix2);
             Assert.AreEqual(new Matrix(new double[,] { { 8, 10, 12 }, { 5, 7, 9 } }), matrix2 + matrix1);
+            Assert.AreEqual(new Matrix(new double[,] { { 3, 4, 5 }, { 6, 7, 8 } }), matrix1 + 2);
+            Assert.AreEqual(new Matrix(new double[,] { { 3, 4, 5 }, { 6, 7, 8 } }), 2 + matrix1);
             Assert.AreEqual(new Matrix(new double[,] { { -6, -6, -6 }, { 3, 3, 3 } }), matrix1 - matrix2);
             Assert.AreEqual(new Matrix(new double[,] { { 6, 6, 6 }, { -3, -3, -3 } }), matrix2 - matrix1);
+            Assert.AreEqual(new Matrix(new double[,] { { -1, 0, 1 }, { 2, 3, 4 } }), matrix1 - 2);
+            Assert.AreEqual(new Matrix(new double[,] { { 1, 0, -1 }, { -2, -3, -4 } }), 2 - matrix1);
+
             Assert.AreEqual(new Matrix(new double[,] { { 22, 28 }, { 49, 64 } }), matrix1 * matrix3);
             Assert.AreEqual(new Matrix(new double[,] { { 9, 12, 15 }, { 19, 26, 33 }, { 29, 40, 51 } }), matrix3 * matrix1);
 
             Assert.AreEqual(new Matrix(new double[,] { { 7, 16, 27 }, { 4, 10, 18 } }), Matrix.ElementwiseMul(matrix1, matrix2));
-            Assert.AreEqual(new Matrix(new ddouble[,] { { 7, 4, 3 }, { 0.25, "0.4", 0.5 } }), Matrix.ElementwiseDiv(matrix2, matrix1)); ;
+            Assert.AreEqual(new Matrix(new ddouble[,] { { 7, 4, 3 }, { 0.25, "0.4", 0.5 } }), Matrix.ElementwiseDiv(matrix2, matrix1));
+
+            Assert.AreEqual(new Matrix(new double[,] { { 2, 4, 6 }, { 8, 10, 12 } }), matrix1 * 2);
+            Assert.AreEqual(new Matrix(new double[,] { { 2, 4, 6 }, { 8, 10, 12 } }), 2 * matrix1);
+            Assert.AreEqual(new Matrix(new double[,] { { 0.5, 1, 1.5 }, { 2, 2.5, 3 } }), matrix1 / 2);
+            Assert.AreEqual(new Matrix(new ddouble[,] { { 2, 1, (ddouble)2 / 3 }, { 0.5, "0.4", (ddouble)2 / 6 } }), 2 / matrix1);
 
             Assert.AreEqual(new Vector(22, 58), matrix1 * vector1);
             Assert.AreEqual(new Vector(32, 44), vector1 * matrix3);
@@ -505,10 +529,10 @@ namespace Algebra.Tests {
         }
 
         [TestMethod()]
-        public void LUDecompositionTest() {
+        public void LUDecomposeTest() {
             Matrix matrix = new(new double[,] { { 2, 3, 1, 2 }, { 4, 1, 3, -2 }, { 2, 2, -3, 1 }, { 1, -3, 2, 4 } });
 
-            (Matrix lower, Matrix upper) = matrix.LUDecomposition();
+            (Matrix lower, Matrix upper) = matrix.LUDecompose();
 
             foreach (var diagonal in lower.Diagonals) {
                 Assert.AreEqual(1, diagonal);
@@ -518,10 +542,10 @@ namespace Algebra.Tests {
         }
 
         [TestMethod()]
-        public void QRDecompositionTest() {
+        public void QRDecomposeTest() {
             Matrix matrix = new(new double[,] { { 12, -51, 4 }, { 6, 167, -68 }, { -4, 24, -41 } });
 
-            (Matrix q, Matrix r) = matrix.QRDecomposition();
+            (Matrix q, Matrix r) = matrix.QRDecompose();
 
             Assert.IsTrue((matrix - q * r).Norm < 1e-12);
             Assert.IsTrue((q * q.Transpose - Matrix.Identity(matrix.Size)).Norm < 1e-28);

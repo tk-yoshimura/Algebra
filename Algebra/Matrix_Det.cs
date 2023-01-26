@@ -8,7 +8,7 @@ namespace Algebra {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ddouble Det {
             get {
-                (_, Matrix upper) = LUDecomposition();
+                (_, Matrix upper) = LUDecompose();
 
                 ddouble prod = 1d;
                 foreach (var diagonal in upper.Diagonals) {

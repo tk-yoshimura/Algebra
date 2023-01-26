@@ -5,7 +5,7 @@ namespace Algebra {
     /// <summary>行列クラス</summary>
     public partial class Matrix {
         /// <summary>LU分解</summary>
-        public (Matrix lower_matrix, Matrix upper_matrix) LUDecomposition() {
+        public (Matrix lower_matrix, Matrix upper_matrix) LUDecompose() {
             if (!IsSquare(this)) {
                 throw new InvalidOperationException("not square matrix");
             }
