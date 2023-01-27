@@ -83,7 +83,7 @@ namespace Algebra {
             return v;
         }
 
-        /// <summary>連立方程式</summary>
+        /// <summary>連立方程式の解</summary>
         public static Vector Solve(Matrix m, Vector v) {
             if (!IsSquare(m) || m.Size != v.Dim) {
                 throw new ArgumentException("invalid size", $"{nameof(m)}, {nameof(v)}");
