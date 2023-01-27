@@ -10,7 +10,7 @@ namespace Algebra {
             get {
                 (_, Matrix upper) = LUDecompose();
 
-                ddouble sum = 0;
+                ddouble sum = 0d;
                 foreach (var diagonal in upper.Diagonals) {
                     sum += diagonal;
                 }

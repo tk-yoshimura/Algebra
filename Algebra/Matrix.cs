@@ -118,7 +118,7 @@ namespace Algebra {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ddouble SquareNorm {
             get {
-                ddouble sum_sq = 0;
+                ddouble sum_sq = 0d;
                 for (int i = 0, j; i < Rows; i++) {
                     for (j = 0; j < Columns; j++) {
                         sum_sq += e[i, j] * e[i, j];
@@ -133,7 +133,7 @@ namespace Algebra {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ddouble Sum {
             get {
-                ddouble sum = 0;
+                ddouble sum = 0d;
                 for (int i = 0, j; i < Rows; i++) {
                     for (j = 0; j < Columns; j++) {
                         sum += e[i, j];

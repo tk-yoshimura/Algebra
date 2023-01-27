@@ -123,7 +123,7 @@ namespace Algebra {
                 throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
             }
 
-            ddouble sum = 0;
+            ddouble sum = 0d;
             for (int i = 0, dim = vector1.Dim; i < dim; i++) {
                 sum += vector1.v[i] * vector2.v[i];
             }
@@ -139,7 +139,7 @@ namespace Algebra {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ddouble SquareNorm {
             get {
-                ddouble norm = 0;
+                ddouble norm = 0d;
                 foreach (var vi in v) {
                     norm += vi * vi;
                 }
