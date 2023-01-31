@@ -465,6 +465,16 @@ namespace Algebra.Tests {
         }
 
         [TestMethod()]
+        public void FillTest() {
+            Matrix matrix = Matrix.Fill(2, 2, value: 7);
+
+            Assert.AreEqual(7, matrix[0, 0]);
+            Assert.AreEqual(7, matrix[1, 0]);
+            Assert.AreEqual(7, matrix[0, 1]);
+            Assert.AreEqual(7, matrix[1, 1]);
+        }
+
+        [TestMethod()]
         public void IdentityTest() {
             Matrix matrix = Matrix.Identity(2);
 
@@ -487,8 +497,8 @@ namespace Algebra.Tests {
             Matrix matrix1 = Matrix.Zero(2, 2);
             Matrix matrix2 = Matrix.Zero(2, 3);
 
-            Assert.IsTrue(Matrix.IsEqualSize(matrix1, matrix1));
-            Assert.IsFalse(Matrix.IsEqualSize(matrix1, matrix2));
+            Assert.AreEqual(matrix1.Shape, matrix1.Shape);
+            Assert.AreNotEqual(matrix1.Shape, matrix2.Shape);
         }
 
         [TestMethod()]
@@ -646,6 +656,57 @@ namespace Algebra.Tests {
 
             Assert.AreEqual(-1, matrix1.Trace);
             Assert.AreEqual(1, matrix2.Trace);
+        }
+
+        [TestMethod()]
+        public void FuncTest() {
+            Matrix matrix1 = new(new double[,] { { 1, 2, 4 }, { 8, 16, 32 } });
+            Matrix matrix2 = new(new double[,] { { 2, 3, 5 }, { 9, 17, 33 } });
+            Matrix matrix3 = new(new double[,] { { 3, 4, 6 }, { 10, 18, 34 } });
+            Matrix matrix4 = new(new double[,] { { 4, 5, 7 }, { 11, 19, 35 } });
+            Matrix matrix5 = new(new double[,] { { 5, 6, 8 }, { 12, 20, 36 }, { 2, 1, 0 } });
+
+            Assert.AreEqual(new Matrix(new double[,] { { 2, 4, 8 }, { 16, 32, 64 } }), Matrix.Func(matrix1, v => 2 * v));
+            Assert.AreEqual(new Matrix(new double[,] { { 5, 8, 14 }, { 26, 50, 98 } }), Matrix.Func(matrix1, matrix2, (v1, v2) => v1 + 2 * v2));
+            Assert.AreEqual(new Matrix(new double[,] { { 17, 24, 38 }, { 66, 122, 234 } }), Matrix.Func(matrix1, matrix2, matrix3, (v1, v2, v3) => v1 + 2 * v2 + 4 * v3));
+            Assert.AreEqual(new Matrix(new double[,] { { 49, 64, 94 }, { 154, 274, 514 } }), Matrix.Func(matrix1, matrix2, matrix3, matrix4, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4));
+            Assert.AreEqual(new Matrix(new double[,] { { 49, 64, 94 }, { 154, 274, 514 } }), Matrix.Func(matrix1, matrix2, matrix3, matrix4, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4));
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Matrix.Func(matrix1, matrix5, (v1, v2) => v1 + 2 * v2);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Matrix.Func(matrix5, matrix1, (v1, v2) => v1 + 2 * v2);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Matrix.Func(matrix1, matrix2, matrix5, (v1, v2, v3) => v1 + 2 * v2 + 4 * v3);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Matrix.Func(matrix1, matrix5, matrix2, (v1, v2, v3) => v1 + 2 * v2 + 4 * v3);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Matrix.Func(matrix5, matrix1, matrix2, (v1, v2, v3) => v1 + 2 * v2 + 4 * v3);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Matrix.Func(matrix1, matrix2, matrix3, matrix5, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Matrix.Func(matrix1, matrix2, matrix5, matrix3, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Matrix.Func(matrix1, matrix5, matrix2, matrix3, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Matrix.Func(matrix5, matrix1, matrix2, matrix3, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4);
+            });
         }
 
         [TestMethod()]

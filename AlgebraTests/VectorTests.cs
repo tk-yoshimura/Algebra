@@ -211,14 +211,21 @@ namespace Algebra.Tests {
         }
 
         [TestMethod()]
-        public void IsZeroTest() {
-            Vector vector = Vector.Zero(3);
+        public void FillTest() {
+            Vector vector = Vector.Fill(3, value: 7);
 
-            Assert.IsTrue(Vector.IsZero(vector));
+            Assert.AreEqual(7, vector.X);
+            Assert.AreEqual(7, vector.Y);
+            Assert.AreEqual(7, vector.Z);
+        }
 
-            vector.X = 1;
+        [TestMethod()]
+        public void ArangeTest() {
+            Vector vector = Vector.Arange(8);
 
-            Assert.IsFalse(Vector.IsZero(vector));
+            for (int i = 0; i < vector.Dim; i++) {
+                Assert.AreEqual(i, vector[i]);
+            }
         }
 
         [TestMethod()]
@@ -228,6 +235,17 @@ namespace Algebra.Tests {
             Assert.IsTrue(ddouble.IsNaN(vector.X));
             Assert.IsTrue(ddouble.IsNaN(vector.Y));
             Assert.IsTrue(ddouble.IsNaN(vector.Z));
+        }
+
+        [TestMethod()]
+        public void IsZeroTest() {
+            Vector vector = Vector.Zero(3);
+
+            Assert.IsTrue(Vector.IsZero(vector));
+
+            vector.X = 1;
+
+            Assert.IsFalse(Vector.IsZero(vector));
         }
 
         [TestMethod()]
@@ -267,14 +285,54 @@ namespace Algebra.Tests {
         }
 
         [TestMethod()]
-        public void ToStringTest() {
-            Vector vector1 = new(1, 2, 3);
-            Vector vector2 = new(new double[0]);
-            Vector vector3 = new(1d);
+        public void FuncTest() {
+            Vector vector1 = new(1, 2, 4, 8);
+            Vector vector2 = new(2, 3, 5, 9);
+            Vector vector3 = new(3, 4, 6, 10);
+            Vector vector4 = new(4, 5, 7, 11);
+            Vector vector5 = new(5, 6, 8, 12, 20);
 
-            Assert.AreEqual("1,2,3", vector1.ToString());
-            Assert.AreEqual(string.Empty, vector2.ToString());
-            Assert.AreEqual("1", vector3.ToString());
+            Assert.AreEqual(new Vector(2, 4, 8, 16), Vector.Func(vector1, v => 2 * v));
+            Assert.AreEqual(new Vector(5, 8, 14, 26), Vector.Func(vector1, vector2, (v1, v2) => v1 + 2 * v2));
+            Assert.AreEqual(new Vector(17, 24, 38, 66), Vector.Func(vector1, vector2, vector3, (v1, v2, v3) => v1 + 2 * v2 + 4 * v3));
+            Assert.AreEqual(new Vector(49, 64, 94, 154), Vector.Func(vector1, vector2, vector3, vector4, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4));
+            Assert.AreEqual(new Vector(49, 64, 94, 154), Vector.Func(vector1, vector2, vector3, vector4, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4));
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Vector.Func(vector1, vector5, (v1, v2) => v1 + 2 * v2);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Vector.Func(vector5, vector1, (v1, v2) => v1 + 2 * v2);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Vector.Func(vector1, vector2, vector5, (v1, v2, v3) => v1 + 2 * v2 + 4 * v3);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Vector.Func(vector1, vector5, vector2, (v1, v2, v3) => v1 + 2 * v2 + 4 * v3);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Vector.Func(vector5, vector1, vector2, (v1, v2, v3) => v1 + 2 * v2 + 4 * v3);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Vector.Func(vector1, vector2, vector3, vector5, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Vector.Func(vector1, vector2, vector5, vector3, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Vector.Func(vector1, vector5, vector2, vector3, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                Vector.Func(vector5, vector1, vector2, vector3, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4);
+            });
         }
 
         [TestMethod()]
@@ -288,6 +346,17 @@ namespace Algebra.Tests {
             Assert.AreEqual(2, vector1.Y);
             Assert.AreEqual(2, vector2.X);
             Assert.AreEqual(2, vector2.Y);
+        }
+
+        [TestMethod()]
+        public void ToStringTest() {
+            Vector vector1 = new(1, 2, 3);
+            Vector vector2 = new(new double[0]);
+            Vector vector3 = new(1d);
+
+            Assert.AreEqual("1,2,3", vector1.ToString());
+            Assert.AreEqual(string.Empty, vector2.ToString());
+            Assert.AreEqual("1", vector3.ToString());
         }
     }
 }

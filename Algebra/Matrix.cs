@@ -10,6 +10,12 @@ namespace Algebra {
     public partial class Matrix : ICloneable, IEnumerable<(int row_index, int column_index, ddouble val)> {
         internal readonly ddouble[,] e;
 
+        /// <summary>コンストラクタ</summary>
+        /// <param name="m">行列要素配列</param>
+        protected Matrix(ddouble[,] m, bool cloning) {
+            this.e = cloning ? (ddouble[,])m.Clone() : m;
+        }
+
         /// <summary>コンストラクタ </summary>
         /// <param name="rows">行数</param>
         /// <param name="columns">列数</param>
@@ -37,19 +43,16 @@ namespace Algebra {
 
         /// <summary>コンストラクタ</summary>
         /// <param name="m">行列要素配列</param>
-        public Matrix(ddouble[,] m) {
-            if (m is null) {
-                throw new ArgumentNullException(nameof(m));
-            }
-
-            this.e = (ddouble[,])m.Clone();
-        }
+        public Matrix(ddouble[,] m) : this(m, cloning: true) { }
 
         /// <summary>行数</summary>
         public int Rows => e.GetLength(0);
 
         /// <summary>列数</summary>
         public int Columns => e.GetLength(1);
+
+        /// <summary>形状</summary>
+        public (int rows, int columns) Shape => (e.GetLength(0), e.GetLength(1));
 
         /// <summary>サイズ(正方行列のときのみ有効)</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -222,6 +225,84 @@ namespace Algebra {
             return new Matrix(rows, columns);
         }
 
+        /// <summary>定数行列</summary>
+        public static Matrix Fill(int rows, int columns, ddouble value) {
+            ddouble[,] v = new ddouble[rows, columns];
+
+            for (int i = 0, j; i < rows; i++) {
+                for (j = 0; j < columns; j++) {
+                    v[i, j] = value;
+                }
+            }
+
+            return new Matrix(v, cloning: false);
+        }
+
+        /// <summary>射影</summary>
+        public static Matrix Func(Matrix matrix, Func<ddouble, ddouble> f) {
+            ddouble[,] x = matrix.e, v = new ddouble[matrix.Rows, matrix.Columns];
+
+            for (int i = 0, j; i < v.GetLength(0); i++) {
+                for (j = 0; j < v.GetLength(1); j++) {
+                    v[i, j] = f(x[i, j]);
+                }
+            }
+
+            return new Matrix(v, cloning: false);
+        }
+
+        /// <summary>射影</summary>
+        public static Matrix Func(Matrix matrix1, Matrix matrix2, Func<ddouble, ddouble, ddouble> f) {
+            if (matrix1.Shape != matrix2.Shape) {
+                throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)}");
+            }
+
+            ddouble[,] x = matrix1.e, y = matrix2.e, v = new ddouble[matrix1.Rows, matrix1.Columns];
+
+            for (int i = 0, j; i < v.GetLength(0); i++) {
+                for (j = 0; j < v.GetLength(1); j++) {
+                    v[i, j] = f(x[i, j], y[i, j]);
+                }
+            }
+
+            return new Matrix(v, cloning: false);
+        }
+
+        /// <summary>射影</summary>
+        public static Matrix Func(Matrix matrix1, Matrix matrix2, Matrix matrix3, Func<ddouble, ddouble, ddouble, ddouble> f) {
+            if (matrix1.Shape != matrix2.Shape || matrix1.Shape != matrix3.Shape) {
+                throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)},{nameof(matrix3)}");
+            }
+
+            ddouble[,] x = matrix1.e, y = matrix2.e, z = matrix3.e, v = new ddouble[matrix1.Rows, matrix1.Columns];
+
+            for (int i = 0, j; i < v.GetLength(0); i++) {
+                for (j = 0; j < v.GetLength(1); j++) {
+                    v[i, j] = f(x[i, j], y[i, j], z[i, j]);
+                }
+            }
+
+            return new Matrix(v, cloning: false);
+        }
+
+
+        /// <summary>射影</summary>
+        public static Matrix Func(Matrix matrix1, Matrix matrix2, Matrix matrix3, Matrix matrix4, Func<ddouble, ddouble, ddouble, ddouble, ddouble> f) {
+            if (matrix1.Shape != matrix2.Shape || matrix1.Shape != matrix3.Shape || matrix1.Shape != matrix4.Shape) {
+                throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)},{nameof(matrix3)},{nameof(matrix4)}");
+            }
+
+            ddouble[,] x = matrix1.e, y = matrix2.e, z = matrix3.e, w = matrix4.e, v = new ddouble[matrix1.Rows, matrix1.Columns];
+
+            for (int i = 0, j; i < v.GetLength(0); i++) {
+                for (j = 0; j < v.GetLength(1); j++) {
+                    v[i, j] = f(x[i, j], y[i, j], z[i, j], w[i, j]);
+                }
+            }
+
+            return new Matrix(v, cloning: false);
+        }
+
         /// <summary>単位行列</summary>
         /// <param name="size">行列サイズ</param>
         public static Matrix Identity(int size) {
@@ -248,11 +329,6 @@ namespace Algebra {
             }
 
             return ret;
-        }
-
-        /// <summary>行列のサイズが等しいか判定</summary>
-        public static bool IsEqualSize(Matrix matrix1, Matrix matrix2) {
-            return (matrix1.Rows == matrix2.Rows) && (matrix1.Columns == matrix2.Columns);
         }
 
         /// <summary>正方行列か判定</summary>
