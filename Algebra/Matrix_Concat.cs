@@ -12,8 +12,8 @@ namespace Algebra {
 
             (int rows, int columns)[,] sizes = new (int, int)[blocks.GetLength(0), blocks.GetLength(1)];
 
-            for (int i = 0, j; i < blocks.GetLength(0); i++) {
-                for (j = 0; j < blocks.GetLength(1); j++) {
+            for (int i = 0; i < blocks.GetLength(0); i++) {
+                for (int j = 0; j < blocks.GetLength(1); j++) {
                     object block = blocks[i, j];
 
                     if (block is Matrix matrix) {
@@ -31,8 +31,8 @@ namespace Algebra {
                 }
             }
 
-            for (int i = 0, j; i < blocks.GetLength(0); i++) {
-                for (j = 0; j < blocks.GetLength(1); j++) {
+            for (int i = 0; i < blocks.GetLength(0); i++) {
+                for (int j = 0; j < blocks.GetLength(1); j++) {
                     if (sizes[i, 0].rows != sizes[i, j].rows || sizes[0, j].columns != sizes[i, j].columns) {
                         throw new ArgumentException("invalid size", $"{nameof(blocks)}[{i}, {j}]");
                     }
@@ -54,10 +54,10 @@ namespace Algebra {
 
             Matrix m = Zero(row_ranges[^1].end, column_ranges[^1].end);
 
-            for (int i = 0, j; i < blocks.GetLength(0); i++) {
+            for (int i = 0; i < blocks.GetLength(0); i++) {
                 Range row_range = new(row_ranges[i].start, row_ranges[i].end);
 
-                for (j = 0; j < blocks.GetLength(1); j++) {
+                for (int j = 0; j < blocks.GetLength(1); j++) {
                     Range column_range = new(column_ranges[j].start, column_ranges[j].end);
 
                     object block = blocks[i, j];

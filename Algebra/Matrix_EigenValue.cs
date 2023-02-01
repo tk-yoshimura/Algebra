@@ -37,7 +37,7 @@ namespace Algebra {
 
             for (int i = 0; i < Size; i++) {
                 eigen_vectors[i] = Vector.Invalid(Size);
-                x_init.v[i] = 1;
+                x_init.v[i] = 1d;
             }
             x_init /= x_init.Norm;
 

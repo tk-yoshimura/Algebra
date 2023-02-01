@@ -11,15 +11,15 @@ namespace Algebra {
 
         /// <summary>単項マイナス</summary>
         public static Matrix operator -(Matrix matrix) {
-            Matrix ret = matrix.Copy();
+            ddouble[,] ret = new ddouble[matrix.Rows, matrix.Columns], e = matrix.e;
 
-            for (int i = 0; i < ret.Rows; i++) {
-                for (int j = 0; j < ret.Columns; j++) {
-                    ret.e[i, j] = -ret.e[i, j];
+            for (int i = 0; i < ret.GetLength(0); i++) {
+                for (int j = 0; j < ret.GetLength(1); j++) {
+                    ret[i, j] = -e[i, j];
                 }
             }
 
-            return ret;
+            return new Matrix(ret, cloning: false);
         }
 
         /// <summary>行列加算</summary>
@@ -28,15 +28,15 @@ namespace Algebra {
                 throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)}");
             }
 
-            Matrix ret = new(matrix1.Rows, matrix1.Columns);
+            ddouble[,] ret = new ddouble[matrix1.Rows, matrix1.Columns], e1 = matrix1.e, e2 = matrix2.e;
 
-            for (int i = 0, j; i < ret.Rows; i++) {
-                for (j = 0; j < ret.Columns; j++) {
-                    ret.e[i, j] = matrix1.e[i, j] + matrix2.e[i, j];
+            for (int i = 0; i < ret.GetLength(0); i++) {
+                for (int j = 0; j < ret.GetLength(1); j++) {
+                    ret[i, j] = e1[i, j] + e2[i, j];
                 }
             }
 
-            return ret;
+            return new Matrix(ret, cloning: false);
         }
 
         /// <summary>行列減算</summary>
@@ -45,15 +45,15 @@ namespace Algebra {
                 throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)}");
             }
 
-            Matrix ret = new(matrix1.Rows, matrix1.Columns);
+            ddouble[,] ret = new ddouble[matrix1.Rows, matrix1.Columns], e1 = matrix1.e, e2 = matrix2.e;
 
-            for (int i = 0, j; i < ret.Rows; i++) {
-                for (j = 0; j < ret.Columns; j++) {
-                    ret.e[i, j] = matrix1.e[i, j] - matrix2.e[i, j];
+            for (int i = 0; i < ret.GetLength(0); i++) {
+                for (int j = 0; j < ret.GetLength(1); j++) {
+                    ret[i, j] = e1[i, j] - e2[i, j];
                 }
             }
 
-            return ret;
+            return new Matrix(ret, cloning: false);
         }
 
         /// <summary>要素ごとに積算</summary>
@@ -62,15 +62,15 @@ namespace Algebra {
                 throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)}");
             }
 
-            Matrix ret = new(matrix1.Rows, matrix1.Columns);
+            ddouble[,] ret = new ddouble[matrix1.Rows, matrix1.Columns], e1 = matrix1.e, e2 = matrix2.e;
 
-            for (int i = 0, j; i < ret.Rows; i++) {
-                for (j = 0; j < ret.Columns; j++) {
-                    ret.e[i, j] = matrix1.e[i, j] * matrix2.e[i, j];
+            for (int i = 0; i < ret.GetLength(0); i++) {
+                for (int j = 0; j < ret.GetLength(1); j++) {
+                    ret[i, j] = e1[i, j] * e2[i, j];
                 }
             }
 
-            return ret;
+            return new Matrix(ret, cloning: false);
         }
 
         /// <summary>要素ごとに除算</summary>
@@ -79,15 +79,15 @@ namespace Algebra {
                 throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)}");
             }
 
-            Matrix ret = new(matrix1.Rows, matrix1.Columns);
+            ddouble[,] ret = new ddouble[matrix1.Rows, matrix1.Columns], e1 = matrix1.e, e2 = matrix2.e;
 
-            for (int i = 0, j; i < ret.Rows; i++) {
-                for (j = 0; j < ret.Columns; j++) {
-                    ret.e[i, j] = matrix1.e[i, j] / matrix2.e[i, j];
+            for (int i = 0; i < ret.GetLength(0); i++) {
+                for (int j = 0; j < ret.GetLength(1); j++) {
+                    ret[i, j] = e1[i, j] / e2[i, j];
                 }
             }
 
-            return ret;
+            return new Matrix(ret, cloning: false);
         }
 
         /// <summary>行列乗算</summary>
@@ -96,18 +96,21 @@ namespace Algebra {
                 throw new ArgumentException($"mismatch {nameof(matrix1.Columns)} {nameof(matrix2.Rows)}", $"{nameof(matrix1)},{nameof(matrix2)}");
             }
 
-            Matrix ret = new(matrix1.Rows, matrix2.Columns);
-            int c = matrix1.Columns;
+            ddouble[,] ret = new ddouble[matrix1.Rows, matrix2.Columns], e1 = matrix1.e, e2 = matrix2.Transpose.e;
 
-            for (int i = 0, j, k; i < ret.Rows; i++) {
-                for (j = 0; j < ret.Columns; j++) {
-                    for (k = 0; k < c; k++) {
-                        ret.e[i, j] += matrix1.e[i, k] * matrix2.e[k, j];
+            for (int i = 0, c = matrix1.Columns; i < ret.GetLength(0); i++) {
+                for (int j = 0; j < ret.GetLength(1); j++) {
+                    ddouble s = 0d;
+
+                    for (int k = 0; k < c; k++) {
+                        s += e1[i, k] * e2[j, k];
                     }
+
+                    ret[i, j] = s;
                 }
             }
 
-            return ret;
+            return new Matrix(ret, cloning: false);
         }
 
         /// <summary>行列・列ベクトル乗算</summary>
@@ -116,15 +119,20 @@ namespace Algebra {
                 throw new ArgumentException($"mismatch {nameof(matrix.Columns)} {nameof(vector.Dim)}", $"{nameof(matrix)},{nameof(vector)}");
             }
 
-            Vector ret = Vector.Zero(matrix.Rows);
+            ddouble[] ret = new ddouble[matrix.Rows], v = vector.v;
+            ddouble[,] e = matrix.e;
 
-            for (int i = 0, j; i < matrix.Rows; i++) {
-                for (j = 0; j < matrix.Columns; j++) {
-                    ret.v[i] += matrix.e[i, j] * vector.v[j];
+            for (int i = 0; i < matrix.Rows; i++) {
+                ddouble s = 0d;
+
+                for (int j = 0; j < matrix.Columns; j++) {
+                    s += e[i, j] * v[j];
                 }
+
+                ret[i] = s;
             }
 
-            return ret;
+            return new Vector(ret, cloning: false);
         }
 
         /// <summary>行列・行ベクトル乗算</summary>
@@ -133,28 +141,33 @@ namespace Algebra {
                 throw new ArgumentException($"mismatch {nameof(vector.Dim)} {nameof(matrix.Rows)}", $"{nameof(vector)},{nameof(matrix)}");
             }
 
-            Vector ret = Vector.Zero(matrix.Columns);
+            ddouble[] ret = new ddouble[matrix.Columns], v = vector.v;
+            ddouble[,] e = matrix.Transpose.e;
 
-            for (int j = 0, i; j < matrix.Columns; j++) {
-                for (i = 0; i < matrix.Rows; i++) {
-                    ret.v[j] += vector.v[i] * matrix.e[i, j];
+            for (int j = 0; j < matrix.Columns; j++) {
+                ddouble s = 0d;
+
+                for (int i = 0; i < matrix.Rows; i++) {
+                    s += v[i] * e[j, i];
                 }
+
+                ret[j] = s;
             }
 
-            return ret;
+            return new Vector(ret, cloning: false);
         }
 
         /// <summary>行列スカラー加算</summary>
         public static Matrix operator +(ddouble r, Matrix matrix) {
-            Matrix ret = new(matrix.Rows, matrix.Columns);
+            ddouble[,] ret = new ddouble[matrix.Rows, matrix.Columns], e = matrix.e;
 
-            for (int i = 0, j; i < ret.Rows; i++) {
-                for (j = 0; j < ret.Columns; j++) {
-                    ret.e[i, j] = r + matrix.e[i, j];
+            for (int i = 0; i < ret.GetLength(0); i++) {
+                for (int j = 0; j < ret.GetLength(1); j++) {
+                    ret[i, j] = r + e[i, j];
                 }
             }
 
-            return ret;
+            return new Matrix(ret, cloning: false);
         }
 
         /// <summary>行列スカラー加算</summary>
@@ -164,15 +177,15 @@ namespace Algebra {
 
         /// <summary>行列スカラー減算</summary>
         public static Matrix operator -(ddouble r, Matrix matrix) {
-            Matrix ret = new(matrix.Rows, matrix.Columns);
+            ddouble[,] ret = new ddouble[matrix.Rows, matrix.Columns], e = matrix.e;
 
-            for (int i = 0, j; i < ret.Rows; i++) {
-                for (j = 0; j < ret.Columns; j++) {
-                    ret.e[i, j] = r - matrix.e[i, j];
+            for (int i = 0; i < ret.GetLength(0); i++) {
+                for (int j = 0; j < ret.GetLength(1); j++) {
+                    ret[i, j] = r - e[i, j];
                 }
             }
 
-            return ret;
+            return new Matrix(ret, cloning: false);
         }
 
         /// <summary>行列スカラー減算</summary>
@@ -182,15 +195,15 @@ namespace Algebra {
 
         /// <summary>行列スカラー倍</summary>
         public static Matrix operator *(ddouble r, Matrix matrix) {
-            Matrix ret = new(matrix.Rows, matrix.Columns);
+            ddouble[,] ret = new ddouble[matrix.Rows, matrix.Columns], e = matrix.e;
 
-            for (int i = 0, j; i < ret.Rows; i++) {
-                for (j = 0; j < ret.Columns; j++) {
-                    ret.e[i, j] = r * matrix.e[i, j];
+            for (int i = 0; i < ret.GetLength(0); i++) {
+                for (int j = 0; j < ret.GetLength(1); j++) {
+                    ret[i, j] = r * e[i, j];
                 }
             }
 
-            return ret;
+            return new Matrix(ret, cloning: false);
         }
 
         /// <summary>行列スカラー倍</summary>
@@ -200,15 +213,15 @@ namespace Algebra {
 
         /// <summary>行列スカラー除算</summary>
         public static Matrix operator /(ddouble r, Matrix matrix) {
-            Matrix ret = new(matrix.Rows, matrix.Columns);
+            ddouble[,] ret = new ddouble[matrix.Rows, matrix.Columns], e = matrix.e;
 
-            for (int i = 0, j; i < ret.Rows; i++) {
-                for (j = 0; j < ret.Columns; j++) {
-                    ret.e[i, j] = r / matrix.e[i, j];
+            for (int i = 0; i < ret.GetLength(0); i++) {
+                for (int j = 0; j < ret.GetLength(1); j++) {
+                    ret[i, j] = r / e[i, j];
                 }
             }
 
-            return ret;
+            return new Matrix(ret, cloning: false);
         }
 
         /// <summary>行列スカラー除算</summary>
@@ -229,8 +242,8 @@ namespace Algebra {
                 return false;
             }
 
-            for (int i = 0, j; i < matrix1.Rows; i++) {
-                for (j = 0; j < matrix2.Columns; j++) {
+            for (int i = 0; i < matrix1.Rows; i++) {
+                for (int j = 0; j < matrix2.Columns; j++) {
                     if (matrix1.e[i, j] != matrix2.e[i, j]) {
                         return false;
                     }

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 
 namespace Algebra {
     /// <summary>行列クラス</summary>
@@ -82,8 +83,8 @@ namespace Algebra {
             get {
                 Matrix ret = new(Columns, Rows);
 
-                for (int i = 0, j; i < Rows; i++) {
-                    for (j = 0; j < Columns; j++) {
+                for (int i = 0; i < Rows; i++) {
+                    for (int j = 0; j < Columns; j++) {
                         ret.e[j, i] = e[i, j];
                     }
                 }
@@ -122,8 +123,9 @@ namespace Algebra {
         public ddouble SquareNorm {
             get {
                 ddouble sum_sq = 0d;
-                for (int i = 0, j; i < Rows; i++) {
-                    for (j = 0; j < Columns; j++) {
+
+                for (int i = 0; i < Rows; i++) {
+                    for (int j = 0; j < Columns; j++) {
                         sum_sq += e[i, j] * e[i, j];
                     }
                 }
@@ -137,8 +139,9 @@ namespace Algebra {
         public ddouble Sum {
             get {
                 ddouble sum = 0d;
-                for (int i = 0, j; i < Rows; i++) {
-                    for (j = 0; j < Columns; j++) {
+
+                for (int i = 0; i < Rows; i++) {
+                    for (int j = 0; j < Columns; j++) {
                         sum += e[i, j];
                     }
                 }
@@ -153,8 +156,8 @@ namespace Algebra {
             get {
                 int max_exponent = int.MinValue;
 
-                for (int i = 0, j; i < Rows; i++) {
-                    for (j = 0; j < Columns; j++) {
+                for (int i = 0; i < Rows; i++) {
+                    for (int j = 0; j < Columns; j++) {
                         if (ddouble.IsFinite(e[i, j])) {
                             max_exponent = Math.Max(Math.ILogB((double)e[i, j]), max_exponent);
                         }
@@ -169,8 +172,8 @@ namespace Algebra {
         public static Matrix ScaleB(Matrix matrix, int n) {
             Matrix ret = matrix.Copy();
 
-            for (int i = 0, j; i < ret.Rows; i++) {
-                for (j = 0; j < ret.Columns; j++) {
+            for (int i = 0; i < ret.Rows; i++) {
+                for (int j = 0; j < ret.Columns; j++) {
                     ret.e[i, j] = ddouble.Ldexp(ret.e[i, j], n);
                 }
             }
@@ -182,6 +185,7 @@ namespace Algebra {
         /// <param name="row_index">行</param>
         public Vector Horizontal(int row_index) {
             Vector ret = Vector.Zero(Columns);
+
             for (int i = 0; i < Columns; i++) {
                 ret.v[i] = e[row_index, i];
             }
@@ -193,6 +197,7 @@ namespace Algebra {
         /// <param name="column_index">列</param>
         public Vector Vertical(int column_index) {
             Vector ret = Vector.Zero(Rows);
+
             for (int i = 0; i < Rows; i++) {
                 ret.v[i] = e[i, column_index];
             }
@@ -229,8 +234,8 @@ namespace Algebra {
         public static Matrix Fill(int rows, int columns, ddouble value) {
             ddouble[,] v = new ddouble[rows, columns];
 
-            for (int i = 0, j; i < rows; i++) {
-                for (j = 0; j < columns; j++) {
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < columns; j++) {
                     v[i, j] = value;
                 }
             }
@@ -242,8 +247,8 @@ namespace Algebra {
         public static Matrix Func(Matrix matrix, Func<ddouble, ddouble> f) {
             ddouble[,] x = matrix.e, v = new ddouble[matrix.Rows, matrix.Columns];
 
-            for (int i = 0, j; i < v.GetLength(0); i++) {
-                for (j = 0; j < v.GetLength(1); j++) {
+            for (int i = 0; i < v.GetLength(0); i++) {
+                for (int j = 0; j < v.GetLength(1); j++) {
                     v[i, j] = f(x[i, j]);
                 }
             }
@@ -259,8 +264,8 @@ namespace Algebra {
 
             ddouble[,] x = matrix1.e, y = matrix2.e, v = new ddouble[matrix1.Rows, matrix1.Columns];
 
-            for (int i = 0, j; i < v.GetLength(0); i++) {
-                for (j = 0; j < v.GetLength(1); j++) {
+            for (int i = 0; i < v.GetLength(0); i++) {
+                for (int j = 0; j < v.GetLength(1); j++) {
                     v[i, j] = f(x[i, j], y[i, j]);
                 }
             }
@@ -276,8 +281,8 @@ namespace Algebra {
 
             ddouble[,] x = matrix1.e, y = matrix2.e, z = matrix3.e, v = new ddouble[matrix1.Rows, matrix1.Columns];
 
-            for (int i = 0, j; i < v.GetLength(0); i++) {
-                for (j = 0; j < v.GetLength(1); j++) {
+            for (int i = 0; i < v.GetLength(0); i++) {
+                for (int j = 0; j < v.GetLength(1); j++) {
                     v[i, j] = f(x[i, j], y[i, j], z[i, j]);
                 }
             }
@@ -294,8 +299,8 @@ namespace Algebra {
 
             ddouble[,] x = matrix1.e, y = matrix2.e, z = matrix3.e, w = matrix4.e, v = new ddouble[matrix1.Rows, matrix1.Columns];
 
-            for (int i = 0, j; i < v.GetLength(0); i++) {
-                for (j = 0; j < v.GetLength(1); j++) {
+            for (int i = 0; i < v.GetLength(0); i++) {
+                for (int j = 0; j < v.GetLength(1); j++) {
                     v[i, j] = f(x[i, j], y[i, j], z[i, j], w[i, j]);
                 }
             }
@@ -308,8 +313,8 @@ namespace Algebra {
         public static Matrix Identity(int size) {
             Matrix ret = new(size, size);
 
-            for (int i = 0, j; i < size; i++) {
-                for (j = 0; j < size; j++) {
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
                     ret.e[i, j] = (i == j) ? 1 : 0;
                 }
             }
@@ -321,14 +326,7 @@ namespace Algebra {
         /// <param name="rows">行数</param>
         /// <param name="columns">列数</param>
         public static Matrix Invalid(int rows, int columns) {
-            Matrix ret = new(rows, columns);
-            for (int i = 0, j; i < ret.Rows; i++) {
-                for (j = 0; j < ret.Columns; j++) {
-                    ret.e[i, j] = ddouble.NaN;
-                }
-            }
-
-            return ret;
+            return Fill(rows, columns, value: ddouble.NaN);
         }
 
         /// <summary>正方行列か判定</summary>
@@ -342,8 +340,8 @@ namespace Algebra {
                 return false;
             }
 
-            for (int i = 0, j; i < matrix.Rows; i++) {
-                for (j = 0; j < matrix.Columns; j++) {
+            for (int i = 0; i < matrix.Rows; i++) {
+                for (int j = 0; j < matrix.Columns; j++) {
                     if (i != j && matrix.e[i, j] != 0) {
                         return false;
                     }
@@ -355,8 +353,8 @@ namespace Algebra {
 
         /// <summary>ゼロ行列か判定</summary>
         public static bool IsZero(Matrix matrix) {
-            for (int i = 0, j; i < matrix.Rows; i++) {
-                for (j = 0; j < matrix.Columns; j++) {
+            for (int i = 0; i < matrix.Rows; i++) {
+                for (int j = 0; j < matrix.Columns; j++) {
                     if (matrix.e[i, j] != 0d) {
                         return false;
                     }
@@ -372,8 +370,8 @@ namespace Algebra {
                 return false;
             }
 
-            for (int i = 0, j; i < matrix.Rows; i++) {
-                for (j = 0; j < matrix.Columns; j++) {
+            for (int i = 0; i < matrix.Rows; i++) {
+                for (int j = 0; j < matrix.Columns; j++) {
                     if (i == j) {
                         if (matrix.e[i, j] != 1d) {
                             return false;
@@ -396,8 +394,8 @@ namespace Algebra {
                 return false;
             }
 
-            for (int i = 0, j; i < matrix.Rows; i++) {
-                for (j = i + 1; j < matrix.Columns; j++) {
+            for (int i = 0; i < matrix.Rows; i++) {
+                for (int j = i + 1; j < matrix.Columns; j++) {
                     if (matrix.e[i, j] != matrix.e[j, i]) {
                         return false;
                     }
@@ -413,8 +411,8 @@ namespace Algebra {
                 return false;
             }
 
-            for (int i = 0, j; i < matrix.Rows; i++) {
-                for (j = 0; j < matrix.Columns; j++) {
+            for (int i = 0; i < matrix.Rows; i++) {
+                for (int j = 0; j < matrix.Columns; j++) {
                     if (!ddouble.IsFinite(matrix.e[i, j])) {
                         return false;
                     }
@@ -455,27 +453,23 @@ namespace Algebra {
                 return "Invalid Matrix";
             }
 
-            string str = "[ ";
-
-            str += "[ ";
-            str += $"{e[0, 0]}";
+            StringBuilder str = new($"[ [ {e[0, 0]}");
             for (int j = 1; j < Columns; j++) {
-                str += $", {e[0, j]}";
+                str.Append($", {e[0, j]}");
             }
-            str += " ]";
+            str.Append(" ]");
 
-            for (int i = 1, j; i < Rows; i++) {
-                str += ", [ ";
-                str += $"{e[i, 0]}";
-                for (j = 1; j < Columns; j++) {
-                    str += $", {e[i, j]}";
+            for (int i = 1; i < Rows; i++) {
+                str.Append($", [ {e[i, 0]}");
+                for (int j = 1; j < Columns; j++) {
+                    str.Append($", {e[i, j]}");
                 }
-                str += " ]";
+                str.Append(" ]");
             }
 
-            str += " ]";
+            str.Append(" ]");
 
-            return str;
+            return str.ToString();
         }
 
         public IEnumerator<(int row_index, int column_index, ddouble val)> GetEnumerator() {

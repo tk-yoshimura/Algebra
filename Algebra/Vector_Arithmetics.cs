@@ -12,12 +12,13 @@ namespace Algebra {
 
         /// <summary>単項マイナス</summary>
         public static Vector operator -(Vector vector) {
-            ddouble[] v = new ddouble[vector.Dim];
+            ddouble[] ret = new ddouble[vector.Dim], v = vector.v;
 
-            for (int i = 0; i < vector.Dim; i++) {
-                v[i] = -vector.v[i];
+            for (int i = 0; i < ret.Length; i++) {
+                ret[i] = -v[i];
             }
-            return new Vector(v);
+
+            return new Vector(ret, cloning: false);
         }
 
         /// <summary>ベクトル加算</summary>
@@ -26,14 +27,13 @@ namespace Algebra {
                 throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
             }
 
-            int size = vector1.Dim;
-            ddouble[] v = new ddouble[size];
+            ddouble[] ret = new ddouble[vector1.Dim], v1 = vector1.v, v2 = vector2.v;
 
-            for (int i = 0; i < size; i++) {
-                v[i] = vector1.v[i] + vector2.v[i];
+            for (int i = 0; i < ret.Length; i++) {
+                ret[i] = v1[i] + v2[i];
             }
 
-            return new Vector(v);
+            return new Vector(ret, cloning: false);
         }
 
         /// <summary>ベクトル減算</summary>
@@ -42,14 +42,13 @@ namespace Algebra {
                 throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
             }
 
-            int size = vector1.Dim;
-            ddouble[] v = new ddouble[size];
+            ddouble[] ret = new ddouble[vector1.Dim], v1 = vector1.v, v2 = vector2.v;
 
-            for (int i = 0; i < size; i++) {
-                v[i] = vector1.v[i] - vector2.v[i];
+            for (int i = 0; i < ret.Length; i++) {
+                ret[i] = v1[i] - v2[i];
             }
 
-            return new Vector(v);
+            return new Vector(ret, cloning: false);
         }
 
         /// <summary>ベクトル乗算</summary>
@@ -58,14 +57,13 @@ namespace Algebra {
                 throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
             }
 
-            int size = vector1.Dim;
-            ddouble[] v = new ddouble[size];
+            ddouble[] ret = new ddouble[vector1.Dim], v1 = vector1.v, v2 = vector2.v;
 
-            for (int i = 0; i < size; i++) {
-                v[i] = vector1.v[i] * vector2.v[i];
+            for (int i = 0; i < ret.Length; i++) {
+                ret[i] = v1[i] * v2[i];
             }
 
-            return new Vector(v);
+            return new Vector(ret, cloning: false);
         }
 
         /// <summary>ベクトル除算</summary>
@@ -74,25 +72,24 @@ namespace Algebra {
                 throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
             }
 
-            int size = vector1.Dim;
-            ddouble[] v = new ddouble[size];
+            ddouble[] ret = new ddouble[vector1.Dim], v1 = vector1.v, v2 = vector2.v;
 
-            for (int i = 0; i < size; i++) {
-                v[i] = vector1.v[i] / vector2.v[i];
+            for (int i = 0; i < ret.Length; i++) {
+                ret[i] = v1[i] / v2[i];
             }
 
-            return new Vector(v);
+            return new Vector(ret, cloning: false);
         }
 
         /// <summary>スカラー加算</summary>
         public static Vector operator +(ddouble r, Vector vector) {
-            ddouble[] v = new ddouble[vector.Dim];
+            ddouble[] ret = new ddouble[vector.Dim], v = vector.v;
 
-            for (int i = 0; i < vector.Dim; i++) {
-                v[i] = r + vector.v[i];
+            for (int i = 0; i < ret.Length; i++) {
+                ret[i] = r + v[i];
             }
 
-            return new Vector(v);
+            return new Vector(ret, cloning: false);
         }
 
         /// <summary>スカラー加算</summary>
@@ -102,13 +99,13 @@ namespace Algebra {
 
         /// <summary>スカラー減算</summary>
         public static Vector operator -(ddouble r, Vector vector) {
-            ddouble[] v = new ddouble[vector.Dim];
+            ddouble[] ret = new ddouble[vector.Dim], v = vector.v;
 
-            for (int i = 0; i < vector.Dim; i++) {
-                v[i] = r - vector.v[i];
+            for (int i = 0; i < ret.Length; i++) {
+                ret[i] = r - v[i];
             }
 
-            return new Vector(v);
+            return new Vector(ret, cloning: false);
         }
 
         /// <summary>スカラー減算</summary>
@@ -118,13 +115,13 @@ namespace Algebra {
 
         /// <summary>スカラー倍</summary>
         public static Vector operator *(ddouble r, Vector vector) {
-            ddouble[] v = new ddouble[vector.Dim];
+            ddouble[] ret = new ddouble[vector.Dim], v = vector.v;
 
-            for (int i = 0; i < vector.Dim; i++) {
-                v[i] = r * vector.v[i];
+            for (int i = 0; i < ret.Length; i++) {
+                ret[i] = r * v[i];
             }
 
-            return new Vector(v);
+            return new Vector(ret, cloning: false);
         }
 
         /// <summary>スカラー倍</summary>
@@ -134,18 +131,33 @@ namespace Algebra {
 
         /// <summary>スカラー除算</summary>
         public static Vector operator /(ddouble r, Vector vector) {
-            ddouble[] v = new ddouble[vector.Dim];
+            ddouble[] ret = new ddouble[vector.Dim], v = vector.v;
 
-            for (int i = 0; i < vector.Dim; i++) {
-                v[i] = r / vector.v[i];
+            for (int i = 0; i < ret.Length; i++) {
+                ret[i] = r / v[i];
             }
 
-            return new Vector(v);
+            return new Vector(ret, cloning: false);
         }
 
         /// <summary>スカラー除算</summary>
         public static Vector operator /(Vector vector, ddouble r) {
             return (1d / r) * vector;
+        }
+
+        /// <summary>内積</summary>
+        public static ddouble Dot(Vector vector1, Vector vector2) {
+            if (vector1.Dim != vector2.Dim) {
+                throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
+            }
+
+            ddouble sum = 0d;
+
+            for (int i = 0, dim = vector1.Dim; i < dim; i++) {
+                sum += vector1.v[i] * vector2.v[i];
+            }
+
+            return sum;
         }
 
         /// <summary>クロス積</summary>

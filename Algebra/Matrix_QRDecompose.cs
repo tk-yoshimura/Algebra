@@ -9,31 +9,31 @@ namespace Algebra {
                 throw new InvalidOperationException("not square matrix");
             }
 
-            Matrix q = new(Size, Size), r = new(Size, Size);
+            int n = Size;
 
-            int i, j, n = Size;
+            Matrix q = new(n, n), r = new(n, n);
 
             Vector[] e = new Vector[n], u = new Vector[n];
-            for (i = 0; i < Size; i++) {
+            for (int i = 0; i < n; i++) {
                 e[i] = Vector.Zero(n);
             }
 
-            for (i = 0; i < n; i++) {
+            for (int i = 0; i < n; i++) {
                 Vector ai = Vertical(i);
 
                 u[i] = ai.Copy();
 
-                for (j = 0; j < i; j++) {
-                    u[i] -= u[j] * Vector.InnerProduct(ai, u[j]) / u[j].SquareNorm;
+                for (int j = 0; j < i; j++) {
+                    u[i] -= u[j] * Vector.Dot(ai, u[j]) / u[j].SquareNorm;
                 }
 
                 e[i] = u[i].Normal;
 
-                for (j = 0; j <= i; j++) {
-                    r.e[j, i] = Vector.InnerProduct(ai, e[j]);
+                for (int j = 0; j <= i; j++) {
+                    r.e[j, i] = Vector.Dot(ai, e[j]);
                 }
 
-                for (j = 0; j < n; j++) {
+                for (int j = 0; j < n; j++) {
                     q.e[j, i] = e[i].v[j];
                 }
             }

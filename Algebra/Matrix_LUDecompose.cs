@@ -10,27 +10,29 @@ namespace Algebra {
                 throw new InvalidOperationException("not square matrix");
             }
 
-            Matrix m = Copy();
-            Matrix l = Zero(Size, Size), u = Zero(Size, Size);
+            int n = Size;
 
-            int i, j, k, n = Size;
+            Matrix m = Copy();
+            Matrix l = Zero(n, n), u = Zero(n, n);
 
             //LU分解
-            for (i = 0; i < n; i++) {
-                for (j = i + 1; j < n; j++) {
+            for (int i = 0; i < n; i++) {
+                for (int j = i + 1; j < n; j++) {
                     ddouble mul = m.e[j, i] /= m.e[i, i];
                     m.e[j, i] = mul;
 
-                    for (k = i + 1; k < n; k++) {
+                    for (int k = i + 1; k < n; k++) {
                         m.e[j, k] -= m.e[i, k] * mul;
                     }
                 }
             }
 
             //三角行列格納
-            for (i = 0; i < n; i++) {
+            for (int i = 0; i < n; i++) {
                 l.e[i, i] = 1;
-                for (j = 0; j < i; j++) {
+
+                int j = 0;
+                for (; j < i; j++) {
                     l.e[i, j] = m.e[i, j];
                 }
                 for (; j < n; j++) {

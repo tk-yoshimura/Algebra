@@ -4,13 +4,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 
 namespace Algebra {
     ///<summary>ベクトルクラス</summary>
     [DebuggerDisplay("{ToString(),nq}")]
     public partial class Vector : ICloneable, IEnumerable<(int index, ddouble val)> {
         internal readonly ddouble[] v;
-        protected Vector(ddouble[] v, bool cloning) {
+        internal Vector(ddouble[] v, bool cloning) {
             this.v = cloning ? (ddouble[])v.Clone() : v;
         }
 
@@ -91,6 +92,7 @@ namespace Algebra {
         public Matrix Horizontal {
             get {
                 Matrix ret = Matrix.Zero(1, Dim);
+
                 for (int i = 0; i < Dim; i++) {
                     ret.e[0, i] = v[i];
                 }
@@ -104,6 +106,7 @@ namespace Algebra {
         public Matrix Vertical {
             get {
                 Matrix ret = Matrix.Zero(Dim, 1);
+
                 for (int i = 0; i < Dim; i++) {
                     ret.e[i, 0] = v[i];
                 }
@@ -126,20 +129,6 @@ namespace Algebra {
             return (vector1 - vector2).SquareNorm;
         }
 
-        /// <summary>ベクトル内積</summary>
-        public static ddouble InnerProduct(Vector vector1, Vector vector2) {
-            if (vector1.Dim != vector2.Dim) {
-                throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
-            }
-
-            ddouble sum = 0d;
-            for (int i = 0, dim = vector1.Dim; i < dim; i++) {
-                sum += vector1.v[i] * vector2.v[i];
-            }
-
-            return sum;
-        }
-
         /// <summary>ノルム</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ddouble Norm => ddouble.Sqrt(SquareNorm);
@@ -148,12 +137,13 @@ namespace Algebra {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ddouble SquareNorm {
             get {
-                ddouble norm = 0d;
+                ddouble sum_sq = 0d;
+
                 foreach (var vi in v) {
-                    norm += vi * vi;
+                    sum_sq += vi * vi;
                 }
 
-                return norm;
+                return sum_sq;
             }
         }
 
@@ -273,12 +263,7 @@ namespace Algebra {
 
         /// <summary>不正なベクトル</summary>
         public static Vector Invalid(int size) {
-            ddouble[] v = new ddouble[size];
-            for (int i = 0; i < size; i++) {
-                v[i] = ddouble.NaN;
-            }
-
-            return new Vector(v);
+            return Fill(size, value: ddouble.NaN);
         }
 
         /// <summary>ゼロベクトルか判定</summary>
@@ -329,13 +314,13 @@ namespace Algebra {
                 return string.Empty;
             }
 
-            string str = $"{v[0]}";
+            StringBuilder str = new($"{v[0]}");
 
             for (int i = 1; i < Dim; i++) {
-                str += $",{v[i]}";
+                str.Append($",{v[i]}");
             }
 
-            return str;
+            return str.ToString();
         }
 
         public IEnumerator<(int index, ddouble val)> GetEnumerator() {

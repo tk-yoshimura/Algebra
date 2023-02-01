@@ -181,6 +181,18 @@ namespace Algebra.Tests {
         }
 
         [TestMethod()]
+        public void DotTest() {
+            Vector vector1 = new(1, 2);
+            Vector vector2 = new(3, 4);
+            Vector vector3 = new(2, -1);
+
+            Assert.AreEqual(11, Vector.Dot(vector1, vector2));
+            Assert.AreEqual(11, Vector.Dot(vector2, vector1));
+            Assert.AreEqual(0, Vector.Dot(vector1, vector3));
+            Assert.AreEqual(2, Vector.Dot(vector2, vector3));
+        }
+
+        [TestMethod()]
         public void CrossTest() {
             Vector vector1 = new(1, 2, 3);
             Vector vector2 = new(4, -5, -6);
@@ -213,18 +225,6 @@ namespace Algebra.Tests {
 
             Assert.AreEqual(ddouble.Sqrt(2), Vector.Distance(vector1, vector2));
             Assert.AreEqual(2, Vector.SquareDistance(vector1, vector2));
-        }
-
-        [TestMethod()]
-        public void InnerProductTest() {
-            Vector vector1 = new(1, 2);
-            Vector vector2 = new(3, 4);
-            Vector vector3 = new(2, -1);
-
-            Assert.AreEqual(11, Vector.InnerProduct(vector1, vector2));
-            Assert.AreEqual(11, Vector.InnerProduct(vector2, vector1));
-            Assert.AreEqual(0, Vector.InnerProduct(vector1, vector3));
-            Assert.AreEqual(2, Vector.InnerProduct(vector2, vector3));
         }
 
         [TestMethod()]
