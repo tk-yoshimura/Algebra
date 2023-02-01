@@ -181,6 +181,17 @@ namespace Algebra.Tests {
         }
 
         [TestMethod()]
+        public void CrossTest() {
+            Vector vector1 = new(1, 2, 3);
+            Vector vector2 = new(4, -5, -6);
+            Vector vector3 = new(3, 1, 0);
+            Vector vector4 = new(2, 5, 1);
+
+            Assert.AreEqual(Vector.Zero(3), Vector.Cross(vector1, vector2) + Vector.Cross(vector2, vector1));
+            Assert.AreEqual(new Vector(1, -3, 13), Vector.Cross(vector3, vector4));
+        }
+
+        [TestMethod()]
         public void DistanceTest() {
             Vector vector1 = new(1, 2);
             Vector vector2 = new(2, 1);

@@ -1,6 +1,8 @@
 ﻿using DoubleDouble;
 using System;
+using System.Collections.Specialized;
 using System.Linq;
+using System.Runtime.Intrinsics.X86;
 
 namespace Algebra {
     ///<summary>ベクトルクラス</summary>
@@ -146,6 +148,23 @@ namespace Algebra {
         /// <summary>スカラー除算</summary>
         public static Vector operator /(Vector vector, ddouble r) {
             return (1d / r) * vector;
+        }
+
+        /// <summary>クロス積</summary>
+        public static Vector Cross(Vector vector1, Vector vector2) {
+            if (vector1.Dim != 3 || vector1.Dim != 3) {
+                throw new ArgumentException("invalid size", $"{nameof(vector1)},{nameof(vector2)}");
+            }
+
+            ddouble x1 = vector1.X, x2 = vector2.X, y1 = vector1.Y, y2 = vector2.Y, z1 = vector1.Z, z2 = vector2.Z;
+
+            ddouble[] v = new ddouble[] {
+                y1 * z2 - z1 * y2,
+                z1 * x2 - x1 * z2,
+                x1 * y2 - y1 * x2,
+            };
+
+            return new Vector(v, cloning: false);
         }
 
         /// <summary>ベクトルが等しいか</summary>
