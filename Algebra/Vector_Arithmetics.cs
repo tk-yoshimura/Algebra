@@ -1,8 +1,6 @@
 ﻿using DoubleDouble;
 using System;
-using System.Collections.Specialized;
 using System.Linq;
-using System.Runtime.Intrinsics.X86;
 
 namespace Algebra {
     ///<summary>ベクトルクラス</summary>
@@ -165,6 +163,40 @@ namespace Algebra {
             };
 
             return new Vector(v, cloning: false);
+        }
+
+        /// <summary>多項式</summary>
+        public static ddouble Polynomial(ddouble x, Vector coef) {
+            if (coef.Dim < 1) {
+                return 0d;
+            }
+
+            ddouble y = coef[^1];
+
+            for (int i = coef.Dim - 2; i >= 0; i--) {
+                y = coef[i] + x * y;
+            }
+
+            return y;
+        }
+
+        /// <summary>多項式</summary>
+        public static Vector Polynomial(Vector x, Vector coef) {
+            if (coef.Dim < 1) {
+                return Zero(x.Dim);
+            }
+
+            Vector y = Fill(x.Dim, coef[^1]);
+
+            for (int i = coef.Dim - 2; i >= 0; i--) {
+                ddouble c = coef[i];
+
+                for (int j = 0, n = x.Dim; j < n; j++) {
+                    y[j] = c + x[j] * y[j];
+                }
+            }
+
+            return y;
         }
 
         /// <summary>ベクトルが等しいか</summary>

@@ -192,6 +192,21 @@ namespace Algebra.Tests {
         }
 
         [TestMethod()]
+        public void PolynomialTest() {
+            Vector x = new(1, 2, 3, 4);
+            Vector coef = new(5, 7, 11, 13, 17);
+
+            Assert.AreEqual(new Vector(53, 439, 1853, 5393), Vector.Polynomial(x, coef));
+            Assert.AreEqual(13, Vector.Polynomial(-1, coef));
+
+            Assert.AreEqual(new Vector(5, 5, 5, 5), Vector.Polynomial(x, new Vector(5)));
+            Assert.AreEqual(5, Vector.Polynomial(-1, new Vector(5)));
+
+            Assert.AreEqual(new Vector(0, 0, 0, 0), Vector.Polynomial(x, new Vector(new double[0])));
+            Assert.AreEqual(0, Vector.Polynomial(-1, new Vector(new double[0])));
+        }
+
+        [TestMethod()]
         public void DistanceTest() {
             Vector vector1 = new(1, 2);
             Vector vector2 = new(2, 1);
