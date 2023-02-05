@@ -17,7 +17,7 @@
 ```csharp
 // solve for v: Av=x
 Matrix a = new(new double[,] { { 1, 2 }, { 3, 4 } });
-Vector x = new(4, 3);
+Vector x = (4, 3);
 
 Vector v = Matrix.Solve(a, x);
 ```

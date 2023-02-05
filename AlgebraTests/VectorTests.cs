@@ -382,6 +382,61 @@ namespace Algebra.Tests {
         }
 
         [TestMethod()]
+        public void TupleTest() {
+            ddouble x, y, z, w, e0, e1, e2, e3, e4, e5, e6, e7;
+
+            Vector vector2 = (2, 4);
+            (x, y) = vector2;
+            Assert.AreEqual((2, 4), (x, y));
+
+            Vector vector3 = (2, 4, 6);
+            (x, y, z) = vector3;
+            Assert.AreEqual((2, 4, 6), (x, y, z));
+
+            Vector vector4 = (2, 4, 6, 8);
+            (x, y, z, w) = vector4;
+            Assert.AreEqual((2, 4, 6, 8), (x, y, z, w));
+
+            Vector vector5 = (2, 4, 6, 8, 1);
+            (e0, e1, e2, e3, e4) = vector5;
+            Assert.AreEqual((2, 4, 6, 8, 1), (e0, e1, e2, e3, e4));
+
+            Vector vector6 = (2, 4, 6, 8, 1, 3);
+            (e0, e1, e2, e3, e4, e5) = vector6;
+            Assert.AreEqual((2, 4, 6, 8, 1, 3), (e0, e1, e2, e3, e4, e5));
+
+            Vector vector7 = (2, 4, 6, 8, 1, 3, 5);
+            (e0, e1, e2, e3, e4, e5, e6) = vector7;
+            Assert.AreEqual((2, 4, 6, 8, 1, 3, 5), (e0, e1, e2, e3, e4, e5, e6));
+
+            Vector vector8 = (2, 4, 6, 8, 1, 3, 5, 7);
+            (e0, e1, e2, e3, e4, e5, e6, e7) = vector8;
+            Assert.AreEqual((2, 4, 6, 8, 1, 3, 5, 7), (e0, e1, e2, e3, e4, e5, e6, e7));
+
+            Assert.ThrowsException<InvalidOperationException>(() => {
+                (x, y, z) = vector2;
+            });
+            Assert.ThrowsException<InvalidOperationException>(() => {
+                (x, y, z, w) = vector3;
+            });
+            Assert.ThrowsException<InvalidOperationException>(() => {
+                (e0, e1, e2, e3, e4) = vector4;
+            });
+            Assert.ThrowsException<InvalidOperationException>(() => {
+                (e0, e1, e2, e3, e4, e5) = vector5;
+            });
+            Assert.ThrowsException<InvalidOperationException>(() => {
+                (e0, e1, e2, e3, e4, e5, e6) = vector6;
+            });
+            Assert.ThrowsException<InvalidOperationException>(() => {
+                (e0, e1, e2, e3, e4, e5, e6, e7) = vector7;
+            });
+            Assert.ThrowsException<InvalidOperationException>(() => {
+                (e0, e1, e2, e3, e4, e5, e6) = vector8;
+            });
+        }
+
+        [TestMethod()]
         public void CopyTest() {
             Vector vector1 = new(1, 2);
             Vector vector2 = vector1.Copy();
