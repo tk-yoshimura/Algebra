@@ -73,7 +73,26 @@ namespace Algebra {
         }
 
         /// <summary>キャスト</summary>
+        public static explicit operator double[,](Matrix matrix) {
+            ddouble[,] e = matrix.e;
+            double[,] ret = new double[e.GetLength(0), e.GetLength(1)];
+            
+            for (int i = 0; i < e.GetLength(0); i++) {
+                for (int j = 0; j < e.GetLength(1); j++) {
+                    ret[i, j] = (double)e[i, j];
+                }
+            }
+
+            return ret;
+        }
+
+        /// <summary>キャスト</summary>
         public static implicit operator Matrix(ddouble[,] arr) {
+            return new Matrix(arr);
+        }
+
+        /// <summary>キャスト</summary>
+        public static implicit operator Matrix(double[,] arr) {
             return new Matrix(arr);
         }
 
