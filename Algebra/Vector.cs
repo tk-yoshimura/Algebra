@@ -86,7 +86,7 @@ namespace Algebra {
         public static explicit operator double[](Vector vector) {
             ddouble[] v = vector.v;
             double[] ret = new double[v.Length];
-            
+
             for (int i = 0; i < v.Length; i++) {
                 ret[i] = (double)v[i];
             }

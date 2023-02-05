@@ -7,7 +7,7 @@ namespace Algebra.Tests {
     public class MatrixTests {
         [TestMethod()]
         public void MatrixTest() {
-            Matrix matrix1 = new(new double[,] { { 1, 2, 3 }, { 4, 5, 6 } });
+            Matrix matrix1 = new double[,] { { 1, 2, 3 }, { 4, 5, 6 } };
             Matrix matrix2 = Matrix.Zero(3, 2);
 
             Assert.AreEqual(1, matrix1[0, 0]);
@@ -67,7 +67,7 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void RangeIndexerGetterTest() {
-            Matrix matrix = new(new double[,] { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 }, { 11, 12, 13, 14, 15 }, { 16, 17, 18, 19, 20 } });
+            Matrix matrix = new double[,] { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 }, { 11, 12, 13, 14, 15 }, { 16, 17, 18, 19, 20 } };
 
             Assert.AreEqual(new Matrix(new double[,] { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 }, { 11, 12, 13, 14, 15 }, { 16, 17, 18, 19, 20 } }), matrix[.., ..]);
 
@@ -116,7 +116,7 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void RangeIndexerSetterTest() {
-            Matrix matrix_src = new(new double[,] { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 }, { 11, 12, 13, 14, 15 }, { 16, 17, 18, 19, 20 } });
+            Matrix matrix_src = new double[,] { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 }, { 11, 12, 13, 14, 15 }, { 16, 17, 18, 19, 20 } };
             Matrix matrix_dst;
 
             matrix_dst = Matrix.Zero(matrix_src.Rows, matrix_src.Columns);
@@ -234,7 +234,7 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void NormTest() {
-            Matrix matrix = new(new double[,] { { 1, 2 }, { 3, 4 } });
+            Matrix matrix = new double[,] { { 1, 2 }, { 3, 4 } };
 
             Assert.AreEqual(ddouble.Sqrt(30), matrix.Norm);
             Assert.AreEqual(30, matrix.SquareNorm);
@@ -242,14 +242,14 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void SumTest() {
-            Matrix matrix = new(new double[,] { { 1, 2 }, { 3, 4 } });
+            Matrix matrix = new double[,] { { 1, 2 }, { 3, 4 } };
 
             Assert.AreEqual(10, matrix.Sum);
         }
 
         [TestMethod()]
         public void TransposeTest() {
-            Matrix matrix1 = new(new double[,] { { 1, 2, 3 }, { 4, 5, 6 } });
+            Matrix matrix1 = new double[,] { { 1, 2, 3 }, { 4, 5, 6 } };
             Matrix matrix2 = matrix1.Transpose;
             Matrix matrix3 = matrix2.Transpose;
 
@@ -259,12 +259,12 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void InverseTest() {
-            Matrix matrix1 = new(new double[,] { { 1, 2, 3 }, { 4, 5, 6 } });
-            Matrix matrix2 = new(new double[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } });
-            Matrix matrix3 = new(new double[,] { { 1, 2 }, { 3, 4 } });
-            Matrix matrix4 = new(new double[,] { { 0, 1 }, { 0, 0 } });
-            Matrix matrix5 = new(new double[,] { { 2, 1, 1, 2 }, { 4, 2, 3, 1 }, { -2, -2, 0, -1 }, { 1, 1, 2, 6 } });
-            Matrix matrix6 = new(new double[,] {
+            Matrix matrix1 = new double[,] { { 1, 2, 3 }, { 4, 5, 6 } };
+            Matrix matrix2 = new double[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
+            Matrix matrix3 = new double[,] { { 1, 2 }, { 3, 4 } };
+            Matrix matrix4 = new double[,] { { 0, 1 }, { 0, 0 } };
+            Matrix matrix5 = new double[,] { { 2, 1, 1, 2 }, { 4, 2, 3, 1 }, { -2, -2, 0, -1 }, { 1, 1, 2, 6 } };
+            Matrix matrix6 = new double[,] {
                 { 1, 0, 0, 0, 1, 0, 0, 0 },
                 { 0, 1, 0, 0, 1, 1, 0, 0 },
                 { 0, 0, 1, 0, 2, 1, 1, 0 },
@@ -273,7 +273,7 @@ namespace Algebra.Tests {
                 { 0, 0, 0, 0, 7, 5, 4, 2 },
                 { 0, 0, 0, 0, 6, 7, 5, 4 },
                 { 0, 0, 0, 0, 8, 6, 7, 5 },
-            });
+            };
 
             Assert.AreEqual(matrix1.Rows, matrix1.Transpose.Columns);
             Assert.AreEqual(matrix1.Columns, matrix1.Transpose.Rows);
@@ -320,11 +320,11 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void SolveTest() {
-            Matrix matrix1 = new(new double[,] { { 1, 2 }, { 3, 4 } });
-            Matrix matrix2 = new(new double[,] { { 0, 1 }, { 0, 0 } });
-            Matrix matrix3 = new(new double[,] { { 1, 2, -3 }, { 2, -1, 3 }, { -3, 2, 1 } });
-            Matrix matrix4 = new(new double[,] { { 2, 1, 1, 2 }, { 4, 2, 3, 1 }, { -2, -2, 0, -1 }, { 1, 1, 2, 6 } });
-            Matrix matrix5 = new(new double[,] {
+            Matrix matrix1 = new double[,] { { 1, 2 }, { 3, 4 } };
+            Matrix matrix2 = new double[,] { { 0, 1 }, { 0, 0 } };
+            Matrix matrix3 = new double[,] { { 1, 2, -3 }, { 2, -1, 3 }, { -3, 2, 1 } };
+            Matrix matrix4 = new double[,] { { 2, 1, 1, 2 }, { 4, 2, 3, 1 }, { -2, -2, 0, -1 }, { 1, 1, 2, 6 } };
+            Matrix matrix5 = new double[,] {
                 { 1, 0, 0, 0, 1, 0, 0, 0 },
                 { 0, 1, 0, 0, 1, 1, 0, 0 },
                 { 0, 0, 1, 0, 2, 1, 1, 0 },
@@ -333,7 +333,7 @@ namespace Algebra.Tests {
                 { 0, 0, 0, 0, 7, 5, 4, 2 },
                 { 0, 0, 0, 0, 6, 7, 5, 4 },
                 { 0, 0, 0, 0, 8, 6, 7, 5 },
-            });
+            };
 
             Vector vector1 = new(4, 3);
             Vector vector2 = new(3, 1);
@@ -368,7 +368,7 @@ namespace Algebra.Tests {
 
             Assert.AreEqual(new Matrix(new double[,] { { 1, 2, 3 } }), vector.Horizontal);
 
-            Matrix matrix = new(new double[,] { { 1, 2, 3 }, { 4, 5, 6 } });
+            Matrix matrix = new double[,] { { 1, 2, 3 }, { 4, 5, 6 } };
 
             Assert.AreEqual(new Vector(1, 2, 3), matrix.Horizontal(0));
             Assert.AreEqual(new Vector(4, 5, 6), matrix.Horizontal(1));
@@ -380,7 +380,7 @@ namespace Algebra.Tests {
 
             Assert.AreEqual(new Matrix(new double[,] { { 1 }, { 2 }, { 3 } }), vector.Vertical);
 
-            Matrix matrix = new(new double[,] { { 1, 2, 3 }, { 4, 5, 6 } });
+            Matrix matrix = new double[,] { { 1, 2, 3 }, { 4, 5, 6 } };
 
             Assert.AreEqual(new Vector(1, 4), matrix.Vertical(0));
             Assert.AreEqual(new Vector(2, 5), matrix.Vertical(1));
@@ -389,9 +389,9 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void OperatorTest() {
-            Matrix matrix1 = new(new double[,] { { 1, 2, 3 }, { 4, 5, 6 } });
-            Matrix matrix2 = new(new double[,] { { 7, 8, 9 }, { 1, 2, 3 } });
-            Matrix matrix3 = new(new double[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } });
+            Matrix matrix1 = new double[,] { { 1, 2, 3 }, { 4, 5, 6 } };
+            Matrix matrix2 = new double[,] { { 7, 8, 9 }, { 1, 2, 3 } };
+            Matrix matrix3 = new double[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
             Vector vector1 = new(5, 4, 3);
             Vector vector2 = new(5, 4);
 
@@ -429,7 +429,7 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void OperatorEqualTest() {
-            Matrix matrix = new(new double[,] { { 1, 2, 3 }, { 4, 5, 6 } });
+            Matrix matrix = new double[,] { { 1, 2, 3 }, { 4, 5, 6 } };
 
             Assert.IsTrue(matrix == new Matrix(new double[,] { { 1, 2, 3 }, { 4, 5, 6 } }));
             Assert.IsTrue(matrix != new Matrix(new double[,] { { 1, 2, 3 }, { 4, 5, 7 } }));
@@ -443,7 +443,7 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void EqualsTest() {
-            Matrix matrix = new(new double[,] { { 1, 2, 3 }, { 4, 5, 6 } });
+            Matrix matrix = new double[,] { { 1, 2, 3 }, { 4, 5, 6 } };
 
             Assert.IsTrue(matrix.Equals(new Matrix(new double[,] { { 1, 2, 3 }, { 4, 5, 6 } })));
             Assert.IsFalse(matrix.Equals(new Matrix(new double[,] { { 1, 2, 3 }, { 4, 5, 7 } })));
@@ -512,10 +512,10 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void IsDiagonalTest() {
-            Matrix matrix1 = new(new double[,] { { 1, 0 }, { 0, 2 } });
-            Matrix matrix2 = new(new double[,] { { 1, 1 }, { 0, 2 } });
-            Matrix matrix3 = new(new double[,] { { 1, 0, 0 }, { 0, 2, 0 } });
-            Matrix matrix4 = new(new double[,] { { 1, 0 }, { 0, 2 }, { 0, 0 } });
+            Matrix matrix1 = new double[,] { { 1, 0 }, { 0, 2 } };
+            Matrix matrix2 = new double[,] { { 1, 1 }, { 0, 2 } };
+            Matrix matrix3 = new double[,] { { 1, 0, 0 }, { 0, 2, 0 } };
+            Matrix matrix4 = new double[,] { { 1, 0 }, { 0, 2 }, { 0, 0 } };
 
             Assert.IsTrue(Matrix.IsDiagonal(matrix1));
             Assert.IsFalse(Matrix.IsDiagonal(matrix2));
@@ -547,8 +547,8 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void IsSymmetricTest() {
-            Matrix matrix1 = new(new double[,] { { 1, 2 }, { 2, 3 } });
-            Matrix matrix2 = new(new double[,] { { 1, 2 }, { 3, 3 } });
+            Matrix matrix1 = new double[,] { { 1, 2 }, { 2, 3 } };
+            Matrix matrix2 = new double[,] { { 1, 2 }, { 3, 3 } };
 
             Assert.IsTrue(Matrix.IsSymmetric(matrix1));
             Assert.IsFalse(Matrix.IsSymmetric(matrix2));
@@ -562,10 +562,10 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void IsRegularTest() {
-            Matrix matrix1 = new(new double[,] { { 1, 2, 3 }, { 4, 5, 6 } });
-            Matrix matrix2 = new(new double[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } });
-            Matrix matrix3 = new(new double[,] { { 1, 2 }, { 3, 4 } });
-            Matrix matrix4 = new(new double[,] { { 0, 1 }, { 0, 0 } });
+            Matrix matrix1 = new double[,] { { 1, 2, 3 }, { 4, 5, 6 } };
+            Matrix matrix2 = new double[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
+            Matrix matrix3 = new double[,] { { 1, 2 }, { 3, 4 } };
+            Matrix matrix4 = new double[,] { { 0, 1 }, { 0, 0 } };
 
             Assert.IsTrue(Matrix.IsRegular(matrix1));
             Assert.IsTrue(Matrix.IsRegular(matrix2));
@@ -577,7 +577,7 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void DiagonalsTest() {
-            Matrix matrix = new(new double[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } });
+            Matrix matrix = new double[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
 
             ddouble[] diagonals = matrix.Diagonals;
 
@@ -588,7 +588,7 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void LUDecomposeTest() {
-            Matrix matrix = new(new double[,] { { 2, 3, 1, 2 }, { 4, 1, 3, -2 }, { 2, 2, -3, 1 }, { 1, -3, 2, 4 } });
+            Matrix matrix = new double[,] { { 2, 3, 1, 2 }, { 4, 1, 3, -2 }, { 2, 2, -3, 1 }, { 1, -3, 2, 4 } };
 
             (Matrix lower, Matrix upper) = matrix.LUDecompose();
 
@@ -603,7 +603,7 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void QRDecomposeTest() {
-            Matrix matrix = new(new double[,] { { 12, -51, 4 }, { 6, 167, -68 }, { -4, 24, -41 } });
+            Matrix matrix = new double[,] { { 12, -51, 4 }, { 6, 167, -68 }, { -4, 24, -41 } };
 
             (Matrix q, Matrix r) = matrix.QRDecompose();
 
@@ -615,7 +615,7 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void CalculateEigenValuesTest() {
-            Matrix matrix = new(new double[,] { { 1, 2 }, { 4, 5 } });
+            Matrix matrix = new double[,] { { 1, 2 }, { 4, 5 } };
             ddouble[] eigen_values = matrix.CalculateEigenValues();
 
             Assert.AreEqual(new Matrix(new double[,] { { 1, 2 }, { 4, 5 } }), matrix);
@@ -626,7 +626,7 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void CalculateEigenVectorTest() {
-            Matrix matrix = new(new double[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 8, 7, 9 } });
+            Matrix matrix = new double[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 8, 7, 9 } };
 
             (ddouble[] eigen_values, Vector[] eigen_vectors) = matrix.CalculateEigenValueVectors();
 
@@ -642,8 +642,8 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void DetTest() {
-            Matrix matrix1 = new(new double[,] { { 1, 2 }, { 3, 4 } });
-            Matrix matrix2 = new(new double[,] { { 1, 2 }, { 2, 4 } });
+            Matrix matrix1 = new double[,] { { 1, 2 }, { 3, 4 } };
+            Matrix matrix2 = new double[,] { { 1, 2 }, { 2, 4 } };
 
             Assert.AreEqual(-2, matrix1.Det);
             Assert.AreEqual(0, matrix2.Det);
@@ -651,8 +651,8 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void TraceTest() {
-            Matrix matrix1 = new(new double[,] { { 1, 2 }, { 3, 4 } });
-            Matrix matrix2 = new(new double[,] { { 1, 2 }, { 2, 4 } });
+            Matrix matrix1 = new double[,] { { 1, 2 }, { 3, 4 } };
+            Matrix matrix2 = new double[,] { { 1, 2 }, { 2, 4 } };
 
             Assert.AreEqual(-1, matrix1.Trace);
             Assert.AreEqual(1, matrix2.Trace);
@@ -660,11 +660,11 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void FuncTest() {
-            Matrix matrix1 = new(new double[,] { { 1, 2, 4 }, { 8, 16, 32 } });
-            Matrix matrix2 = new(new double[,] { { 2, 3, 5 }, { 9, 17, 33 } });
-            Matrix matrix3 = new(new double[,] { { 3, 4, 6 }, { 10, 18, 34 } });
-            Matrix matrix4 = new(new double[,] { { 4, 5, 7 }, { 11, 19, 35 } });
-            Matrix matrix5 = new(new double[,] { { 5, 6, 8 }, { 12, 20, 36 }, { 2, 1, 0 } });
+            Matrix matrix1 = new double[,] { { 1, 2, 4 }, { 8, 16, 32 } };
+            Matrix matrix2 = new double[,] { { 2, 3, 5 }, { 9, 17, 33 } };
+            Matrix matrix3 = new double[,] { { 3, 4, 6 }, { 10, 18, 34 } };
+            Matrix matrix4 = new double[,] { { 4, 5, 7 }, { 11, 19, 35 } };
+            Matrix matrix5 = new double[,] { { 5, 6, 8 }, { 12, 20, 36 }, { 2, 1, 0 } };
 
             Assert.AreEqual(new Matrix(new double[,] { { 2, 4, 8 }, { 16, 32, 64 } }), Matrix.Func(matrix1, v => 2 * v));
             Assert.AreEqual(new Matrix(new double[,] { { 5, 8, 14 }, { 26, 50, 98 } }), Matrix.Func(matrix1, matrix2, (v1, v2) => v1 + 2 * v2));
@@ -852,9 +852,9 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void ToStringTest() {
-            Matrix matrix1 = new(new double[,] { { 1, 2, 3 }, { 4, 5, 6 } });
-            Matrix matrix2 = new(new double[,] { { 1, 2, 3 } });
-            Matrix matrix3 = new(new double[,] { { 1 }, { 2 }, { 3 } });
+            Matrix matrix1 = new double[,] { { 1, 2, 3 }, { 4, 5, 6 } };
+            Matrix matrix2 = new double[,] { { 1, 2, 3 } };
+            Matrix matrix3 = new double[,] { { 1 }, { 2 }, { 3 } };
             Matrix matrix4 = Matrix.Invalid(2, 2);
 
             Assert.AreEqual("[ [ 1, 2, 3 ], [ 4, 5, 6 ] ]", matrix1.ToString());
