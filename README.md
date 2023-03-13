@@ -9,8 +9,6 @@
 [Download Nuget](https://www.nuget.org/packages/tyoshimura.algebra/)  
 
 - Import DoubleDouble(https://github.com/tk-yoshimura/DoubleDouble)
-- To install, just import the DLL.
-- This library does not change the environment at all.
 
 ## Usage
 
