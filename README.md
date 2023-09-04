@@ -2,7 +2,7 @@
  Linear Algebra
 
 ## Requirement
- .NET 6.0
+ .NET 7.0
  
 ## Install
 [Download DLL](https://github.com/tk-yoshimura/Algebra/releases)  

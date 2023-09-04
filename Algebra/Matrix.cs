@@ -3,12 +3,21 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Numerics;
 using System.Text;
 
 namespace Algebra {
     /// <summary>行列クラス</summary>
     [DebuggerDisplay("{ToString(),nq}")]
-    public partial class Matrix : ICloneable, IEnumerable<(int row_index, int column_index, ddouble val)> {
+    public partial class Matrix : 
+        ICloneable, 
+        IEnumerable<(int row_index, int column_index, ddouble val)>,
+        IAdditionOperators<Matrix, Matrix, Matrix>,
+        ISubtractionOperators<Matrix, Matrix, Matrix>,
+        IMultiplyOperators<Matrix, Matrix, Matrix>,
+        IUnaryPlusOperators<Matrix, Matrix>,
+        IUnaryNegationOperators<Matrix, Matrix>{
+        
         internal readonly ddouble[,] e;
 
         /// <summary>コンストラクタ</summary>

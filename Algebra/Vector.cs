@@ -4,12 +4,22 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 
 namespace Algebra {
     ///<summary>ベクトルクラス</summary>
     [DebuggerDisplay("{ToString(),nq}")]
-    public partial class Vector : ICloneable, IEnumerable<(int index, ddouble val)> {
+    public partial class Vector : 
+        ICloneable, 
+        IEnumerable<(int index, ddouble val)>, 
+        IAdditionOperators<Vector, Vector, Vector>,
+        ISubtractionOperators<Vector, Vector, Vector>,
+        IMultiplyOperators<Vector, Vector, Vector>,
+        IDivisionOperators<Vector, Vector, Vector>,
+        IUnaryPlusOperators<Vector, Vector>,
+        IUnaryNegationOperators<Vector, Vector> {        
+        
         internal readonly ddouble[] v;
         internal Vector(ddouble[] v, bool cloning) {
             this.v = cloning ? (ddouble[])v.Clone() : v;
