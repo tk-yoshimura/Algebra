@@ -2,13 +2,12 @@
  Linear Algebra
 
 ## Requirement
- .NET 7.0
- 
+.NET 8.0  
+[DoubleDouble](https://github.com/tk-yoshimura/DoubleDouble)
+
 ## Install
 [Download DLL](https://github.com/tk-yoshimura/Algebra/releases)  
 [Download Nuget](https://www.nuget.org/packages/tyoshimura.algebra/)  
-
-- Import DoubleDouble(https://github.com/tk-yoshimura/DoubleDouble)
 
 ## Usage
 
