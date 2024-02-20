@@ -1,5 +1,6 @@
 ﻿using DoubleDouble;
 using System;
+using System.Linq;
 
 namespace Algebra {
     ///<summary>行列クラス</summary>
@@ -87,6 +88,48 @@ namespace Algebra {
                         m[row_ranges[i].start, column_ranges[j].start] = vs;
                     }
                 }
+            }
+
+            return m;
+        }
+
+        /// <summary>Row方向に結合</summary>
+        public static Matrix VConcat(params Vector[] vectors) {
+            if (vectors.Length < 1) {
+                throw new ArgumentException("empty array", nameof(vectors));
+            }
+
+            int colomns = vectors[0].Dim;
+
+            if (vectors.Any(v => v.Dim != colomns)) {
+                throw new ArgumentException("mismatch size", nameof(vectors));
+            }
+
+            Matrix m = new(vectors.Length, colomns);
+
+            for (int i = 0; i < vectors.Length; i++) {
+                m[i, ..] = vectors[i];
+            }
+
+            return m;
+        }
+
+        /// <summary>Colomn方向に結合</summary>
+        public static Matrix HConcat(params Vector[] vectors) {
+            if (vectors.Length < 1) {
+                throw new ArgumentException("empty array", nameof(vectors));
+            }
+
+            int rows = vectors[0].Dim;
+
+            if (vectors.Any(v => v.Dim != rows)) {
+                throw new ArgumentException("mismatch size", nameof(vectors));
+            }
+
+            Matrix m = new(rows, vectors.Length);
+
+            for (int i = 0; i < vectors.Length; i++) {
+                m[.., i] = vectors[i];
             }
 
             return m;

@@ -7,7 +7,7 @@ namespace Algebra {
     public partial class Vector {
         /// <summary>結合</summary>
         public static Vector Concat(params object[] blocks) {
-            List<ddouble> v = new();
+            List<ddouble> v = [];
 
             foreach (object obj in blocks) {
                 if (obj is Vector vector) {

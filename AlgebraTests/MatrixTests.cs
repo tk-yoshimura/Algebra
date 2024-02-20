@@ -840,6 +840,50 @@ namespace Algebra.Tests {
         }
 
         [TestMethod()]
+        public void VConcatTest() {
+            Matrix matrix = Matrix.VConcat(
+                Vector.Fill(3, 1),
+                Vector.Fill(3, 2),
+                Vector.Fill(3, 3),
+                Vector.Fill(3, 4),
+                Vector.Fill(3, 5)
+            );
+
+            Matrix matrix_expected = new double[5, 3] {
+                { 1, 1, 1 },
+                { 2, 2, 2 },
+                { 3, 3, 3 },
+                { 4, 4, 4 },
+                { 5, 5, 5 },
+            };
+
+            Console.WriteLine(matrix);
+
+            Assert.AreEqual(matrix_expected, matrix);
+        }
+
+        [TestMethod()]
+        public void HConcatTest() {
+            Matrix matrix = Matrix.HConcat(
+                Vector.Fill(3, 1),
+                Vector.Fill(3, 2),
+                Vector.Fill(3, 3),
+                Vector.Fill(3, 4),
+                Vector.Fill(3, 5)
+            );
+
+            Matrix matrix_expected = new double[3, 5] {
+                { 1, 2, 3, 4, 5 },
+                { 1, 2, 3, 4, 5 },
+                { 1, 2, 3, 4, 5 }
+            };
+
+            Console.WriteLine(matrix);
+
+            Assert.AreEqual(matrix_expected, matrix);
+        }
+
+        [TestMethod()]
         public void CopyTest() {
             Matrix matrix1 = Matrix.Zero(2, 2);
             Matrix matrix2 = matrix1.Copy();

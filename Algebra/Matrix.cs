@@ -9,15 +9,15 @@ using System.Text;
 namespace Algebra {
     /// <summary>行列クラス</summary>
     [DebuggerDisplay("{ToString(),nq}")]
-    public partial class Matrix : 
-        ICloneable, 
+    public partial class Matrix :
+        ICloneable,
         IEnumerable<(int row_index, int column_index, ddouble val)>,
         IAdditionOperators<Matrix, Matrix, Matrix>,
         ISubtractionOperators<Matrix, Matrix, Matrix>,
         IMultiplyOperators<Matrix, Matrix, Matrix>,
         IUnaryPlusOperators<Matrix, Matrix>,
-        IUnaryNegationOperators<Matrix, Matrix>{
-        
+        IUnaryNegationOperators<Matrix, Matrix> {
+
         internal readonly ddouble[,] e;
 
         /// <summary>コンストラクタ</summary>
@@ -40,9 +40,7 @@ namespace Algebra {
         /// <summary>コンストラクタ</summary>
         /// <param name="m">行列要素配列</param>
         public Matrix(double[,] m) : this(m.GetLength(0), m.GetLength(1)) {
-            if (m is null) {
-                throw new ArgumentNullException(nameof(m));
-            }
+            ArgumentNullException.ThrowIfNull(m, nameof(m));
 
             for (int i = 0; i < Rows; i++) {
                 for (int j = 0; j < Columns; j++) {
