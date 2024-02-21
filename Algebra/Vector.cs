@@ -47,7 +47,7 @@ namespace Algebra {
 
         /// <summary>コンストラクタ</summary>
         public Vector(IReadOnlyCollection<ddouble> v) {
-            this.v = v.ToArray();
+            this.v = [.. v];
         }
 
         /// <summary>コンストラクタ</summary>
@@ -233,7 +233,7 @@ namespace Algebra {
         }
 
         /// <summary>射影</summary>
-        public static Vector Func(Vector vector, Func<ddouble, ddouble> f) {
+        public static Vector Func(Func<ddouble, ddouble> f, Vector vector) {
             ddouble[] x = vector.v, v = new ddouble[vector.Dim];
 
             for (int i = 0; i < v.Length; i++) {
@@ -244,7 +244,7 @@ namespace Algebra {
         }
 
         /// <summary>射影</summary>
-        public static Vector Func(Vector vector1, Vector vector2, Func<ddouble, ddouble, ddouble> f) {
+        public static Vector Func(Func<ddouble, ddouble, ddouble> f, Vector vector1, Vector vector2) {
             if (vector1.Dim != vector2.Dim) {
                 throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
             }
@@ -259,7 +259,7 @@ namespace Algebra {
         }
 
         /// <summary>射影</summary>
-        public static Vector Func(Vector vector1, Vector vector2, Vector vector3, Func<ddouble, ddouble, ddouble, ddouble> f) {
+        public static Vector Func(Func<ddouble, ddouble, ddouble, ddouble> f, Vector vector1, Vector vector2, Vector vector3) {
             if (vector1.Dim != vector2.Dim || vector1.Dim != vector3.Dim) {
                 throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)},{nameof(vector3)}");
             }
@@ -274,7 +274,7 @@ namespace Algebra {
         }
 
         /// <summary>射影</summary>
-        public static Vector Func(Vector vector1, Vector vector2, Vector vector3, Vector vector4, Func<ddouble, ddouble, ddouble, ddouble, ddouble> f) {
+        public static Vector Func(Func<ddouble, ddouble, ddouble, ddouble, ddouble> f, Vector vector1, Vector vector2, Vector vector3, Vector vector4) {
             if (vector1.Dim != vector2.Dim || vector1.Dim != vector3.Dim || vector1.Dim != vector4.Dim) {
                 throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)},{nameof(vector3)},{nameof(vector4)}");
             }

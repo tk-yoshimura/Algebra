@@ -214,8 +214,8 @@ namespace Algebra.Tests {
             Assert.AreEqual(new Vector(5, 5, 5, 5), Vector.Polynomial(x, new Vector(5)));
             Assert.AreEqual(5, Vector.Polynomial(-1, new Vector(5)));
 
-            Assert.AreEqual(new Vector(0, 0, 0, 0), Vector.Polynomial(x, new Vector(new double[0])));
-            Assert.AreEqual(0, Vector.Polynomial(-1, new Vector(new double[0])));
+            Assert.AreEqual(new Vector(0, 0, 0, 0), Vector.Polynomial(x, new Vector(Array.Empty<double>())));
+            Assert.AreEqual(0, Vector.Polynomial(-1, new Vector(Array.Empty<double>())));
         }
 
         [TestMethod()]
@@ -318,46 +318,46 @@ namespace Algebra.Tests {
             Vector vector4 = new(4, 5, 7, 11);
             Vector vector5 = new(5, 6, 8, 12, 20);
 
-            Assert.AreEqual(new Vector(2, 4, 8, 16), Vector.Func(vector1, v => 2 * v));
-            Assert.AreEqual(new Vector(5, 8, 14, 26), Vector.Func(vector1, vector2, (v1, v2) => v1 + 2 * v2));
-            Assert.AreEqual(new Vector(17, 24, 38, 66), Vector.Func(vector1, vector2, vector3, (v1, v2, v3) => v1 + 2 * v2 + 4 * v3));
-            Assert.AreEqual(new Vector(49, 64, 94, 154), Vector.Func(vector1, vector2, vector3, vector4, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4));
-            Assert.AreEqual(new Vector(49, 64, 94, 154), Vector.Func(vector1, vector2, vector3, vector4, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4));
+            Assert.AreEqual(new Vector(2, 4, 8, 16), Vector.Func(v => 2 * v, vector1));
+            Assert.AreEqual(new Vector(5, 8, 14, 26), Vector.Func((v1, v2) => v1 + 2 * v2, vector1, vector2));
+            Assert.AreEqual(new Vector(17, 24, 38, 66), Vector.Func((v1, v2, v3) => v1 + 2 * v2 + 4 * v3, vector1, vector2, vector3));
+            Assert.AreEqual(new Vector(49, 64, 94, 154), Vector.Func((v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4, vector1, vector2, vector3, vector4));
+            Assert.AreEqual(new Vector(49, 64, 94, 154), Vector.Func((v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4, vector1, vector2, vector3, vector4));
 
             Assert.ThrowsException<ArgumentException>(() => {
-                Vector.Func(vector1, vector5, (v1, v2) => v1 + 2 * v2);
+                Vector.Func((v1, v2) => v1 + 2 * v2, vector1, vector5);
             });
 
             Assert.ThrowsException<ArgumentException>(() => {
-                Vector.Func(vector5, vector1, (v1, v2) => v1 + 2 * v2);
+                Vector.Func((v1, v2) => v1 + 2 * v2, vector5, vector1);
             });
 
             Assert.ThrowsException<ArgumentException>(() => {
-                Vector.Func(vector1, vector2, vector5, (v1, v2, v3) => v1 + 2 * v2 + 4 * v3);
+                Vector.Func((v1, v2, v3) => v1 + 2 * v2 + 4 * v3, vector1, vector2, vector5);
             });
 
             Assert.ThrowsException<ArgumentException>(() => {
-                Vector.Func(vector1, vector5, vector2, (v1, v2, v3) => v1 + 2 * v2 + 4 * v3);
+                Vector.Func((v1, v2, v3) => v1 + 2 * v2 + 4 * v3, vector1, vector5, vector2);
             });
 
             Assert.ThrowsException<ArgumentException>(() => {
-                Vector.Func(vector5, vector1, vector2, (v1, v2, v3) => v1 + 2 * v2 + 4 * v3);
+                Vector.Func((v1, v2, v3) => v1 + 2 * v2 + 4 * v3, vector5, vector1, vector2);
             });
 
             Assert.ThrowsException<ArgumentException>(() => {
-                Vector.Func(vector1, vector2, vector3, vector5, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4);
+                Vector.Func((v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4, vector1, vector2, vector3, vector5);
             });
 
             Assert.ThrowsException<ArgumentException>(() => {
-                Vector.Func(vector1, vector2, vector5, vector3, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4);
+                Vector.Func((v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4, vector1, vector2, vector5, vector3);
             });
 
             Assert.ThrowsException<ArgumentException>(() => {
-                Vector.Func(vector1, vector5, vector2, vector3, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4);
+                Vector.Func((v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4, vector1, vector5, vector2, vector3);
             });
 
             Assert.ThrowsException<ArgumentException>(() => {
-                Vector.Func(vector5, vector1, vector2, vector3, (v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4);
+                Vector.Func((v1, v2, v3, v4) => v1 + 2 * v2 + 4 * v3 + 8 * v4, vector5, vector1, vector2, vector3);
             });
         }
 
@@ -437,6 +437,97 @@ namespace Algebra.Tests {
         }
 
         [TestMethod()]
+        public void MeshGridTest() {
+            Vector x = new double[] { 1, 2, 3 };
+            Vector y = new double[] { 4, 5, 6, 7 };
+            Vector z = new double[] { 8, 9, 10, 11, 12 };
+            Vector w = new double[] { 13, 14 };
+
+            Assert.AreEqual((
+                new Vector(1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3),
+                new Vector(4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7)
+                ),
+                Vector.MeshGrid(x, y)
+            );
+
+            Assert.AreEqual((
+                new Vector(
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3),
+                new Vector(
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7),
+                new Vector(
+                    8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+                    9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
+                    10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
+                    11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11,
+                    12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12)
+                ),
+                Vector.MeshGrid(x, y, z)
+            );
+
+            Assert.AreEqual((
+                new Vector(
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
+                    1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3
+                ),
+                new Vector(
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+                    4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7
+                ),
+                new Vector(
+                    8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+                    9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
+                    10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
+                    11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11,
+                    12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
+                    8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+                    9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
+                    10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
+                    11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11,
+                    12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12
+                ),
+                new Vector(
+                    13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
+                    13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
+                    13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
+                    13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
+                    13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
+
+                    14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14,
+                    14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14,
+                    14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14,
+                    14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14,
+                    14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14)
+                ),
+                Vector.MeshGrid(x, y, z, w)
+            );
+        }
+
+        [TestMethod()]
         public void CopyTest() {
             Vector vector1 = new(1, 2);
             Vector vector2 = vector1.Copy();
@@ -452,7 +543,7 @@ namespace Algebra.Tests {
         [TestMethod()]
         public void ToStringTest() {
             Vector vector1 = new(1, 2, 3);
-            Vector vector2 = new(new double[0]);
+            Vector vector2 = new(Array.Empty<double>());
             Vector vector3 = new(1d);
 
             Assert.AreEqual("1,2,3", vector1.ToString());

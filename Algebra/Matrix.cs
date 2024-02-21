@@ -270,7 +270,7 @@ namespace Algebra {
         }
 
         /// <summary>射影</summary>
-        public static Matrix Func(Matrix matrix, Func<ddouble, ddouble> f) {
+        public static Matrix Func(Func<ddouble, ddouble> f, Matrix matrix) {
             ddouble[,] x = matrix.e, v = new ddouble[matrix.Rows, matrix.Columns];
 
             for (int i = 0; i < v.GetLength(0); i++) {
@@ -283,7 +283,7 @@ namespace Algebra {
         }
 
         /// <summary>射影</summary>
-        public static Matrix Func(Matrix matrix1, Matrix matrix2, Func<ddouble, ddouble, ddouble> f) {
+        public static Matrix Func(Func<ddouble, ddouble, ddouble> f, Matrix matrix1, Matrix matrix2) {
             if (matrix1.Shape != matrix2.Shape) {
                 throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)}");
             }
@@ -300,7 +300,7 @@ namespace Algebra {
         }
 
         /// <summary>射影</summary>
-        public static Matrix Func(Matrix matrix1, Matrix matrix2, Matrix matrix3, Func<ddouble, ddouble, ddouble, ddouble> f) {
+        public static Matrix Func(Func<ddouble, ddouble, ddouble, ddouble> f, Matrix matrix1, Matrix matrix2, Matrix matrix3) {
             if (matrix1.Shape != matrix2.Shape || matrix1.Shape != matrix3.Shape) {
                 throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)},{nameof(matrix3)}");
             }
@@ -316,9 +316,8 @@ namespace Algebra {
             return new Matrix(v, cloning: false);
         }
 
-
         /// <summary>射影</summary>
-        public static Matrix Func(Matrix matrix1, Matrix matrix2, Matrix matrix3, Matrix matrix4, Func<ddouble, ddouble, ddouble, ddouble, ddouble> f) {
+        public static Matrix Func(Func<ddouble, ddouble, ddouble, ddouble, ddouble> f, Matrix matrix1, Matrix matrix2, Matrix matrix3, Matrix matrix4) {
             if (matrix1.Shape != matrix2.Shape || matrix1.Shape != matrix3.Shape || matrix1.Shape != matrix4.Shape) {
                 throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)},{nameof(matrix3)},{nameof(matrix4)}");
             }
