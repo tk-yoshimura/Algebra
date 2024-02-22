@@ -710,6 +710,16 @@ namespace Algebra.Tests {
         }
 
         [TestMethod()]
+        public void MapTest() {
+            Vector vector1 = new(1, 2, 4, 8);
+            Vector vector2 = new(2, 3, 5);
+
+            Matrix m = ((v1, v2) => v1 + v2, vector1, vector2);
+            
+            Assert.AreEqual(new Matrix(new double[,] { { 3, 4, 6 }, { 4, 5, 7 }, { 6, 7, 9 }, { 10, 11, 13 } }), m);
+        }
+
+        [TestMethod()]
         public void ConcatTest() {
             Matrix matrix3x2 = Matrix.Fill(3, 2, value: 2);
             Matrix matrix3x4 = Matrix.Fill(3, 4, value: 3);

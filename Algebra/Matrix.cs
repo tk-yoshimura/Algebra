@@ -123,6 +123,11 @@ namespace Algebra {
             return Func(sel.func, sel.args.matrix1, sel.args.matrix2, sel.args.matrix3, sel.args.matrix4);
         }
 
+        /// <summary>写像キャスト</summary>
+        public static implicit operator Matrix((Func<ddouble, ddouble, ddouble> func, Vector vector_row, Vector vector_column) sel) {
+            return Map(sel.func, sel.vector_row, sel.vector_column);
+        }
+
         /// <summary>転置</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Matrix Transpose {
@@ -347,6 +352,20 @@ namespace Algebra {
             for (int i = 0; i < v.GetLength(0); i++) {
                 for (int j = 0; j < v.GetLength(1); j++) {
                     v[i, j] = f(x[i, j], y[i, j], z[i, j], w[i, j]);
+                }
+            }
+
+            return new Matrix(v, cloning: false);
+        }
+
+        /// <summary>写像</summary>
+        public static Matrix Map(Func<ddouble, ddouble, ddouble> f, Vector vector_row, Vector vector_column) {
+            ddouble[] row = vector_row.v, col = vector_column.v;
+            ddouble[,] v = new ddouble[row.Length, col.Length];
+
+            for (int i = 0; i < v.GetLength(0); i++) {
+                for (int j = 0; j < v.GetLength(1); j++) {
+                    v[i, j] = f(row[i], col[j]);
                 }
             }
 
