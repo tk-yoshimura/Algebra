@@ -715,7 +715,7 @@ namespace Algebra.Tests {
             Vector vector2 = new(2, 3, 5);
 
             Matrix m = ((v1, v2) => v1 + v2, vector1, vector2);
-            
+
             Assert.AreEqual(new Matrix(new double[,] { { 3, 4, 6 }, { 4, 5, 7 }, { 6, 7, 9 }, { 10, 11, 13 } }), m);
         }
 
