@@ -114,6 +114,26 @@ namespace Algebra {
             return new Vector(arr);
         }
 
+        /// <summary>写像キャスト</summary>
+        public static implicit operator Vector((Func<ddouble, ddouble> func, Vector arg) sel) {
+            return Func(sel.func, sel.arg);
+        }
+
+        /// <summary>写像キャスト</summary>
+        public static implicit operator Vector((Func<ddouble, ddouble, ddouble> func, (Vector vector1, Vector vector2) args) sel) {
+            return Func(sel.func, sel.args.vector1, sel.args.vector2);
+        }
+
+        /// <summary>写像キャスト</summary>
+        public static implicit operator Vector((Func<ddouble, ddouble, ddouble, ddouble> func, (Vector vector1, Vector vector2, Vector vector3) args) sel) {
+            return Func(sel.func, sel.args.vector1, sel.args.vector2, sel.args.vector3);
+        }
+
+        /// <summary>写像キャスト</summary>
+        public static implicit operator Vector((Func<ddouble, ddouble, ddouble, ddouble, ddouble> func, (Vector vector1, Vector vector2, Vector vector3, Vector vector4) args) sel) {
+            return Func(sel.func, sel.args.vector1, sel.args.vector2, sel.args.vector3, sel.args.vector4);
+        }
+
         /// <summary>行ベクトル</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Matrix Horizontal {
@@ -232,7 +252,7 @@ namespace Algebra {
             return new Vector(v, cloning: false);
         }
 
-        /// <summary>射影</summary>
+        /// <summary>写像</summary>
         public static Vector Func(Func<ddouble, ddouble> f, Vector vector) {
             ddouble[] x = vector.v, v = new ddouble[vector.Dim];
 
@@ -243,7 +263,7 @@ namespace Algebra {
             return new Vector(v, cloning: false);
         }
 
-        /// <summary>射影</summary>
+        /// <summary>写像</summary>
         public static Vector Func(Func<ddouble, ddouble, ddouble> f, Vector vector1, Vector vector2) {
             if (vector1.Dim != vector2.Dim) {
                 throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)}");
@@ -258,7 +278,7 @@ namespace Algebra {
             return new Vector(v, cloning: false);
         }
 
-        /// <summary>射影</summary>
+        /// <summary>写像</summary>
         public static Vector Func(Func<ddouble, ddouble, ddouble, ddouble> f, Vector vector1, Vector vector2, Vector vector3) {
             if (vector1.Dim != vector2.Dim || vector1.Dim != vector3.Dim) {
                 throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)},{nameof(vector3)}");
@@ -273,7 +293,7 @@ namespace Algebra {
             return new Vector(v, cloning: false);
         }
 
-        /// <summary>射影</summary>
+        /// <summary>写像</summary>
         public static Vector Func(Func<ddouble, ddouble, ddouble, ddouble, ddouble> f, Vector vector1, Vector vector2, Vector vector3, Vector vector4) {
             if (vector1.Dim != vector2.Dim || vector1.Dim != vector3.Dim || vector1.Dim != vector4.Dim) {
                 throw new ArgumentException("mismatch size", $"{nameof(vector1)},{nameof(vector2)},{nameof(vector3)},{nameof(vector4)}");
