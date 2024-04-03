@@ -628,6 +628,16 @@ namespace Algebra.Tests {
         }
 
         [TestMethod()]
+        public void QRDecomposeEyeEpsTest() {
+            Matrix matrix = new double[,] { { 1, 1e-30, 0 }, { 2e-30, 1, 1e-30 }, { 0, -1e-30, 1 } };
+
+            (Matrix q, Matrix r) = Matrix.QR(matrix);
+
+            Assert.IsTrue((matrix - q * r).Norm < 1e-12);
+            Assert.IsTrue((q * q.T - Matrix.Identity(matrix.Size)).Norm < 1e-31);
+        }
+
+        [TestMethod()]
         public void EigenValuesTest() {
             Matrix matrix = new double[,] { { 1, 2 }, { 4, 5 } };
             ddouble[] eigen_values = Matrix.EigenValues(matrix);
@@ -640,7 +650,16 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void EigenValuesEyeTest() {
-            Matrix matrix = new double[,] { { 1, 0 }, { 0, 1 } };
+            Matrix matrix = new double[,] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 1, 0 } };
+            ddouble[] eigen_values = Matrix.EigenValues(matrix);
+
+            Assert.IsTrue(ddouble.Abs(eigen_values[0] - 1) < 1e-29);
+            Assert.IsTrue(ddouble.Abs(eigen_values[1] - 1) < 1e-29);
+        }
+
+        [TestMethod()]
+        public void EigenValuesEyeEpsTest() {
+            Matrix matrix = new double[,] { { 1, 1e-30, 0 }, { 0, 1, 2e-30 }, { -1e-30, 1, 1e-30 } };
             ddouble[] eigen_values = Matrix.EigenValues(matrix);
 
             Assert.IsTrue(ddouble.Abs(eigen_values[0] - 1) < 1e-29);
@@ -654,6 +673,38 @@ namespace Algebra.Tests {
             (ddouble[] eigen_values, Vector[] eigen_vectors) = Matrix.EigenValueVectors(matrix);
 
             Assert.AreEqual(new Matrix(new double[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 8, 7, 9 } }), matrix);
+
+            for (int i = 0; i < matrix.Size; i++) {
+                ddouble eigen_value = eigen_values[i];
+                Vector eigen_vector = eigen_vectors[i];
+
+                Assert.IsTrue((matrix * eigen_vector - eigen_value * eigen_vector).Norm < 1e-15);
+            }
+        }
+
+        [TestMethod()]
+        public void EigenVectorEyeTest() {
+            Matrix matrix = new double[,] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
+
+            (ddouble[] eigen_values, Vector[] eigen_vectors) = Matrix.EigenValueVectors(matrix);
+
+            Assert.AreEqual(new Matrix(new double[,] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } }), matrix);
+
+            for (int i = 0; i < matrix.Size; i++) {
+                ddouble eigen_value = eigen_values[i];
+                Vector eigen_vector = eigen_vectors[i];
+
+                Assert.IsTrue((matrix * eigen_vector - eigen_value * eigen_vector).Norm < 1e-15);
+            }
+        }
+
+        [TestMethod()]
+        public void EigenVectorEyeEpsTest() {
+            Matrix matrix = new double[,] { { 1, 1e-30, 0 }, { 0, 1, 2e-30 }, { -1e-30, 1e-30, 1 } };
+
+            (ddouble[] eigen_values, Vector[] eigen_vectors) = Matrix.EigenValueVectors(matrix);
+
+            Assert.AreEqual(new double[,] { { 1, 1e-30, 0 }, { 0, 1, 2e-30 }, { -1e-30, 1e-30, 1 } }, matrix);
 
             for (int i = 0; i < matrix.Size; i++) {
                 ddouble eigen_value = eigen_values[i];
