@@ -134,10 +134,12 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void NormTest() {
-            Vector vector = new(-3, 4);
+            Vector vector1 = new(-3, 4);
+            Vector vector2 = new(0, 0);
 
-            Assert.AreEqual(5, vector.Norm);
-            Assert.AreEqual(25, vector.SquareNorm);
+            Assert.AreEqual(5, vector1.Norm);
+            Assert.AreEqual(0, vector2.Norm);
+            Assert.AreEqual(25, vector1.SquareNorm);
         }
 
         [TestMethod()]

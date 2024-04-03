@@ -53,13 +53,8 @@ namespace Algebra {
                     eigen_value = eigen_values[j];
 
                     Matrix h = m - eigen_value * identity;
-                    if (h.Norm <= m.Norm * 1e-28) {
-                        is_converged_vector[j] = true;
-                        break;
-                    }
-
                     Matrix g = h.Inverse;
-                    if (!IsFinite(g)) {
+                    if (!IsFinite(g) || g.Norm > ddouble.Ldexp(h.Norm, 18)) {
                         is_converged_vector[j] = true;
                         break;
                     }

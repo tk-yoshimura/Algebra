@@ -234,10 +234,12 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void NormTest() {
-            Matrix matrix = new double[,] { { 1, 2 }, { 3, 4 } };
+            Matrix matrix1 = new double[,] { { 1, 2 }, { 3, 4 } };
+            Matrix matrix2 = Matrix.Zero(2, 3);
 
-            Assert.AreEqual(ddouble.Sqrt(30), matrix.Norm);
-            Assert.AreEqual(30, matrix.SquareNorm);
+            Assert.AreEqual(ddouble.Sqrt(30), matrix1.Norm);
+            Assert.AreEqual(0, matrix2.Norm);
+            Assert.AreEqual(30, matrix1.SquareNorm);
         }
 
         [TestMethod()]
@@ -668,13 +670,17 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void SVDTest() {
-            Matrix m = new double[,] { { 1, 1e-30, 0 }, { 0, 1, 2e-30 }, { -1e-30, 1e-30, 1 } };
+            for (ddouble eps = 1e-30; eps < 1e-1; eps *= 2) {
+                Console.WriteLine(eps);
 
-            (Matrix u, Vector s, Matrix v) = Matrix.SVD(m);
+                Matrix m = new ddouble[,] { { 1, eps, 0 }, { 0, 1, 2 * eps }, { -eps, eps, 1 } };
 
-            Matrix w = u * Matrix.FromDiagonals(s) * v;
+                (Matrix u, Vector s, Matrix v) = Matrix.SVD(m);
 
-            Assert.IsTrue((m - w).Norm < 1e-31);
+                Matrix w = u * Matrix.FromDiagonals(s) * v;
+
+                Assert.IsTrue((m - w).Norm < 1e-28, $"{(m - w).Norm}");
+            }
         }
 
         [TestMethod()]
