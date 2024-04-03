@@ -31,7 +31,7 @@ namespace Algebra {
 
             //三角行列格納
             for (int i = 0; i < n; i++) {
-                l.e[i, i] = 1;
+                l.e[i, i] = 1d;
 
                 int j = 0;
                 for (; j < i; j++) {

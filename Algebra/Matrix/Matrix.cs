@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
-using System.Text;
 
 namespace Algebra {
     /// <summary>行列クラス</summary>
@@ -102,31 +101,6 @@ namespace Algebra {
         /// <summary>キャスト</summary>
         public static implicit operator Matrix(double[,] arr) {
             return new Matrix(arr);
-        }
-
-        /// <summary>写像キャスト</summary>
-        public static implicit operator Matrix((Func<ddouble, ddouble> func, Matrix arg) sel) {
-            return Func(sel.func, sel.arg);
-        }
-
-        /// <summary>写像キャスト</summary>
-        public static implicit operator Matrix((Func<ddouble, ddouble, ddouble> func, (Matrix matrix1, Matrix matrix2) args) sel) {
-            return Func(sel.func, sel.args.matrix1, sel.args.matrix2);
-        }
-
-        /// <summary>写像キャスト</summary>
-        public static implicit operator Matrix((Func<ddouble, ddouble, ddouble, ddouble> func, (Matrix matrix1, Matrix matrix2, Matrix matrix3) args) sel) {
-            return Func(sel.func, sel.args.matrix1, sel.args.matrix2, sel.args.matrix3);
-        }
-
-        /// <summary>写像キャスト</summary>
-        public static implicit operator Matrix((Func<ddouble, ddouble, ddouble, ddouble, ddouble> func, (Matrix matrix1, Matrix matrix2, Matrix matrix3, Matrix matrix4) args) sel) {
-            return Func(sel.func, sel.args.matrix1, sel.args.matrix2, sel.args.matrix3, sel.args.matrix4);
-        }
-
-        /// <summary>写像キャスト</summary>
-        public static implicit operator Matrix((Func<ddouble, ddouble, ddouble> func, Vector vector_row, Vector vector_column) sel) {
-            return Map(sel.func, sel.vector_row, sel.vector_column);
         }
 
         /// <summary>転置</summary>
@@ -305,84 +279,6 @@ namespace Algebra {
             return new Matrix(v, cloning: false);
         }
 
-        /// <summary>写像</summary>
-        public static Matrix Func(Func<ddouble, ddouble> f, Matrix matrix) {
-            ddouble[,] x = matrix.e, v = new ddouble[matrix.Rows, matrix.Columns];
-
-            for (int i = 0; i < v.GetLength(0); i++) {
-                for (int j = 0; j < v.GetLength(1); j++) {
-                    v[i, j] = f(x[i, j]);
-                }
-            }
-
-            return new Matrix(v, cloning: false);
-        }
-
-        /// <summary>写像</summary>
-        public static Matrix Func(Func<ddouble, ddouble, ddouble> f, Matrix matrix1, Matrix matrix2) {
-            if (matrix1.Shape != matrix2.Shape) {
-                throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)}");
-            }
-
-            ddouble[,] x = matrix1.e, y = matrix2.e, v = new ddouble[matrix1.Rows, matrix1.Columns];
-
-            for (int i = 0; i < v.GetLength(0); i++) {
-                for (int j = 0; j < v.GetLength(1); j++) {
-                    v[i, j] = f(x[i, j], y[i, j]);
-                }
-            }
-
-            return new Matrix(v, cloning: false);
-        }
-
-        /// <summary>写像</summary>
-        public static Matrix Func(Func<ddouble, ddouble, ddouble, ddouble> f, Matrix matrix1, Matrix matrix2, Matrix matrix3) {
-            if (matrix1.Shape != matrix2.Shape || matrix1.Shape != matrix3.Shape) {
-                throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)},{nameof(matrix3)}");
-            }
-
-            ddouble[,] x = matrix1.e, y = matrix2.e, z = matrix3.e, v = new ddouble[matrix1.Rows, matrix1.Columns];
-
-            for (int i = 0; i < v.GetLength(0); i++) {
-                for (int j = 0; j < v.GetLength(1); j++) {
-                    v[i, j] = f(x[i, j], y[i, j], z[i, j]);
-                }
-            }
-
-            return new Matrix(v, cloning: false);
-        }
-
-        /// <summary>写像</summary>
-        public static Matrix Func(Func<ddouble, ddouble, ddouble, ddouble, ddouble> f, Matrix matrix1, Matrix matrix2, Matrix matrix3, Matrix matrix4) {
-            if (matrix1.Shape != matrix2.Shape || matrix1.Shape != matrix3.Shape || matrix1.Shape != matrix4.Shape) {
-                throw new ArgumentException("mismatch size", $"{nameof(matrix1)},{nameof(matrix2)},{nameof(matrix3)},{nameof(matrix4)}");
-            }
-
-            ddouble[,] x = matrix1.e, y = matrix2.e, z = matrix3.e, w = matrix4.e, v = new ddouble[matrix1.Rows, matrix1.Columns];
-
-            for (int i = 0; i < v.GetLength(0); i++) {
-                for (int j = 0; j < v.GetLength(1); j++) {
-                    v[i, j] = f(x[i, j], y[i, j], z[i, j], w[i, j]);
-                }
-            }
-
-            return new Matrix(v, cloning: false);
-        }
-
-        /// <summary>写像</summary>
-        public static Matrix Map(Func<ddouble, ddouble, ddouble> f, Vector vector_row, Vector vector_column) {
-            ddouble[] row = vector_row.v, col = vector_column.v;
-            ddouble[,] v = new ddouble[row.Length, col.Length];
-
-            for (int i = 0; i < v.GetLength(0); i++) {
-                for (int j = 0; j < v.GetLength(1); j++) {
-                    v[i, j] = f(row[i], col[j]);
-                }
-            }
-
-            return new Matrix(v, cloning: false);
-        }
-
         /// <summary>単位行列</summary>
         /// <param name="size">行列サイズ</param>
         public static Matrix Identity(int size) {
@@ -532,47 +428,6 @@ namespace Algebra {
             return IsFinite(Invert(matrix));
         }
 
-        /// <summary>Any句</summary>
-        public static bool Any(Matrix matrix, Func<ddouble, bool> cond) {
-            for (int i = 0; i < matrix.Rows; i++) {
-                for (int j = 0; j < matrix.Columns; j++) {
-                    if (cond(matrix.e[i, j])) {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>All句</summary>
-        public static bool All(Matrix matrix, Func<ddouble, bool> cond) {
-            for (int i = 0; i < matrix.Rows; i++) {
-                for (int j = 0; j < matrix.Columns; j++) {
-                    if (!cond(matrix.e[i, j])) {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>Count句</summary>
-        public static long Count(Matrix matrix, Func<ddouble, bool> cond) {
-            long cnt = 0;
-
-            for (int i = 0; i < matrix.Rows; i++) {
-                for (int j = 0; j < matrix.Columns; j++) {
-                    if (cond(matrix.e[i, j])) {
-                        cnt++;
-                    }
-                }
-            }
-
-            return cnt;
-        }
-
         /// <summary>等しいか判定</summary>
         public override bool Equals(object obj) {
             return (obj is not null) && obj is Matrix matrix && matrix == this;
@@ -591,79 +446,6 @@ namespace Algebra {
         /// <summary>ディープコピー</summary>
         public Matrix Copy() {
             return new Matrix(e);
-        }
-
-        /// <summary>文字列化</summary>
-        public override string ToString() {
-            if (!IsValid(this)) {
-                return "invalid";
-            }
-
-            StringBuilder str = new($"[ [ {e[0, 0]}");
-            for (int j = 1; j < Columns; j++) {
-                str.Append($", {e[0, j]}");
-            }
-            str.Append(" ]");
-
-            for (int i = 1; i < Rows; i++) {
-                str.Append($", [ {e[i, 0]}");
-                for (int j = 1; j < Columns; j++) {
-                    str.Append($", {e[i, j]}");
-                }
-                str.Append(" ]");
-            }
-
-            str.Append(" ]");
-
-            return str.ToString();
-        }
-
-        public string ToString(string format) {
-            if (!IsValid(this)) {
-                return "invalid";
-            }
-
-            StringBuilder str = new($"[ [ {e[0, 0].ToString(format)}");
-            for (int j = 1; j < Columns; j++) {
-                str.Append($", {e[0, j].ToString(format)}");
-            }
-            str.Append(" ]");
-
-            for (int i = 1; i < Rows; i++) {
-                str.Append($", [ {e[i, 0].ToString(format)}");
-                for (int j = 1; j < Columns; j++) {
-                    str.Append($", {e[i, j].ToString(format)}");
-                }
-                str.Append(" ]");
-            }
-
-            str.Append(" ]");
-
-            return str.ToString();
-        }
-
-        public string ToString(string format, IFormatProvider provider) {
-            if (!IsValid(this)) {
-                return "invalid";
-            }
-
-            StringBuilder str = new($"[ [ {e[0, 0].ToString(format, provider)}");
-            for (int j = 1; j < Columns; j++) {
-                str.Append($", {e[0, j].ToString(format, provider)}");
-            }
-            str.Append(" ]");
-
-            for (int i = 1; i < Rows; i++) {
-                str.Append($", [ {e[i, 0].ToString(format, provider)}");
-                for (int j = 1; j < Columns; j++) {
-                    str.Append($", {e[i, j].ToString(format, provider)}");
-                }
-                str.Append(" ]");
-            }
-
-            str.Append(" ]");
-
-            return str.ToString();
         }
 
         public IEnumerator<(int row_index, int column_index, ddouble val)> GetEnumerator() {

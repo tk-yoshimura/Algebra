@@ -122,7 +122,7 @@ namespace Algebra {
                 }
 
                 // 前進消去
-                ddouble inv_mii = 1 / u.e[i, i];
+                ddouble inv_mii = 1d / u.e[i, i];
                 u.e[i, i] = 1d;
                 for (int j = i + 1; j < n; j++) {
                     u.e[i, j] *= inv_mii;
