@@ -1,6 +1,4 @@
-﻿using DoubleDouble;
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.Text;
 
 namespace Algebra {
