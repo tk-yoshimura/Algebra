@@ -40,7 +40,7 @@ namespace Algebra {
                 ddouble c = 2d / usum;
 
                 Matrix h = Identity(size);
-                for (int i = k; i < size; i++) { 
+                for (int i = k; i < size; i++) {
                     for (int j = k; j < size; j++) {
                         h.e[i, j] -= c * u[i] * u[j];
                     }
@@ -52,8 +52,8 @@ namespace Algebra {
 
             for (int i = 0; i < size; i++) {
                 if (ddouble.IsNegative(r.e[i, i])) {
-                    q[.., i] *= -1;
-                    r[i, ..] *= -1;
+                    q[.., i] = -q[.., i];
+                    r[i, ..] = -r[i, ..];
                 }
 
                 for (int k = 0; k < i; k++) {
