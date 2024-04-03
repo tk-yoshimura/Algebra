@@ -259,6 +259,17 @@ namespace Algebra {
             }
         }
 
+        
+        public static Matrix FromDiagonals(ddouble[] vs) {
+            ddouble[,] v = new ddouble[vs.Length, vs.Length];
+
+            for (int i = 0; i < vs.Length; i++) {
+                v[i, i] = vs[i];
+            }
+
+            return new Matrix(v, cloning: false);
+        }
+
         /// <summary>ゼロ行列</summary>
         /// <param name="rows">行数</param>
         /// <param name="columns">列数</param>

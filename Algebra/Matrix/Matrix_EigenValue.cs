@@ -32,7 +32,7 @@ namespace Algebra {
 
             ddouble eigen_value;
             bool[] is_converged_vector = new bool[size];
-            Matrix d = m, g, identity = Identity(size);
+            Matrix d = m, identity = Identity(size);
             Vector x_init = Vector.Fill(size, 1).Normal, x;
 
             for (int i = 0; i < precision_level; i++) {
@@ -52,7 +52,13 @@ namespace Algebra {
 
                     eigen_value = eigen_values[j];
 
-                    g = (m - eigen_value * identity).Inverse;
+                    Matrix h = m - eigen_value * identity;
+                    if (h.Norm <= m.Norm * 1e-28) {
+                        is_converged_vector[j] = true;
+                        break;
+                    }
+
+                    Matrix g = h.Inverse;
                     if (!IsFinite(g)) {
                         is_converged_vector[j] = true;
                         break;

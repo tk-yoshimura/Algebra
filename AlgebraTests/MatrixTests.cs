@@ -667,6 +667,83 @@ namespace Algebra.Tests {
         }
 
         [TestMethod()]
+        public void SVDTest() {
+            Matrix m = new double[,] { { 1, 1e-30, 0 }, { 0, 1, 2e-30 }, { -1e-30, 1e-30, 1 } };
+
+            (Matrix u, Vector s, Matrix v) = Matrix.SVD(m);
+
+            Matrix w = u * Matrix.FromDiagonals(s) * v;
+
+            Assert.IsTrue((m - w).Norm < 1e-31);
+        }
+
+        [TestMethod()]
+        public void SVDTest2() {
+            Matrix m = new double[,] { { 1, 1e-30, 0 }, { 0, 2, 2e-30 }, { -1e-30, 1e-30, 4 } };
+
+            (Matrix u, Vector s, Matrix v) = Matrix.SVD(m);
+
+            Matrix w = u * Matrix.FromDiagonals(s) * v;
+
+            Assert.IsTrue((m - w).Norm < 1e-31);
+        }
+
+        [TestMethod()]
+        public void SVDTest3() {
+            Matrix m = new double[,] { { 1, 1e-30, 0 }, { 0, 1, 2e-30 }, { -1e-30, 1e-30, 4 } };
+
+            (Matrix u, Vector s, Matrix v) = Matrix.SVD(m);
+
+            Matrix w = u * Matrix.FromDiagonals(s) * v;
+
+            Assert.IsTrue((m - w).Norm < 1e-31);
+        }
+
+        [TestMethod()]
+        public void SVDTest4() {
+            Matrix m = new double[,] { { 1, 1e-30, 0 }, { 0, 1, 2e-30 }, { -1e-30, 1e-30, 4 } };
+
+            (Matrix u, Vector s, Matrix v) = Matrix.SVD(m);
+
+            Matrix w = u * Matrix.FromDiagonals(s) * v;
+
+            Assert.IsTrue((m - w).Norm < 1e-31);
+        }
+
+        [TestMethod()]
+        public void SVDTest5() {
+            Matrix m = new double[,] { { 12, -51, 4, 6 }, { 6, 167, -68, 3 }, { -4, 24, -41, 12 } };
+
+            (Matrix u, Vector s, Matrix v) = Matrix.SVD(m);
+
+            Matrix w = u * Matrix.FromDiagonals(s) * v;
+
+            Assert.IsTrue((m - w).Norm < 1e-29);
+        }
+
+        [TestMethod()]
+        public void SVDTest6() {
+            Matrix m = new double[,] { { 12, -51, 4 }, { 6, 167, -68 }, { -4, 24, -41 }, { 8, 13, 7 } };
+
+            (Matrix u, Vector s, Matrix v) = Matrix.SVD(m);
+
+            Matrix w = u * Matrix.FromDiagonals(s) * v;
+
+            Assert.IsTrue((m - w).Norm < 1e-29);
+        }
+
+        [TestMethod()]
+        public void SVDTest7() {
+            Matrix m = new double[,] { { 12, -51, 4 }, { 6, 167, -68 }, { -4, 24, -41 } };
+
+            (Matrix u, Vector s, Matrix v) = Matrix.SVD(m);
+
+            Matrix w = u * Matrix.FromDiagonals(s) * v;
+
+            Assert.IsTrue((m - w).Norm < 1e-29);
+        }
+
+        [TestMethod()]
         public void EigenValuesTest() {
             Matrix matrix = new double[,] { { 1, 2 }, { 4, 5 } };
             ddouble[] eigen_values = Matrix.EigenValues(matrix);
