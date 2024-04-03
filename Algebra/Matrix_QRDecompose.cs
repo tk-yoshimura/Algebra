@@ -1,42 +1,73 @@
-﻿using System;
+﻿using DoubleDouble;
+using System;
 
 namespace Algebra {
     /// <summary>行列クラス</summary>
     public partial class Matrix {
         /// <summary>QR分解</summary>
         public static (Matrix q, Matrix r) QR(Matrix m) {
-            if (m.Rows < m.Columns) {
+            if (!IsSquare(m)) {
                 throw new ArgumentException("invalid size", nameof(m));
             }
 
-            int n = m.Size;
+            int size = m.Size;
 
-            Matrix q = new(n, n), r = new(n, n);
+            int exponent = m.MaxExponent;
+            m = ScaleB(m, -exponent);
 
-            Vector[] e = new Vector[n], u = new Vector[n];
-            for (int i = 0; i < n; i++) {
-                e[i] = Vector.Zero(n);
+            Matrix r = m, q = Identity(size);
+            Vector u = Vector.Zero(size);
+
+            for (int k = 0; k < size - 1; k++) {
+                ddouble vsum = 0d;
+                for (int i = k; i < size; i++) {
+                    vsum += ddouble.Square(r.e[i, k]);
+                }
+                ddouble vnorm = ddouble.Sqrt(vsum);
+
+                if (vnorm == 0d) {
+                    continue;
+                }
+
+                ddouble x = r.e[k, k];
+                u.v[k] = (x >= 0) ? (x + vnorm) : (x - vnorm);
+                ddouble usum = ddouble.Square(u.v[k]);
+
+                for (int i = k + 1; i < size; i++) {
+                    u.v[i] = r.e[i, k];
+                    usum += ddouble.Square(u.v[i]);
+                }
+                ddouble c = 2d / usum;
+
+                Matrix h = Identity(size);
+                for (int i = k; i < size; i++) { 
+                    for (int j = k; j < size; j++) {
+                        h.e[i, j] -= c * u[i] * u[j];
+                    }
+                }
+
+                r = h * r;
+                q *= h;
             }
 
-            for (int i = 0; i < n; i++) {
-                Vector ai = m.Vertical(i);
-
-                u[i] = ai.Copy();
-
-                for (int j = 0; j < i; j++) {
-                    u[i] -= u[j] * Vector.Dot(ai, u[j]) / u[j].SquareNorm;
+            for (int i = 0; i < size; i++) {
+                if (ddouble.IsNegative(r.e[i, i])) {
+                    q[.., i] *= -1;
+                    r[i, ..] *= -1;
                 }
 
-                e[i] = u[i].Normal;
-
-                for (int j = 0; j <= i; j++) {
-                    r.e[j, i] = Vector.Dot(ai, e[j]);
+                for (int k = 0; k < i; k++) {
+                    r.e[i, k] = 0d;
                 }
 
-                for (int j = 0; j < n; j++) {
-                    q.e[j, i] = e[i].v[j];
+                for (int k = i + 1; k < size; k++) {
+                    if (ddouble.IsMinusZero(r.e[i, k])) {
+                        r.e[i, k] = 0d;
+                    }
                 }
             }
+
+            r = ScaleB(r, exponent);
 
             return (q, r);
         }

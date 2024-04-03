@@ -598,7 +598,7 @@ namespace Algebra.Tests {
                 Assert.AreEqual(1, diagonal);
             }
 
-            Assert.IsTrue((matrix - lower * upper).Norm < 1e-28);
+            Assert.IsTrue((matrix - lower * upper).Norm < 1e-31);
         }
 
         [TestMethod()]
@@ -609,8 +609,22 @@ namespace Algebra.Tests {
 
             Assert.AreEqual(new Matrix(new double[,] { { 12, -51, 4 }, { 6, 167, -68 }, { -4, 24, -41 } }), matrix);
 
+            Assert.AreEqual(0d, r[1, 0]);
+            Assert.AreEqual(0d, r[2, 0]);
+            Assert.AreEqual(0d, r[2, 1]);
+
             Assert.IsTrue((matrix - q * r).Norm < 1e-12);
-            Assert.IsTrue((q * q.T - Matrix.Identity(matrix.Size)).Norm < 1e-28);
+            Assert.IsTrue((q * q.T - Matrix.Identity(matrix.Size)).Norm < 1e-31);
+        }
+
+        [TestMethod()]
+        public void QRDecomposeEyeTest() {
+            Matrix matrix = new double[,] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
+
+            (Matrix q, Matrix r) = Matrix.QR(matrix);
+
+            Assert.IsTrue((matrix - q * r).Norm < 1e-12);
+            Assert.IsTrue((q * q.T - Matrix.Identity(matrix.Size)).Norm < 1e-31);
         }
 
         [TestMethod()]
@@ -620,8 +634,17 @@ namespace Algebra.Tests {
 
             Assert.AreEqual(new Matrix(new double[,] { { 1, 2 }, { 4, 5 } }), matrix);
 
-            Assert.IsTrue(ddouble.Abs(eigen_values[0] - (3 + 2 * ddouble.Sqrt(3))) < 1e-28);
-            Assert.IsTrue(ddouble.Abs(eigen_values[1] - (3 - 2 * ddouble.Sqrt(3))) < 1e-28);
+            Assert.IsTrue(ddouble.Abs(eigen_values[0] - (3 + 2 * ddouble.Sqrt(3))) < 1e-29);
+            Assert.IsTrue(ddouble.Abs(eigen_values[1] - (3 - 2 * ddouble.Sqrt(3))) < 1e-29);
+        }
+
+        [TestMethod()]
+        public void EigenValuesEyeTest() {
+            Matrix matrix = new double[,] { { 1, 0 }, { 0, 1 } };
+            ddouble[] eigen_values = Matrix.EigenValues(matrix);
+
+            Assert.IsTrue(ddouble.Abs(eigen_values[0] - 1) < 1e-29);
+            Assert.IsTrue(ddouble.Abs(eigen_values[1] - 1) < 1e-29);
         }
 
         [TestMethod()]
