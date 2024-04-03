@@ -53,7 +53,7 @@ namespace Algebra.Tests {
 
             Assert.AreEqual(2, Matrix.Zero(2, 2).Size);
 
-            Assert.ThrowsException<InvalidOperationException>(() => {
+            Assert.ThrowsException<ArithmeticException>(() => {
                 int n = Matrix.Zero(2, 3).Size;
             });
 
@@ -250,8 +250,8 @@ namespace Algebra.Tests {
         [TestMethod()]
         public void TransposeTest() {
             Matrix matrix1 = new double[,] { { 1, 2, 3 }, { 4, 5, 6 } };
-            Matrix matrix2 = matrix1.Transpose;
-            Matrix matrix3 = matrix2.Transpose;
+            Matrix matrix2 = matrix1.T;
+            Matrix matrix3 = matrix2.T;
 
             Assert.AreEqual(new Matrix(new double[,] { { 1, 4 }, { 2, 5 }, { 3, 6 } }), matrix2);
             Assert.AreEqual(matrix1, matrix3);
@@ -275,14 +275,14 @@ namespace Algebra.Tests {
                 { 0, 0, 0, 0, 8, 6, 7, 5 },
             };
 
-            Assert.AreEqual(matrix1.Rows, matrix1.Transpose.Columns);
-            Assert.AreEqual(matrix1.Columns, matrix1.Transpose.Rows);
+            Assert.AreEqual(matrix1.Rows, matrix1.T.Columns);
+            Assert.AreEqual(matrix1.Columns, matrix1.T.Rows);
 
-            Assert.AreEqual(matrix2.Rows, matrix2.Transpose.Columns);
-            Assert.AreEqual(matrix2.Columns, matrix2.Transpose.Rows);
+            Assert.AreEqual(matrix2.Rows, matrix2.T.Columns);
+            Assert.AreEqual(matrix2.Columns, matrix2.T.Rows);
 
-            Assert.AreEqual(matrix3.Rows, matrix3.Transpose.Columns);
-            Assert.AreEqual(matrix3.Columns, matrix3.Transpose.Rows);
+            Assert.AreEqual(matrix3.Rows, matrix3.T.Columns);
+            Assert.AreEqual(matrix3.Columns, matrix3.T.Rows);
 
             Assert.IsTrue((matrix1 * matrix1.Inverse * matrix1 - matrix1).Norm < 1e-28);
             Assert.IsTrue((matrix2 * matrix2.Inverse * matrix2 - matrix2).Norm < 1e-28);
@@ -296,13 +296,13 @@ namespace Algebra.Tests {
             Assert.IsTrue((matrix2.Inverse * matrix2 * matrix2.Inverse - matrix2.Inverse).Norm < 1e-28);
             Assert.IsTrue((matrix3.Inverse * matrix3 * matrix3.Inverse - matrix3.Inverse).Norm < 1e-28);
 
-            Assert.IsTrue(((matrix1 * matrix1.Inverse).Transpose - matrix1 * matrix1.Inverse).Norm < 1e-28);
-            Assert.IsTrue(((matrix2 * matrix2.Inverse).Transpose - matrix2 * matrix2.Inverse).Norm < 1e-28);
-            Assert.IsTrue(((matrix3 * matrix3.Inverse).Transpose - matrix3 * matrix3.Inverse).Norm < 1e-28);
+            Assert.IsTrue(((matrix1 * matrix1.Inverse).T - matrix1 * matrix1.Inverse).Norm < 1e-28);
+            Assert.IsTrue(((matrix2 * matrix2.Inverse).T - matrix2 * matrix2.Inverse).Norm < 1e-28);
+            Assert.IsTrue(((matrix3 * matrix3.Inverse).T - matrix3 * matrix3.Inverse).Norm < 1e-28);
 
-            Assert.IsTrue(((matrix1.Inverse * matrix1).Transpose - matrix1.Inverse * matrix1).Norm < 1e-28);
-            Assert.IsTrue(((matrix2.Inverse * matrix2).Transpose - matrix2.Inverse * matrix2).Norm < 1e-28);
-            Assert.IsTrue(((matrix3.Inverse * matrix3).Transpose - matrix3.Inverse * matrix3).Norm < 1e-28);
+            Assert.IsTrue(((matrix1.Inverse * matrix1).T - matrix1.Inverse * matrix1).Norm < 1e-28);
+            Assert.IsTrue(((matrix2.Inverse * matrix2).T - matrix2.Inverse * matrix2).Norm < 1e-28);
+            Assert.IsTrue(((matrix3.Inverse * matrix3).T - matrix3.Inverse * matrix3).Norm < 1e-28);
 
             Assert.IsFalse(Matrix.IsValid(matrix4.Inverse));
             Assert.IsFalse(Matrix.IsValid(Matrix.Zero(2, 2).Inverse));
@@ -590,7 +590,7 @@ namespace Algebra.Tests {
         public void LUDecomposeTest() {
             Matrix matrix = new double[,] { { 2, 3, 1, 2 }, { 4, 1, 3, -2 }, { 2, 2, -3, 1 }, { 1, -3, 2, 4 } };
 
-            (Matrix lower, Matrix upper) = matrix.LUDecompose();
+            (Matrix lower, Matrix upper) = Matrix.LU(matrix);
 
             Assert.AreEqual(new Matrix(new double[,] { { 2, 3, 1, 2 }, { 4, 1, 3, -2 }, { 2, 2, -3, 1 }, { 1, -3, 2, 4 } }), matrix);
 
@@ -605,18 +605,18 @@ namespace Algebra.Tests {
         public void QRDecomposeTest() {
             Matrix matrix = new double[,] { { 12, -51, 4 }, { 6, 167, -68 }, { -4, 24, -41 } };
 
-            (Matrix q, Matrix r) = matrix.QRDecompose();
+            (Matrix q, Matrix r) = Matrix.QR(matrix);
 
             Assert.AreEqual(new Matrix(new double[,] { { 12, -51, 4 }, { 6, 167, -68 }, { -4, 24, -41 } }), matrix);
 
             Assert.IsTrue((matrix - q * r).Norm < 1e-12);
-            Assert.IsTrue((q * q.Transpose - Matrix.Identity(matrix.Size)).Norm < 1e-28);
+            Assert.IsTrue((q * q.T - Matrix.Identity(matrix.Size)).Norm < 1e-28);
         }
 
         [TestMethod()]
-        public void CalculateEigenValuesTest() {
+        public void EigenValuesTest() {
             Matrix matrix = new double[,] { { 1, 2 }, { 4, 5 } };
-            ddouble[] eigen_values = matrix.CalculateEigenValues();
+            ddouble[] eigen_values = Matrix.EigenValues(matrix);
 
             Assert.AreEqual(new Matrix(new double[,] { { 1, 2 }, { 4, 5 } }), matrix);
 
@@ -625,10 +625,10 @@ namespace Algebra.Tests {
         }
 
         [TestMethod()]
-        public void CalculateEigenVectorTest() {
+        public void EigenVectorTest() {
             Matrix matrix = new double[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 8, 7, 9 } };
 
-            (ddouble[] eigen_values, Vector[] eigen_vectors) = matrix.CalculateEigenValueVectors();
+            (ddouble[] eigen_values, Vector[] eigen_vectors) = Matrix.EigenValueVectors(matrix);
 
             Assert.AreEqual(new Matrix(new double[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 8, 7, 9 } }), matrix);
 
@@ -914,7 +914,10 @@ namespace Algebra.Tests {
             Assert.AreEqual("[ [ 1, 2, 3 ], [ 4, 5, 6 ] ]", matrix1.ToString());
             Assert.AreEqual("[ [ 1, 2, 3 ] ]", matrix2.ToString());
             Assert.AreEqual("[ [ 1 ], [ 2 ], [ 3 ] ]", matrix3.ToString());
-            Assert.AreEqual("Invalid Matrix", matrix4.ToString());
+            Assert.AreEqual("invalid", matrix4.ToString());
+
+            Assert.AreEqual("[ [ 1.0000e0, 2.0000e0, 3.0000e0 ], [ 4.0000e0, 5.0000e0, 6.0000e0 ] ]", matrix1.ToString("e4"));
+            Assert.AreEqual("[ [ 1.0000e0, 2.0000e0, 3.0000e0 ], [ 4.0000e0, 5.0000e0, 6.0000e0 ] ]", $"{matrix1:e4}");
         }
 
         [TestMethod()]

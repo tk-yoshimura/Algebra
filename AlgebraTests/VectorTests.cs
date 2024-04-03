@@ -546,9 +546,12 @@ namespace Algebra.Tests {
             Vector vector2 = new(Array.Empty<double>());
             Vector vector3 = new(1d);
 
-            Assert.AreEqual("1,2,3", vector1.ToString());
-            Assert.AreEqual(string.Empty, vector2.ToString());
-            Assert.AreEqual("1", vector3.ToString());
+            Assert.AreEqual("[ 1, 2, 3 ]", vector1.ToString());
+            Assert.AreEqual("invalid", vector2.ToString());
+            Assert.AreEqual("[ 1 ]", vector3.ToString());
+            Assert.AreEqual("[ 1, 2, 3 ]", vector1.ToString());
+            Assert.AreEqual("[ 1.0000e0, 2.0000e0, 3.0000e0 ]", vector1.ToString("e4"));
+            Assert.AreEqual("[ 1.0000e0, 2.0000e0, 3.0000e0 ]", $"{vector1:e4}");
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Numerics;
 using System.Text;
 
@@ -10,7 +11,7 @@ namespace Algebra {
     /// <summary>行列クラス</summary>
     [DebuggerDisplay("{ToString(),nq}")]
     public partial class Matrix :
-        ICloneable,
+        ICloneable, IFormattable,
         IEnumerable<(int row_index, int column_index, ddouble val)>,
         IAdditionOperators<Matrix, Matrix, Matrix>,
         ISubtractionOperators<Matrix, Matrix, Matrix>,
@@ -67,7 +68,7 @@ namespace Algebra {
         public int Size {
             get {
                 if (!IsSquare(this)) {
-                    throw new InvalidOperationException("not square matrix");
+                    throw new ArithmeticException("not square matrix");
                 }
 
                 return Rows;
@@ -130,44 +131,48 @@ namespace Algebra {
 
         /// <summary>転置</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Matrix Transpose {
-            get {
-                Matrix ret = new(Columns, Rows);
+        public Matrix T => Transpose(this);
 
-                for (int i = 0; i < Rows; i++) {
-                    for (int j = 0; j < Columns; j++) {
-                        ret.e[j, i] = e[i, j];
-                    }
+        /// <summary>転置</summary>
+        public static Matrix Transpose(Matrix m) {
+            Matrix ret = new(m.Columns, m.Rows);
+
+            for (int i = 0; i < m.Rows; i++) {
+                for (int j = 0; j < m.Columns; j++) {
+                    ret.e[j, i] = m.e[i, j];
                 }
-
-                return ret;
             }
+
+            return ret;
         }
 
         /// <summary>逆行列</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Matrix Inverse {
-            get {
-                if (IsZero(this) || !IsValid(this)) {
-                    return Invalid(Columns, Rows);
-                }
-                if (Rows == Columns) {
-                    return GaussianEliminate(this);
-                }
-                else if (Rows < Columns) {
-                    Matrix m = this * Transpose;
-                    return Transpose * m.Inverse;
-                }
-                else {
-                    Matrix m = Transpose * this;
-                    return m.Inverse * Transpose;
-                }
+        public Matrix Inverse => Invert(this);
+
+        /// <summary>逆行列</summary>
+        public static Matrix Invert(Matrix m) {
+            if (IsZero(m) || !IsFinite(m)) {
+                return Invalid(m.Columns, m.Rows);
+            }
+            if (m.Rows == m.Columns) {
+                return GaussianEliminate(m);
+            }
+            else if (m.Rows < m.Columns) {
+                Matrix mt = m.T, mr = m * mt;
+                return mt * mr.Inverse;
+            }
+            else {
+                Matrix mt = m.T, mr = m.T * m;
+                return mr.Inverse * mt;
             }
         }
 
         /// <summary>ノルム</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public ddouble Norm => ddouble.Sqrt(SquareNorm);
+        public ddouble Norm =>
+            IsFinite(this) ? (IsZero(this) ? 0d : ddouble.Ldexp(ddouble.Sqrt(ScaleB(this, -MaxExponent).SquareNorm), MaxExponent))
+            : !IsValid(this) ? ddouble.NaN : ddouble.PositiveInfinity;
 
         /// <summary>ノルム2乗</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -244,6 +249,9 @@ namespace Algebra {
             return ret;
         }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public Vector[] Horizontals => (new Vector[Rows]).Select((_, idx) => Horizontal(idx)).ToArray();
+
         /// <summary>列ベクトル</summary>
         /// <param name="column_index">列</param>
         public Vector Vertical(int column_index) {
@@ -256,12 +264,15 @@ namespace Algebra {
             return ret;
         }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public Vector[] Verticals => (new Vector[Columns]).Select((_, idx) => Vertical(idx)).ToArray();
+
         /// <summary>対角成分</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ddouble[] Diagonals {
             get {
                 if (!IsSquare(this)) {
-                    throw new InvalidOperationException("not square matrix");
+                    throw new ArithmeticException("not square matrix");
                 }
 
                 ddouble[] diagonals = new ddouble[Size];
@@ -469,12 +480,8 @@ namespace Algebra {
             return true;
         }
 
-        /// <summary>有効な行列か判定</summary>
-        public static bool IsValid(Matrix matrix) {
-            if (matrix.Rows < 1 || matrix.Columns < 1) {
-                return false;
-            }
-
+        /// <summary>有限行列か判定</summary>
+        public static bool IsFinite(Matrix matrix) {
             for (int i = 0; i < matrix.Rows; i++) {
                 for (int j = 0; j < matrix.Columns; j++) {
                     if (!ddouble.IsFinite(matrix.e[i, j])) {
@@ -486,9 +493,84 @@ namespace Algebra {
             return true;
         }
 
+        /// <summary>無限要素を含む行列か判定</summary>
+        public static bool IsInfinity(Matrix matrix) {
+            if (!IsValid(matrix)) {
+                return false;
+            }
+
+            for (int i = 0; i < matrix.Rows; i++) {
+                for (int j = 0; j < matrix.Columns; j++) {
+                    if (ddouble.IsInfinity(matrix.e[i, j])) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>有効な行列か判定</summary>
+        public static bool IsValid(Matrix matrix) {
+            if (matrix.Rows < 1 || matrix.Columns < 1) {
+                return false;
+            }
+
+            for (int i = 0; i < matrix.Rows; i++) {
+                for (int j = 0; j < matrix.Columns; j++) {
+                    if (ddouble.IsNaN(matrix.e[i, j])) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
         /// <summary>正則行列か判定</summary>
         public static bool IsRegular(Matrix matrix) {
-            return IsValid(matrix.Inverse);
+            return IsFinite(Invert(matrix));
+        }
+
+        /// <summary>Any句</summary>
+        public static bool Any(Matrix matrix, Func<ddouble, bool> cond) {
+            for (int i = 0; i < matrix.Rows; i++) {
+                for (int j = 0; j < matrix.Columns; j++) {
+                    if (cond(matrix.e[i, j])) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>All句</summary>
+        public static bool All(Matrix matrix, Func<ddouble, bool> cond) {
+            for (int i = 0; i < matrix.Rows; i++) {
+                for (int j = 0; j < matrix.Columns; j++) {
+                    if (!cond(matrix.e[i, j])) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>Count句</summary>
+        public static long Count(Matrix matrix, Func<ddouble, bool> cond) {
+            long cnt = 0;
+
+            for (int i = 0; i < matrix.Rows; i++) {
+                for (int j = 0; j < matrix.Columns; j++) {
+                    if (cond(matrix.e[i, j])) {
+                        cnt++;
+                    }
+                }
+            }
+
+            return cnt;
         }
 
         /// <summary>等しいか判定</summary>
@@ -514,7 +596,7 @@ namespace Algebra {
         /// <summary>文字列化</summary>
         public override string ToString() {
             if (!IsValid(this)) {
-                return "Invalid Matrix";
+                return "invalid";
             }
 
             StringBuilder str = new($"[ [ {e[0, 0]}");
@@ -527,6 +609,54 @@ namespace Algebra {
                 str.Append($", [ {e[i, 0]}");
                 for (int j = 1; j < Columns; j++) {
                     str.Append($", {e[i, j]}");
+                }
+                str.Append(" ]");
+            }
+
+            str.Append(" ]");
+
+            return str.ToString();
+        }
+
+        public string ToString(string format) {
+            if (!IsValid(this)) {
+                return "invalid";
+            }
+
+            StringBuilder str = new($"[ [ {e[0, 0].ToString(format)}");
+            for (int j = 1; j < Columns; j++) {
+                str.Append($", {e[0, j].ToString(format)}");
+            }
+            str.Append(" ]");
+
+            for (int i = 1; i < Rows; i++) {
+                str.Append($", [ {e[i, 0].ToString(format)}");
+                for (int j = 1; j < Columns; j++) {
+                    str.Append($", {e[i, j].ToString(format)}");
+                }
+                str.Append(" ]");
+            }
+
+            str.Append(" ]");
+
+            return str.ToString();
+        }
+
+        public string ToString(string format, IFormatProvider provider) {
+            if (!IsValid(this)) {
+                return "invalid";
+            }
+
+            StringBuilder str = new($"[ [ {e[0, 0].ToString(format, provider)}");
+            for (int j = 1; j < Columns; j++) {
+                str.Append($", {e[0, j].ToString(format, provider)}");
+            }
+            str.Append(" ]");
+
+            for (int i = 1; i < Rows; i++) {
+                str.Append($", [ {e[i, 0].ToString(format, provider)}");
+                for (int j = 1; j < Columns; j++) {
+                    str.Append($", {e[i, j].ToString(format, provider)}");
                 }
                 str.Append(" ]");
             }

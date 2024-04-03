@@ -5,14 +5,16 @@ namespace Algebra {
     /// <summary>行列クラス</summary>
     public partial class Matrix {
         /// <summary>LU分解</summary>
-        public (Matrix lower_matrix, Matrix upper_matrix) LUDecompose() {
-            if (!IsSquare(this)) {
-                throw new InvalidOperationException("not square matrix");
+        public static (Matrix l, Matrix u) LU(Matrix m) {
+            if (!IsSquare(m)) {
+                throw new ArgumentException("invalid size", nameof(m));
             }
 
-            int n = Size;
+            int n = m.Size;
 
-            Matrix m = Copy();
+            int exponent = m.MaxExponent;
+            m = ScaleB(m, -exponent);
+
             Matrix l = Zero(n, n), u = Zero(n, n);
 
             //LU分解
@@ -39,6 +41,8 @@ namespace Algebra {
                     u.e[i, j] = m.e[i, j];
                 }
             }
+
+            u = ScaleB(u, exponent);
 
             return (l, u);
         }

@@ -6,10 +6,9 @@ namespace Algebra {
     public partial class Matrix {
         /// <summary>固有値計算</summary>
         /// <param name="precision_level">精度(収束ループを回す回数)</param>
-        public ddouble[] CalculateEigenValues(int precision_level = 32) {
-            Matrix m = Copy();
+        public static ddouble[] EigenValues(Matrix m, int precision_level = 32) {
             for (int i = 0; i < precision_level; i++) {
-                (Matrix q, Matrix r) = m.QRDecompose();
+                (Matrix q, Matrix r) = QR(m);
                 m = r * q;
             }
 
@@ -20,36 +19,31 @@ namespace Algebra {
         /// <param name="eigen_values">固有値</param>
         /// <param name="eigen_vectors">固有ベクトル</param>
         /// <param name="precision_level">精度(収束ループを回す回数)</param>
-        public (ddouble[] eigen_values, Vector[] eigen_vectors) CalculateEigenValueVectors(int precision_level = 32) {
-            if (!IsSquare(this)) {
-                throw new InvalidOperationException("not square matrix");
+        public static (ddouble[] eigen_values, Vector[] eigen_vectors) EigenValueVectors(Matrix m, int precision_level = 32) {
+            if (!IsSquare(m)) {
+                throw new ArgumentException("not square matrix", nameof(m));
             }
-
-            ddouble[] eigen_values = null;
-            Vector[] eigen_vectors = new Vector[Size];
 
             const int vector_converge_times = 3;
 
-            ddouble eigen_value;
-            bool[] is_converged_vector = new bool[Size];
-            Matrix m = Copy(), g;
-            Vector x_init = Vector.Zero(Size), x;
+            ddouble[] eigen_values = null;
+            int size = m.Size;
+            Vector[] eigen_vectors = Identity(size).Horizontals;
 
-            for (int i = 0; i < Size; i++) {
-                eigen_vectors[i] = Vector.Invalid(Size);
-                x_init.v[i] = 1d;
-            }
-            x_init /= x_init.Norm;
+            ddouble eigen_value;
+            bool[] is_converged_vector = new bool[size];
+            Matrix d = m, g, identity = Identity(size);
+            Vector x_init = Vector.Fill(size, 1).Normal, x;
 
             for (int i = 0; i < precision_level; i++) {
-                (Matrix q, Matrix r) = m.QRDecompose();
-                m = r * q;
+                (Matrix q, Matrix r) = QR(d);
+                d = r * q;
 
-                eigen_values = m.Diagonals;
+                eigen_values = d.Diagonals;
 
                 bool is_all_converged = true;
 
-                for (int j = 0; j < Size; j++) {
+                for (int j = 0; j < size; j++) {
                     if (is_converged_vector[j]) {
                         continue;
                     }
@@ -58,8 +52,8 @@ namespace Algebra {
 
                     eigen_value = eigen_values[j];
 
-                    g = (this - eigen_value * Identity(Size)).Inverse;
-                    if (!IsValid(g)) {
+                    g = (m - eigen_value * identity).Inverse;
+                    if (!IsFinite(g)) {
                         is_converged_vector[j] = true;
                         break;
                     }

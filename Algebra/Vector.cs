@@ -11,7 +11,7 @@ namespace Algebra {
     ///<summary>ベクトルクラス</summary>
     [DebuggerDisplay("{ToString(),nq}")]
     public partial class Vector :
-        ICloneable,
+        ICloneable, IFormattable,
         IEnumerable<(int index, ddouble val)>,
         IAdditionOperators<Vector, Vector, Vector>,
         ISubtractionOperators<Vector, Vector, Vector>,
@@ -178,7 +178,10 @@ namespace Algebra {
 
         /// <summary>ノルム</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public ddouble Norm => ddouble.Sqrt(SquareNorm);
+        public ddouble Norm =>
+            IsFinite(this)
+            ? (IsZero(this) ? 0d : ddouble.Ldexp(ddouble.Sqrt(ScaleB(this, -MaxExponent).SquareNorm), MaxExponent))
+            : !IsValid(this) ? ddouble.NaN : ddouble.PositiveInfinity;
 
         /// <summary>ノルム2乗</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -324,8 +327,8 @@ namespace Algebra {
             return true;
         }
 
-        /// <summary>有効なベクトルか判定</summary>
-        public static bool IsValid(Vector vector) {
+        /// <summary>有限ベクトルか判定</summary>
+        public static bool IsFinite(Vector vector) {
             for (int i = 0; i < vector.Dim; i++) {
                 if (!ddouble.IsFinite(vector.v[i])) {
                     return false;
@@ -333,6 +336,71 @@ namespace Algebra {
             }
 
             return true;
+        }
+
+        /// <summary>無限要素を含むベクトルか判定</summary>
+        public static bool IsInfinity(Vector vector) {
+            if (!IsValid(vector)) {
+                return false;
+            }
+
+            for (int i = 0; i < vector.Dim; i++) {
+                if (ddouble.IsInfinity(vector.v[i])) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>有効なベクトルか判定</summary>
+        public static bool IsValid(Vector vector) {
+            if (vector.Dim < 1) {
+                return false;
+            }
+
+            for (int i = 0; i < vector.Dim; i++) {
+                if (ddouble.IsNaN(vector.v[i])) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>Any句</summary>
+        public static bool Any(Vector vector, Func<ddouble, bool> cond) {
+            for (int i = 0; i < vector.Dim; i++) {
+                if (cond(vector.v[i])) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>All句</summary>
+        public static bool All(Vector vector, Func<ddouble, bool> cond) {
+            for (int i = 0; i < vector.Dim; i++) {
+                if (!cond(vector.v[i])) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>Count句</summary>
+        public static long Count(Vector vector, Func<ddouble, bool> cond) {
+            long cnt = 0;
+
+            for (int i = 0; i < vector.Dim; i++) {
+                if (cond(vector.v[i])) {
+                    cnt++;
+                }
+            }
+
+            return cnt;
         }
 
         /// <summary>等しいか判定</summary>
@@ -357,15 +425,49 @@ namespace Algebra {
 
         /// <summary>文字列化</summary>
         public override string ToString() {
-            if (Dim <= 0) {
-                return string.Empty;
+            if (!IsValid(this)) {
+                return "invalid";
             }
 
-            StringBuilder str = new($"{v[0]}");
+            StringBuilder str = new($"[ {v[0]}");
 
             for (int i = 1; i < Dim; i++) {
-                str.Append($",{v[i]}");
+                str.Append($", {v[i]}");
             }
+
+            str.Append(" ]");
+
+            return str.ToString();
+        }
+
+        public string ToString(string format) {
+            if (!IsValid(this)) {
+                return "invalid";
+            }
+
+            StringBuilder str = new($"[ {v[0].ToString(format)}");
+
+            for (int i = 1; i < Dim; i++) {
+                str.Append($", {v[i].ToString(format)}");
+            }
+
+            str.Append(" ]");
+
+            return str.ToString();
+        }
+
+        public string ToString(string format, IFormatProvider provider) {
+            if (!IsValid(this)) {
+                return "invalid";
+            }
+
+            StringBuilder str = new($"[ {v[0].ToString(format, provider)}");
+
+            for (int i = 1; i < Dim; i++) {
+                str.Append($", {v[i].ToString(format, provider)}");
+            }
+
+            str.Append(" ]");
 
             return str.ToString();
         }

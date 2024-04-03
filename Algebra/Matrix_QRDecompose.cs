@@ -4,12 +4,12 @@ namespace Algebra {
     /// <summary>行列クラス</summary>
     public partial class Matrix {
         /// <summary>QR分解</summary>
-        public (Matrix orthogonal_matrix, Matrix triangular_matrix) QRDecompose() {
-            if (!IsSquare(this)) {
-                throw new InvalidOperationException("not square matrix");
+        public static (Matrix q, Matrix r) QR(Matrix m) {
+            if (m.Rows < m.Columns) {
+                throw new ArgumentException("invalid size", nameof(m));
             }
 
-            int n = Size;
+            int n = m.Size;
 
             Matrix q = new(n, n), r = new(n, n);
 
@@ -19,7 +19,7 @@ namespace Algebra {
             }
 
             for (int i = 0; i < n; i++) {
-                Vector ai = Vertical(i);
+                Vector ai = m.Vertical(i);
 
                 u[i] = ai.Copy();
 
