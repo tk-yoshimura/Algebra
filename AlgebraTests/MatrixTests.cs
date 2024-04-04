@@ -670,7 +670,7 @@ namespace Algebra.Tests {
 
         [TestMethod()]
         public void SVDTest() {
-            for (ddouble eps = 1e-30; eps < 1e-1; eps *= 2) {
+            for (ddouble eps = 1e-80; eps < 1e-1; eps *= 2) {
                 Console.WriteLine(eps);
 
                 Matrix m = new ddouble[,] { { 1, eps, 0 }, { 0, 1, 2 * eps }, { -eps, eps, 1 } };
@@ -678,6 +678,10 @@ namespace Algebra.Tests {
                 (Matrix u, Vector s, Matrix v) = Matrix.SVD(m);
 
                 Matrix w = u * Matrix.FromDiagonals(s) * v;
+
+                Console.WriteLine(u);
+                Console.WriteLine(s);
+                Console.WriteLine(v);
 
                 Assert.IsTrue((m - w).Norm < 1e-28, $"{(m - w).Norm}");
             }
@@ -783,6 +787,9 @@ namespace Algebra.Tests {
             Matrix matrix = new double[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 8, 7, 9 } };
 
             (ddouble[] eigen_values, Vector[] eigen_vectors) = Matrix.EigenValueVectors(matrix);
+            Vector eigen_values_expected = Matrix.EigenValues(matrix);
+
+            Assert.IsTrue((eigen_values - eigen_values_expected).Norm < 1e-30);
 
             Assert.AreEqual(new Matrix(new double[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 8, 7, 9 } }), matrix);
 
