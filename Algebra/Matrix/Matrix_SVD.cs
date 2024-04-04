@@ -8,7 +8,7 @@ namespace Algebra {
             Matrix mt = m.T, r = mt * m;
 
             (ddouble[] values, Vector[] vectors) = EigenValueVectors(r);
-        
+
             Vector s = (v => ddouble.Sqrt(ddouble.Max(0, v)), values);
             Matrix v = VConcat(vectors);
 

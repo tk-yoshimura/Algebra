@@ -1,7 +1,6 @@
 ﻿using DoubleDouble;
 using System;
 using System.Linq;
-using System.Security.Principal;
 
 namespace Algebra {
     /// <summary>行列クラス</summary>
@@ -67,7 +66,7 @@ namespace Algebra {
                     }
 
                     Matrix gp = ScaleB(gs_prev[i], -gs_prev[i].MaxExponent);
-                    
+
                     ddouble norm, norm_prev = ddouble.NaN;
                     Vector x = Vector.Fill(size, 0.125), x_prev = x;
                     x[i] = 1d;

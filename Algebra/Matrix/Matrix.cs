@@ -259,7 +259,7 @@ namespace Algebra {
             }
         }
 
-        
+
         public static Matrix FromDiagonals(ddouble[] vs) {
             ddouble[,] v = new ddouble[vs.Length, vs.Length];
 
