@@ -8,10 +8,10 @@ namespace Algebra {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ddouble Trace {
             get {
-                (_, Matrix upper) = LU(this);
+                (_, Matrix u) = LU(this);
 
                 ddouble sum = 0d;
-                foreach (var diagonal in upper.Diagonals) {
+                foreach (var diagonal in u.Diagonals) {
                     sum += diagonal;
                 }
 

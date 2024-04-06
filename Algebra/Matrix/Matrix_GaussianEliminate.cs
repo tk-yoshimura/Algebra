@@ -7,16 +7,16 @@ namespace Algebra {
         /// <summary>ガウスの消去法</summary>
         public static Matrix GaussianEliminate(Matrix m) {
             if (!IsSquare(m)) {
-                throw new ArgumentException("not square matrix", $"{nameof(m)}");
+                throw new ArgumentException("not square matrix", nameof(m));
             }
 
-            int exponent = m.MaxExponent;
             int n = m.Size;
 
             if (!IsFinite(m)) {
                 return Invalid(n, n);
             }
 
+            int exponent = m.MaxExponent;
             Matrix v = Identity(n), u = ScaleB(m, -exponent);
 
             for (int i = 0; i < n; i++) {
