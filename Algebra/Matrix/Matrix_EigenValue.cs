@@ -31,14 +31,14 @@ namespace Algebra {
                 throw new ArgumentException("not square matrix", nameof(m));
             }
 
-            int size = m.Size;
-            bool[] is_convergenced = new bool[size];
-            ddouble[] eigen_values = Vector.Fill(size, 1);
-            Vector[] eigen_vectors = Identity(size).Horizontals;
+            int n = m.Size;
+            bool[] is_convergenced = new bool[n];
+            ddouble[] eigen_values = Vector.Fill(n, 1);
+            Vector[] eigen_vectors = Identity(n).Horizontals;
 
-            Matrix d = m, identity = Identity(size);
+            Matrix d = m, identity = Identity(n);
 
-            Matrix[] gs_prev = new Matrix[size];
+            Matrix[] gs_prev = new Matrix[n];
 
             for (int iter_qr = 0; iter_qr < precision_level; iter_qr++) {
                 (Matrix q, Matrix r) = QR(d);
@@ -46,7 +46,7 @@ namespace Algebra {
 
                 eigen_values = d.Diagonals;
 
-                for (int i = 0; i < size; i++) {
+                for (int i = 0; i < n; i++) {
                     if (is_convergenced[i]) {
                         continue;
                     }
@@ -68,7 +68,7 @@ namespace Algebra {
                     Matrix gp = ScaleB(gs_prev[i], -gs_prev[i].MaxExponent);
 
                     ddouble norm, norm_prev = ddouble.NaN;
-                    Vector x = Vector.Fill(size, 0.125), x_prev = x;
+                    Vector x = Vector.Fill(n, 0.125), x_prev = x;
                     x[i] = 1d;
 
                     for (int iter_vector = 0; iter_vector < precision_level; iter_vector++) {

@@ -12,6 +12,10 @@ namespace Algebra {
 
             int n = m.Size;
 
+            if (!IsFinite(m)) {
+                return (Invalid(n, n), Invalid(n, n));
+            }
+
             int exponent = m.MaxExponent;
             m = ScaleB(m, -exponent);
 

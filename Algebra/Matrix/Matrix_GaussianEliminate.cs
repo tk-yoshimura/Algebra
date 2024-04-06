@@ -11,9 +11,13 @@ namespace Algebra {
             }
 
             int exponent = m.MaxExponent;
-            int n = m.Rows;
+            int n = m.Size;
 
-            Matrix v = Identity(m.Rows), u = ScaleB(m, -exponent);
+            if (!IsFinite(m)) {
+                return Invalid(n, n);
+            }
+
+            Matrix v = Identity(n), u = ScaleB(m, -exponent);
 
             for (int i = 0; i < n; i++) {
                 ddouble pivot = ddouble.Abs(u.e[i, i]);
@@ -89,9 +93,13 @@ namespace Algebra {
                 throw new ArgumentException("invalid size", $"{nameof(m)}, {nameof(v)}");
             }
 
-            int exponent = m.MaxExponent;
-            int n = m.Rows;
+            int n = m.Size;
 
+            if (!IsFinite(m)) {
+                return Vector.Invalid(n);
+            }
+
+            int exponent = m.MaxExponent;
             Matrix u = ScaleB(m, -exponent);
             v = v.Copy();
 

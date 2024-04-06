@@ -10,17 +10,21 @@ namespace Algebra {
                 throw new ArgumentException("invalid size", nameof(m));
             }
 
-            int size = m.Size;
+            int n = m.Size;
+
+            if (!IsFinite(m)) {
+                return (Invalid(n, n), Invalid(n, n));
+            }
 
             int exponent = m.MaxExponent;
             m = ScaleB(m, -exponent);
 
-            Matrix r = m, q = Identity(size);
-            Vector u = Vector.Zero(size);
+            Matrix r = m, q = Identity(n);
+            Vector u = Vector.Zero(n);
 
-            for (int k = 0; k < size - 1; k++) {
+            for (int k = 0; k < n - 1; k++) {
                 ddouble vsum = 0d;
-                for (int i = k; i < size; i++) {
+                for (int i = k; i < n; i++) {
                     vsum += ddouble.Square(r.e[i, k]);
                 }
                 ddouble vnorm = ddouble.Sqrt(vsum);
@@ -33,15 +37,15 @@ namespace Algebra {
                 u.v[k] = ddouble.IsPositive(x) ? (x + vnorm) : (x - vnorm);
                 ddouble usum = ddouble.Square(u.v[k]);
 
-                for (int i = k + 1; i < size; i++) {
+                for (int i = k + 1; i < n; i++) {
                     u.v[i] = r.e[i, k];
                     usum += ddouble.Square(u.v[i]);
                 }
                 ddouble c = 2d / usum;
 
-                Matrix h = Identity(size);
-                for (int i = k; i < size; i++) {
-                    for (int j = k; j < size; j++) {
+                Matrix h = Identity(n);
+                for (int i = k; i < n; i++) {
+                    for (int j = k; j < n; j++) {
                         h.e[i, j] -= c * u[i] * u[j];
                     }
                 }
@@ -50,7 +54,7 @@ namespace Algebra {
                 q *= h;
             }
 
-            for (int i = 0; i < size; i++) {
+            for (int i = 0; i < n; i++) {
                 if (ddouble.IsNegative(r.e[i, i])) {
                     q[.., i] = -q[.., i];
                     r[i, ..] = -r[i, ..];
@@ -60,7 +64,7 @@ namespace Algebra {
                     r.e[i, k] = 0d;
                 }
 
-                for (int k = i + 1; k < size; k++) {
+                for (int k = i + 1; k < n; k++) {
                     if (ddouble.IsMinusZero(r.e[i, k])) {
                         r.e[i, k] = 0d;
                     }
