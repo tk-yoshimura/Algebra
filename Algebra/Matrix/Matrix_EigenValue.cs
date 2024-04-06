@@ -74,7 +74,7 @@ namespace Algebra {
                     for (int iter_vector = 0; iter_vector < precision_level; iter_vector++) {
                         x = (gp * x).Normal;
 
-                        if (Vector.Dot(x, x_prev) < 0d) {
+                        if (ddouble.IsNegative(Vector.Dot(x, x_prev))) {
                             x = -x;
                         }
 

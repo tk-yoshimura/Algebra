@@ -30,7 +30,7 @@ namespace Algebra {
                 }
 
                 ddouble x = r.e[k, k];
-                u.v[k] = (x >= 0) ? (x + vnorm) : (x - vnorm);
+                u.v[k] = ddouble.IsPositive(x) ? (x + vnorm) : (x - vnorm);
                 ddouble usum = ddouble.Square(u.v[k]);
 
                 for (int i = k + 1; i < size; i++) {
