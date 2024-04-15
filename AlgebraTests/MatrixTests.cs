@@ -669,6 +669,17 @@ namespace Algebra.Tests {
         }
 
         [TestMethod()]
+        public void SVDDecomposeTest() {
+            Matrix matrix = new double[,] { { 12, -51, 4, 6 }, { 6, 167, -68, 3 }, { -4, 24, -41, 12 }, { 8, 13, 7, 2 } };
+
+            (Matrix u, Vector s, Matrix v) = Matrix.SVD(matrix);
+
+            Matrix m2 = u * Matrix.FromDiagonals(s) * v.T;
+
+            Console.WriteLine(m2);
+        }
+
+        [TestMethod()]
         public void EigenValuesTest() {
             Matrix matrix = new double[,] { { 1, 2 }, { 4, 5 } };
             ddouble[] eigen_values = Matrix.EigenValues(matrix);
