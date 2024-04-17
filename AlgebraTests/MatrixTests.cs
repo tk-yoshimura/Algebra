@@ -1067,6 +1067,40 @@ namespace Algebra.Tests {
         }
 
         [TestMethod()]
+        public void ConcatTest2() {
+            Matrix matrix3x2 = Matrix.Fill(3, 2, value: 2);
+            Matrix matrix3x4 = Matrix.Fill(3, 4, value: 3);
+            Matrix matrix3x6 = Matrix.Fill(3, 6, value: 4);
+            Matrix matrix5x2 = Matrix.Fill(5, 2, value: 5);
+            Matrix matrix5x4 = Matrix.Fill(5, 4, value: 6);
+            Matrix matrix5x6 = Matrix.Fill(5, 6, value: 7);
+            Matrix matrix7x2 = Matrix.Fill(7, 2, value: 8);
+            Matrix matrix7x4 = Matrix.Fill(7, 4, value: 9);
+            Matrix matrix7x6 = Matrix.Fill(7, 6, value: 10);
+
+            Matrix matrix1 = Matrix.Concat(new Matrix[,] { { matrix3x2 }, { matrix5x2 }, { matrix7x2 } });
+            Assert.AreEqual(matrix3x2, matrix1[..3, ..]);
+            Assert.AreEqual(matrix5x2, matrix1[3..8, ..]);
+            Assert.AreEqual(matrix7x2, matrix1[8.., ..]);
+
+            Matrix matrix2 = Matrix.Concat(new Matrix[,] { { matrix3x2, matrix3x4, matrix3x6 } });
+            Assert.AreEqual(matrix3x2, matrix2[.., ..2]);
+            Assert.AreEqual(matrix3x4, matrix2[.., 2..6]);
+            Assert.AreEqual(matrix3x6, matrix2[.., 6..]);
+
+            Matrix matrix3 = Matrix.Concat(new Matrix[,] { { matrix3x2, matrix3x4, matrix3x6 }, { matrix5x2, matrix5x4, matrix5x6 }, { matrix7x2, matrix7x4, matrix7x6 } });
+            Assert.AreEqual(matrix3x2, matrix3[..3, ..2]);
+            Assert.AreEqual(matrix5x2, matrix3[3..8, ..2]);
+            Assert.AreEqual(matrix7x2, matrix3[8.., ..2]);
+            Assert.AreEqual(matrix3x4, matrix3[..3, 2..6]);
+            Assert.AreEqual(matrix5x4, matrix3[3..8, 2..6]);
+            Assert.AreEqual(matrix7x4, matrix3[8.., 2..6]);
+            Assert.AreEqual(matrix3x6, matrix3[..3, 6..]);
+            Assert.AreEqual(matrix5x6, matrix3[3..8, 6..]);
+            Assert.AreEqual(matrix7x6, matrix3[8.., 6..]);
+        }
+
+        [TestMethod()]
         public void VConcatTest() {
             Matrix matrix = Matrix.VConcat(
                 Vector.Fill(3, 1),

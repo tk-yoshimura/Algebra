@@ -38,5 +38,16 @@ namespace Algebra {
 
             return new Vector(v);
         }
+
+        /// <summary>結合</summary>
+        public static Vector Concat(params Vector[] blocks) {
+            List<ddouble> v = [];
+
+            foreach (Vector vector in blocks) {
+                v.AddRange(vector.v);
+            }
+
+            return new Vector(v);
+        }
     }
 }
