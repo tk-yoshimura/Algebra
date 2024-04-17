@@ -6,7 +6,7 @@ namespace Algebra {
     /// <summary>行列クラス</summary>
     public partial class Matrix {
         /// <summary>特異値分解</summary>
-        public static (Matrix u, Vector s, Matrix v) SVD(Matrix m, int max_iter = 256) {
+        public static (Matrix u, Vector s, Matrix v) SVD(Matrix m) {
             const double eps = 1e-28d;
 
             if (m.Rows < m.Columns) {
@@ -61,9 +61,13 @@ namespace Algebra {
                 }
             }
 
+            ddouble error_sum_prev = ddouble.NaN;
+
             // one-side jacobi method
-            for (int iter = 0; iter < max_iter; iter++) {
+            while (true) {
                 bool convergenced = true;
+
+                ddouble error_sum = 0d;
 
                 for (int i = 0; i < col - 1; i++) {
                     for (int j = i + 1; j < col; j++) {
@@ -73,7 +77,10 @@ namespace Algebra {
 
                         (ddouble cos, ddouble sin) = jacobi_coef(dot_ii, dot_ij, dot_jj);
 
-                        if (ddouble.Abs(sin) < eps) {
+                        ddouble error = ddouble.Abs(sin);
+                        error_sum += error;
+
+                        if (error < eps) {
                             continue;
                         }
 
@@ -91,9 +98,11 @@ namespace Algebra {
                     }
                 }
 
-                if (convergenced) {
+                if (convergenced || error_sum_prev <= error_sum || !ddouble.IsFinite(error_sum)) {
                     break;
                 }
+
+                error_sum_prev = error_sum;
             }
 
             // determine eigen value
