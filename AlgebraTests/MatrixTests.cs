@@ -856,8 +856,8 @@ namespace Algebra.Tests {
             Matrix matrix1 = new double[,] { { 1, 2 }, { 3, 4 } };
             Matrix matrix2 = new double[,] { { 1, 2 }, { 2, 4 } };
 
-            Assert.AreEqual(-1, matrix1.Trace);
-            Assert.AreEqual(1, matrix2.Trace);
+            Assert.AreEqual(5, matrix1.Trace);
+            Assert.AreEqual(5, matrix2.Trace);
         }
 
         [TestMethod()]
