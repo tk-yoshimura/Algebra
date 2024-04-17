@@ -689,12 +689,13 @@ namespace Algebra.Tests {
 
             (Matrix u, Vector s, Matrix v) = Matrix.SVD(matrix);
 
-            Matrix sm = Matrix.Concat(new Matrix[,] { { Matrix.FromDiagonals(s), Matrix.Zero(3, 1) } });
+            Matrix sm = Matrix.Concat(new Matrix[,] { { Matrix.FromDiagonals(s) }, { Matrix.Zero(1, 3) } });
 
-            Matrix matrix2 = (u * sm)[.., ..3] * v.T;
+            Matrix matrix2 = u * sm * v.T;
 
             Assert.IsTrue((matrix - matrix2).Norm < 1e-15);
-            Assert.IsTrue(ddouble.Abs(v.Det - 1d) < 1e-20);
+            Assert.IsTrue(ddouble.Abs(ddouble.Abs(u.Det) - 1d) < 1e-20);
+            Assert.IsTrue(ddouble.Abs(ddouble.Abs(v.Det) - 1d) < 1e-20);
         }
 
         [TestMethod()]
@@ -703,14 +704,45 @@ namespace Algebra.Tests {
 
             (Matrix u, Vector s, Matrix v) = Matrix.SVD(matrix);
 
-            Matrix sm = Matrix.Concat(new Matrix[,] { { Matrix.FromDiagonals(s) }, { Matrix.Zero(1, 3) } });
+            Matrix sm = Matrix.Concat(new Matrix[,] { { Matrix.FromDiagonals(s), Matrix.Zero(3, 1) } });
 
-            Matrix matrix2 = u * (sm * v.T)[..3, ..];
+            Matrix matrix2 = u * sm * v.T;
 
             Console.WriteLine(matrix2);
 
             Assert.IsTrue((matrix - matrix2).Norm < 1e-15);
             Assert.IsTrue(ddouble.Abs(ddouble.Abs(u.Det) - 1d) < 1e-20);
+            Assert.IsTrue(ddouble.Abs(ddouble.Abs(v.Det) - 1d) < 1e-20);
+        }
+
+        [TestMethod()]
+        public void SVDDecomposeTest4() {
+            Matrix matrix = new double[,] { { 12, -51, 4 }, { -4, 24, -41 }, { -8, 48, -82 }, { -12, 72, -123 } };
+
+            (Matrix u, Vector s, Matrix v) = Matrix.SVD(matrix);
+
+            Matrix sm = Matrix.Concat(new Matrix[,] { { Matrix.FromDiagonals(s) }, { Matrix.Zero(1, 3) } });
+
+            Matrix matrix2 = u * sm * v.T;
+
+            Assert.IsTrue((matrix - matrix2).Norm < 1e-15);
+            Assert.IsTrue(ddouble.Abs(ddouble.Abs(u.Det) - 1d) < 1e-20);
+            Assert.IsTrue(ddouble.Abs(ddouble.Abs(v.Det) - 1d) < 1e-20);
+        }
+
+        [TestMethod()]
+        public void SVDDecomposeTest5() {
+            Matrix matrix = Matrix.Identity(4);
+
+            (Matrix u, Vector s, Matrix v) = Matrix.SVD(matrix);
+
+            Matrix matrix2 = u * Matrix.FromDiagonals(s) * v.T;
+
+            Console.WriteLine(matrix2);
+
+            Assert.IsTrue((matrix - matrix2).Norm < 1e-15);
+            Assert.IsTrue(ddouble.Abs(ddouble.Abs(u.Det) - 1d) < 1e-20);
+            Assert.IsTrue(ddouble.Abs(ddouble.Abs(v.Det) - 1d) < 1e-20);
         }
 
         [TestMethod()]
