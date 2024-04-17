@@ -16,6 +16,10 @@ namespace Algebra {
                 return (Invalid(n, n), Invalid(n, n));
             }
 
+            if (IsZero(m)) {
+                return (Zero(n, n), Zero(n, n));
+            }
+
             int exponent = m.MaxExponent;
             m = ScaleB(m, -exponent);
 

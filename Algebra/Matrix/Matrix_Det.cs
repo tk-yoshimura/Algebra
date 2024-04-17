@@ -8,10 +8,10 @@ namespace Algebra {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ddouble Det {
             get {
-                (_, Matrix upper) = LU(this);
+                (_, int pivot_det, _, Matrix u) = LUKernel(this);
 
-                ddouble prod = 1d;
-                foreach (var diagonal in upper.Diagonals) {
+                ddouble prod = pivot_det;
+                foreach (var diagonal in u.Diagonals) {
                     prod *= diagonal;
                 }
 

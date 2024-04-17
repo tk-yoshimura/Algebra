@@ -15,7 +15,6 @@ namespace Algebra {
                 return (vt, st, ut);
             }
 
-            int exponent = m.MaxExponent;
             int row = m.Rows, col = m.Columns;
 
             Debug.Assert(row >= col);
@@ -26,6 +25,8 @@ namespace Algebra {
             if (IsZero(m)) {
                 return (Identity(row), Vector.Zero(col), Identity(col));
             }
+
+            int exponent = m.MaxExponent;
 
             Vector[] us = ScaleB(m, -exponent).Verticals, vs = Identity(col).Verticals;
             ddouble[] sqnorms = us.Select(u => u.SquareNorm).ToArray();

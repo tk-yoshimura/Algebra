@@ -592,7 +592,7 @@ namespace Algebra.Tests {
         public void LUDecomposeTest() {
             Matrix matrix = new double[,] { { 2, 3, 1, 2 }, { 4, 1, 3, -2 }, { 2, 2, -3, 1 }, { 1, -3, 2, 4 } };
 
-            (Matrix lower, Matrix upper) = Matrix.LU(matrix);
+            (Matrix pivot, Matrix lower, Matrix upper) = Matrix.LU(matrix);
 
             Assert.AreEqual(new Matrix(new double[,] { { 2, 3, 1, 2 }, { 4, 1, 3, -2 }, { 2, 2, -3, 1 }, { 1, -3, 2, 4 } }), matrix);
 
@@ -600,7 +600,22 @@ namespace Algebra.Tests {
                 Assert.AreEqual(1, diagonal);
             }
 
-            Assert.IsTrue((matrix - lower * upper).Norm < 1e-31);
+            Assert.IsTrue((matrix - pivot * lower * upper).Norm < 1e-31);
+        }
+
+        [TestMethod()]
+        public void LUDecomposeTest2() {
+            Matrix matrix = new double[,] { { 0, 0, 0, 1 }, { 1, 0, 0, 0 }, { 0, 1, 0, 0 }, { 0, 0, 1, 0 } };
+
+            (Matrix pivot, Matrix lower, Matrix upper) = Matrix.LU(matrix);
+
+            Assert.AreEqual(new Matrix(new double[,] { { 0, 0, 0, 1 }, { 1, 0, 0, 0 }, { 0, 1, 0, 0 }, { 0, 0, 1, 0 } }), matrix);
+
+            foreach (var diagonal in lower.Diagonals) {
+                Assert.AreEqual(1, diagonal);
+            }
+
+            Assert.IsTrue((matrix - pivot * lower * upper).Norm < 1e-31);
         }
 
         [TestMethod()]
