@@ -15,7 +15,6 @@ namespace Algebra {
             if (!IsFinite(m)) {
                 return (Invalid(n, n), Invalid(n, n));
             }
-
             if (IsZero(m)) {
                 return (Zero(n, n), Zero(n, n));
             }

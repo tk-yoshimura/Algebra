@@ -18,7 +18,6 @@ namespace Algebra {
             if (!IsFinite(m)) {
                 return (ps, 1, Invalid(n, n), Invalid(n, n));
             }
-
             if (IsZero(m)) {
                 return (ps, 1, Zero(n, n), Zero(n, n));
             }
