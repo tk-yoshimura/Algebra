@@ -131,6 +131,15 @@ namespace Algebra {
                     u_new -= us[k] * us[k][i];
                 }
 
+                if (Vector.IsZero(u_new)) {
+                    Vector b = Vector.Fill(row, 1d).Normal;
+                    u_new = b;
+
+                    for (int k = 0; k < us.Length; k++) {
+                        u_new -= us[k] * Vector.Dot(us[k], b);
+                    }
+                }
+
                 u_new = u_new.Normal;
 
                 us = [.. us, u_new];

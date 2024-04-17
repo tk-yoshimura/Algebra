@@ -746,6 +746,23 @@ namespace Algebra.Tests {
         }
 
         [TestMethod()]
+        public void SVDDecomposeTest6() {
+            Matrix matrix = Matrix.Identity(4);
+
+            matrix[0, 0] = 0;
+
+            (Matrix u, Vector s, Matrix v) = Matrix.SVD(matrix);
+
+            Matrix matrix2 = u * Matrix.FromDiagonals(s) * v.T;
+
+            Console.WriteLine(matrix2);
+
+            Assert.IsTrue((matrix - matrix2).Norm < 1e-15);
+            Assert.IsTrue(ddouble.Abs(ddouble.Abs(u.Det) - 1d) < 1e-20);
+            Assert.IsTrue(ddouble.Abs(ddouble.Abs(v.Det) - 1d) < 1e-20);
+        }
+
+        [TestMethod()]
         public void EigenValuesTest() {
             Matrix matrix = new double[,] { { 1, 2 }, { 4, 5 } };
             ddouble[] eigen_values = Matrix.EigenValues(matrix);
