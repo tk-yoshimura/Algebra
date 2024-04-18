@@ -1,5 +1,7 @@
 ﻿using Algebra;
+using DoubleDouble;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace AlgebraTests {
     public partial class MatrixTests {
@@ -62,6 +64,30 @@ namespace AlgebraTests {
 
             Assert.IsTrue(((matrix5 * 1e-100).Inverse.Inverse - (matrix5 * 1e-100)).Norm < 1e-128);
             Assert.IsTrue(((matrix6 * 1e-100).Inverse.Inverse - (matrix6 * 1e-100)).Norm < 1e-128);
+        }
+
+        [TestMethod()]
+        public void InverseCaseTest() {
+            foreach (Matrix matrix in MatrixTestCases.RegularMatrixs) {
+                Console.WriteLine($"test: {matrix}");
+
+                Matrix matrix_inv = matrix.Inverse;
+
+                Assert.IsTrue(ddouble.Abs(matrix.Det * matrix_inv.Det - 1) < 1e-25);
+                Assert.IsTrue((matrix * matrix_inv - Matrix.Identity(matrix.Size)).Norm < 1e-28);
+            }
+        }
+
+        [TestMethod()]
+        public void InverseLargeCaseTest() {
+            foreach (Matrix matrix in MatrixTestCases.LargeMatrixs) {
+                Console.WriteLine($"test: {matrix}");
+
+                Matrix matrix_inv = matrix.Inverse;
+
+                Assert.IsTrue(ddouble.Abs(matrix.Det * matrix_inv.Det - 1) < 1e-25);
+                Assert.IsTrue((matrix * matrix_inv - Matrix.Identity(matrix.Size)).Norm < 1e-28);
+            }
         }
 
         [TestMethod()]
