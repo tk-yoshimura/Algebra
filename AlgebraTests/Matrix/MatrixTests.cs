@@ -254,9 +254,15 @@ namespace AlgebraTests {
         public void DetTest() {
             Matrix matrix1 = new double[,] { { 1, 2 }, { 3, 4 } };
             Matrix matrix2 = new double[,] { { 1, 2 }, { 2, 4 } };
+            Matrix matrix3 = new double[,] { { -7, -6, 4 }, { 0, 5, -6 }, { 6, -2,  6 } };
+            Matrix matrix4 = new double[,] { { 1, 1, -9 }, { -8, -10, -4 }, { 7, 10, 9 } };
+            Matrix matrix5 = new double[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
 
             Assert.AreEqual(-2, matrix1.Det);
             Assert.AreEqual(0, matrix2.Det);
+            Assert.AreEqual(-30, matrix3.Det);
+            Assert.AreEqual(84, matrix4.Det);
+            Assert.AreEqual(0, matrix5.Det);
         }
 
         [TestMethod()]
