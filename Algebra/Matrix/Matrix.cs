@@ -130,6 +130,16 @@ namespace Algebra {
                 return Invalid(m.Columns, m.Rows);
             }
             if (m.Rows == m.Columns) {
+                if (m.Rows == 1) {
+                    return new Matrix(new ddouble[,] { { 1d / m.e[0, 0] } }, cloning: false);
+                }
+                if (m.Rows == 2) {
+                    return Invert2x2(m);
+                }
+                if (m.Rows == 3) {
+                    return Invert3x3(m);
+                }
+
                 return GaussianEliminate(m);
             }
             else if (m.Rows < m.Columns) {

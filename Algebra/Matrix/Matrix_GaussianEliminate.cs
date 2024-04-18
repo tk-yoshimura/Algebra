@@ -1,9 +1,45 @@
 ﻿using DoubleDouble;
 using System;
+using System.Diagnostics;
 
 namespace Algebra {
     /// <summary>行列クラス</summary>
     public partial class Matrix {
+        private static Matrix Invert2x2(Matrix m) {
+            Debug.Assert(m.Shape == (2, 2));
+
+            int exponent = m.MaxExponent;
+            m = ScaleB(m, -exponent);
+
+            return new Matrix(
+                new ddouble[,] {
+                    { m.e[1, 1], -m.e[0, 1] },
+                    { -m.e[1, 0], m.e[0, 0] }
+                }, cloning: false
+            ) / ddouble.Ldexp(Det2x2(m), exponent);
+        }
+
+        private static Matrix Invert3x3(Matrix m) {
+            Debug.Assert(m.Shape == (3, 3));
+
+            int exponent = m.MaxExponent;
+            m = ScaleB(m, -exponent);
+
+            return new Matrix(
+                new ddouble[,] {
+                    { m.e[1, 1] * m.e[2, 2] - m.e[1, 2] * m.e[2, 1],
+                      m.e[0, 2] * m.e[2, 1] - m.e[0, 1] * m.e[2, 2],
+                      m.e[0, 1] * m.e[1, 2] - m.e[0, 2] * m.e[1, 1] },
+                    { m.e[1, 2] * m.e[2, 0] - m.e[1, 0] * m.e[2, 2],
+                      m.e[0, 0] * m.e[2, 2] - m.e[0, 2] * m.e[2, 0],
+                      m.e[0, 2] * m.e[1, 0] - m.e[0, 0] * m.e[1, 2] },
+                    { m.e[1, 0] * m.e[2, 1] - m.e[1, 1] * m.e[2, 0],
+                      m.e[0, 1] * m.e[2, 0] - m.e[0, 0] * m.e[2, 1],
+                      m.e[0, 0] * m.e[1, 1] - m.e[0, 1] * m.e[1, 0] }
+                }, cloning: false
+            ) / ddouble.Ldexp(Det3x3(m), exponent);
+        }
+
         /// <summary>ガウスの消去法</summary>
         public static Matrix GaussianEliminate(Matrix m) {
             if (!IsSquare(m)) {

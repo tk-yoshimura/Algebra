@@ -67,6 +67,14 @@ namespace AlgebraTests {
         }
 
         [TestMethod()]
+        public void Inverse3x3Test() {
+            Matrix matrix = new double[,] { { 4, -5, 6 }, { -10, 8, -1 }, { -3, -10, -1 } };
+            Matrix matrix_inv = matrix.Inverse;
+
+            Assert.IsTrue((matrix * matrix_inv * matrix - matrix).Norm < 1e-28);
+        }
+
+        [TestMethod()]
         public void InverseCaseTest() {
             foreach (Matrix matrix in MatrixTestCases.RegularMatrixs) {
                 Console.WriteLine($"test: {matrix}");
