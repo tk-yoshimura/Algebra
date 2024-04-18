@@ -15,9 +15,9 @@ namespace Algebra {
         private static ddouble Det3x3(Matrix m) {
             Debug.Assert(m.Shape == (3, 3));
 
-            ddouble det = 
-                m.e[0, 0] * (m.e[1, 1] * m.e[2, 2] - m.e[2, 1] * m.e[1, 2]) + 
-                m.e[1, 0] * (m.e[2, 1] * m.e[0, 2] - m.e[0, 1] * m.e[2, 2]) + 
+            ddouble det =
+                m.e[0, 0] * (m.e[1, 1] * m.e[2, 2] - m.e[2, 1] * m.e[1, 2]) +
+                m.e[1, 0] * (m.e[2, 1] * m.e[0, 2] - m.e[0, 1] * m.e[2, 2]) +
                 m.e[2, 0] * (m.e[0, 1] * m.e[1, 2] - m.e[1, 1] * m.e[0, 2]);
 
             return det;
