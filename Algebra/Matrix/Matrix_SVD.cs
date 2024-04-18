@@ -64,7 +64,7 @@ namespace Algebra {
             ddouble error_sum_prev = ddouble.NaN;
 
             // one-side jacobi method
-            for(long iter = 0, max_iter = 4L * col; iter < max_iter; iter++) {
+            for (long iter = 0, max_iter = 4L * col; iter < max_iter; iter++) {
                 bool convergenced = true;
 
                 ddouble error_sum = 0d;

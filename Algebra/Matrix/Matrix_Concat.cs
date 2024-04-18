@@ -184,7 +184,7 @@ namespace Algebra {
 
             int row_index = 0;
             foreach (Matrix matrix in matrixs) {
-                m[row_index..(row_index+matrix.Rows), ..] = matrix;
+                m[row_index..(row_index + matrix.Rows), ..] = matrix;
                 row_index += matrix.Rows;
             }
 
@@ -228,7 +228,7 @@ namespace Algebra {
 
             int col_index = 0;
             foreach (Matrix matrix in matrixs) {
-                m[.., col_index..(col_index+matrix.Columns)] = matrix;
+                m[.., col_index..(col_index + matrix.Columns)] = matrix;
                 col_index += matrix.Columns;
             }
 

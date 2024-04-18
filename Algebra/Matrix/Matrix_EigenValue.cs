@@ -9,8 +9,12 @@ namespace Algebra {
         /// <param name="precision_level">精度(収束ループを回す回数)</param>
         public static ddouble[] EigenValues(Matrix m, int precision_level = 32) {
             ArgumentOutOfRangeException.ThrowIfLessThan(precision_level, 2, nameof(precision_level));
-            if (!IsSquare(m) || m.Size <= 1) {
+            if (!IsSquare(m) || m.Size < 1) {
                 throw new ArgumentException("not square matrix", nameof(m));
+            }
+
+            if (m.Size <= 1) {
+                return [m[0, 0]];
             }
 
             for (int iter = 0; iter < precision_level; iter++) {
@@ -27,8 +31,12 @@ namespace Algebra {
         /// <param name="precision_level">精度(収束ループを回す回数)</param>
         public static (ddouble[] eigen_values, Vector[] eigen_vectors) EigenValueVectors(Matrix m, int precision_level = 32) {
             ArgumentOutOfRangeException.ThrowIfLessThan(precision_level, 2, nameof(precision_level));
-            if (!IsSquare(m) || m.Size <= 1) {
+            if (!IsSquare(m) || m.Size < 1) {
                 throw new ArgumentException("not square matrix", nameof(m));
+            }
+
+            if (m.Size <= 1) {
+                return ([m[0, 0]], [new Vector(1)]);
             }
 
             int n = m.Size;
