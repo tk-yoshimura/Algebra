@@ -13,10 +13,10 @@ namespace Algebra {
             int n = m.Size;
 
             if (!IsFinite(m)) {
-                return (Invalid(n, n), Invalid(n, n));
+                return (Invalid(n), Invalid(n));
             }
             if (IsZero(m)) {
-                return (Zero(n, n), Zero(n, n));
+                return (Zero(n), Zero(n));
             }
 
             int exponent = m.MaxExponent;

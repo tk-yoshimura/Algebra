@@ -168,6 +168,29 @@ namespace Algebra {
             return m;
         }
 
+        /// <summary>Row方向に結合</summary>
+        public static Matrix VConcat(params Matrix[] matrixs) {
+            if (matrixs.Length < 1) {
+                throw new ArgumentException("empty array", nameof(matrixs));
+            }
+
+            int colomns = matrixs[0].Columns;
+
+            if (matrixs.Any(m => m.Columns != colomns)) {
+                throw new ArgumentException("mismatch size", nameof(matrixs));
+            }
+
+            Matrix m = new(matrixs.Sum(m => m.Rows), colomns);
+
+            int row_index = 0;
+            foreach (Matrix matrix in matrixs) {
+                m[row_index..(row_index+matrix.Rows), ..] = matrix;
+                row_index += matrix.Rows;
+            }
+
+            return m;
+        }
+
         /// <summary>Colomn方向に結合</summary>
         public static Matrix HConcat(params Vector[] vectors) {
             if (vectors.Length < 1) {
@@ -184,6 +207,29 @@ namespace Algebra {
 
             for (int i = 0; i < vectors.Length; i++) {
                 m[.., i] = vectors[i];
+            }
+
+            return m;
+        }
+
+        /// <summary>Colomn方向に結合</summary>
+        public static Matrix HConcat(params Matrix[] matrixs) {
+            if (matrixs.Length < 1) {
+                throw new ArgumentException("empty array", nameof(matrixs));
+            }
+
+            int rows = matrixs[0].Rows;
+
+            if (matrixs.Any(m => m.Rows != rows)) {
+                throw new ArgumentException("mismatch size", nameof(matrixs));
+            }
+
+            Matrix m = new(rows, matrixs.Sum(m => m.Columns));
+
+            int col_index = 0;
+            foreach (Matrix matrix in matrixs) {
+                m[.., col_index..(col_index+matrix.Columns)] = matrix;
+                col_index += matrix.Columns;
             }
 
             return m;

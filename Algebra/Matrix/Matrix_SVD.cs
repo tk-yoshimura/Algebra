@@ -20,7 +20,7 @@ namespace Algebra {
             Debug.Assert(row >= col);
 
             if (!IsFinite(m)) {
-                return (Invalid(row, row), Vector.Invalid(col), Invalid(col, col));
+                return (Invalid(row), Vector.Invalid(col), Invalid(col));
             }
             if (IsZero(m)) {
                 return (Identity(row), Vector.Zero(col), Identity(col));
@@ -64,7 +64,7 @@ namespace Algebra {
             ddouble error_sum_prev = ddouble.NaN;
 
             // one-side jacobi method
-            while (true) {
+            for(long iter = 0, max_iter = 4L * col; iter < max_iter; iter++) {
                 bool convergenced = true;
 
                 ddouble error_sum = 0d;
@@ -98,7 +98,7 @@ namespace Algebra {
                     }
                 }
 
-                if (convergenced || error_sum_prev <= error_sum || !ddouble.IsFinite(error_sum)) {
+                if (convergenced || !ddouble.IsFinite(error_sum) || (iter > col && error_sum_prev <= error_sum)) {
                     break;
                 }
 

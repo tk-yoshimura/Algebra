@@ -277,6 +277,12 @@ namespace Algebra {
             return new Matrix(rows, columns);
         }
 
+        /// <summary>ゼロ行列</summary>
+        /// <param name="size"行列サイズ</param>
+        public static Matrix Zero(int size) {
+            return new Matrix(size, size);
+        }
+
         /// <summary>定数行列</summary>
         public static Matrix Fill(int rows, int columns, ddouble value) {
             ddouble[,] v = new ddouble[rows, columns];
@@ -288,6 +294,11 @@ namespace Algebra {
             }
 
             return new Matrix(v, cloning: false);
+        }
+
+        /// <summary>定数行列</summary>
+        public static Matrix Fill(int size, ddouble value) {
+            return Fill(size, size, value);
         }
 
         /// <summary>単位行列</summary>
@@ -309,6 +320,12 @@ namespace Algebra {
         /// <param name="columns">列数</param>
         public static Matrix Invalid(int rows, int columns) {
             return Fill(rows, columns, value: ddouble.NaN);
+        }
+
+        /// <summary>不正な行列</summary>
+        /// <param name="size">行列サイズ</param>
+        public static Matrix Invalid(int size) {
+            return Fill(size, value: ddouble.NaN);
         }
 
         /// <summary>正方行列か判定</summary>

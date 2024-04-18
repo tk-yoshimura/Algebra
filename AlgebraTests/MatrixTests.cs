@@ -704,7 +704,7 @@ namespace Algebra.Tests {
 
             (Matrix u, Vector s, Matrix v) = Matrix.SVD(matrix);
 
-            Matrix sm = Matrix.Concat(new Matrix[,] { { Matrix.FromDiagonals(s) }, { Matrix.Zero(1, 3) } });
+            Matrix sm = Matrix.VConcat(Matrix.FromDiagonals(s), Matrix.Zero(1, 3));
 
             Matrix matrix2 = u * sm * v.T;
 
@@ -719,7 +719,7 @@ namespace Algebra.Tests {
 
             (Matrix u, Vector s, Matrix v) = Matrix.SVD(matrix);
 
-            Matrix sm = Matrix.Concat(new Matrix[,] { { Matrix.FromDiagonals(s), Matrix.Zero(3, 1) } });
+            Matrix sm = Matrix.HConcat(Matrix.FromDiagonals(s), Matrix.Zero(3, 1));
 
             Matrix matrix2 = u * sm * v.T;
 
@@ -736,7 +736,7 @@ namespace Algebra.Tests {
 
             (Matrix u, Vector s, Matrix v) = Matrix.SVD(matrix);
 
-            Matrix sm = Matrix.Concat(new Matrix[,] { { Matrix.FromDiagonals(s) }, { Matrix.Zero(1, 3) } });
+            Matrix sm = Matrix.VConcat(Matrix.FromDiagonals(s), Matrix.Zero(1, 3));
 
             Matrix matrix2 = u * sm * v.T;
 

@@ -16,16 +16,16 @@ namespace Algebra {
             int pivot_det = 1;
 
             if (!IsFinite(m)) {
-                return (ps, 1, Invalid(n, n), Invalid(n, n));
+                return (ps, 1, Invalid(n), Invalid(n));
             }
             if (IsZero(m)) {
-                return (ps, 1, Zero(n, n), Zero(n, n));
+                return (ps, 1, Zero(n), Zero(n));
             }
 
             int exponent = m.MaxExponent;
             m = ScaleB(m, -exponent);
 
-            Matrix l = Zero(n, n), u = Zero(n, n);
+            Matrix l = Zero(n), u = Zero(n);
 
             //LU分解
             for (int i = 0; i < n; i++) {
