@@ -33,5 +33,20 @@ namespace AlgebraTests {
                 Assert.IsTrue((matrix - pivot * lower * upper).Norm < 1e-28);
             }
         }
+
+        [TestMethod()]
+        public void LUDecomposeSingularTest() {
+            foreach (Matrix matrix in MatrixTestCases.SingularMatrixs) {
+
+                Console.WriteLine($"test: {matrix}");
+
+                (Matrix pivot, Matrix lower, Matrix upper) = Matrix.LU(matrix);
+
+                Assert.IsTrue(Matrix.IsFinite(pivot));
+                Assert.IsTrue(!Matrix.IsValid(lower));
+                Assert.IsTrue(Matrix.IsZero(upper));
+                Assert.AreEqual(0d, matrix.Det);
+            }
+        }
     }
 }

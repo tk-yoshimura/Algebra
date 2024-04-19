@@ -19,7 +19,7 @@ namespace Algebra {
                 return (ps, 1, Invalid(n), Invalid(n));
             }
             if (IsZero(m)) {
-                return (ps, 1, Zero(n), Zero(n));
+                return (ps, 1, Invalid(n), Zero(n));
             }
 
             int exponent = m.MaxExponent;
@@ -37,6 +37,11 @@ namespace Algebra {
                         pivot = ddouble.Abs(m.e[j, i]);
                         r = j;
                     }
+                }
+
+                //ピボットが閾値以下ならばMは正則行列でない
+                if (Math.ILogB((double)pivot) <= -100) {
+                    return (ps, 0, Invalid(n), Zero(n));
                 }
 
                 if (r != i) {
@@ -79,9 +84,13 @@ namespace Algebra {
 
         /// <summary>LU分解</summary>
         public static (Matrix p, Matrix l, Matrix u) LU(Matrix m) {
-            (int[] ps, _, Matrix l, Matrix u) = LUKernel(m);
+            (int[] ps, int pivot_det, Matrix l, Matrix u) = LUKernel(m);
 
             int n = m.Size;
+
+            if (pivot_det == 0) {
+                return (Identity(n), l, u);
+            }
 
             Matrix p = Zero(n, n);
 
