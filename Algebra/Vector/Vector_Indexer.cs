@@ -1,5 +1,10 @@
 ﻿using DoubleDouble;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics.Metrics;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 
 namespace Algebra {
     ///<summary>ベクトルクラス</summary>
@@ -40,6 +45,34 @@ namespace Algebra {
                     v[i + index] = value.v[i];
                 }
             }
+        }
+
+        /// <summary>配列インデクサ</summary>
+        public Vector this[int[] indexes] {
+            get {
+                ddouble[] ret = new ddouble[indexes.Length]; 
+                for (int i = 0; i < indexes.Length; i++) {
+                    ret[i] = v[indexes[i]];
+                }
+
+                return new(ret);
+            }
+
+            set {
+                if (value.Dim != indexes.Length) {
+                    throw new ArgumentException("invalid size", nameof(indexes));
+                }
+
+                for (int i = 0; i < indexes.Length; i++) {
+                    v[indexes[i]] = value.v[i];
+                }
+            }
+        }
+
+        /// <summary>配列インデクサ</summary>
+        public Vector this[IEnumerable<int> indexes] {
+            get => this[indexes.ToArray()];
+            set => this[indexes.ToArray()] = value;
         }
     }
 }

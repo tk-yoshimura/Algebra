@@ -170,5 +170,64 @@ namespace AlgebraTests {
                 matrix_dst[0..^2, 0..^2] = matrix_src[1..^1, 1..];
             });
         }
+
+        [TestMethod()]
+        public void ArrayIndexerTest() {
+            Matrix m = new double[,] { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 }, { 11, 12, 13, 14, 15 }, { 16, 17, 18, 19, 20 } };
+
+            Assert.AreEqual(new double[,] { { 14, 12, 13 }, { 4, 2, 3 }, { 9, 7, 8 } }, m[[2, 0, 1], [3, 1, 2]]);
+
+            m[[1, 0, 2], [3, 1, 2]] = new double[,] { { 0, 1, 2 }, { 3, 4, 5 }, { 6, 7, 8 } };
+
+            Assert.AreEqual(0, m[1, 3]);
+            Assert.AreEqual(1, m[1, 1]);
+            Assert.AreEqual(2, m[1, 2]);
+
+            Assert.AreEqual(3, m[0, 3]);
+            Assert.AreEqual(4, m[0, 1]);
+            Assert.AreEqual(5, m[0, 2]);
+
+            Assert.AreEqual(6, m[2, 3]);
+            Assert.AreEqual(7, m[2, 1]);
+            Assert.AreEqual(8, m[2, 2]);
+        }
+
+        [TestMethod()]
+        public void RowArrayIndexerTest() {
+            Matrix m = new double[,] { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 }, { 11, 12, 13, 14, 15 }, { 16, 17, 18, 19, 20 } };
+
+            Assert.AreEqual(new double[,] { { 14, 12, 13 }, { 19, 17, 18 } }, m[2.., [3, 1, 2]]);
+
+            m[1..3, [3, 1, 2]] = new double[,] { { 0, 1, 2 }, { 3, 4, 5 } };
+
+            Assert.AreEqual(0, m[1, 3]);
+            Assert.AreEqual(1, m[1, 1]);
+            Assert.AreEqual(2, m[1, 2]);
+
+            Assert.AreEqual(3, m[2, 3]);
+            Assert.AreEqual(4, m[2, 1]);
+            Assert.AreEqual(5, m[2, 2]);
+        }
+
+        [TestMethod()]
+        public void ColumnArrayIndexerTest() {
+            Matrix m = new double[,] { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 }, { 11, 12, 13, 14, 15 }, { 16, 17, 18, 19, 20 } };
+
+            Assert.AreEqual(new double[,] { { 12, 13, 14 }, { 2, 3, 4 }, { 7, 8, 9 } }, m[[2, 0, 1], 1..4]);
+
+            m[[1, 0, 2], 1..4] = new double[,] { { 0, 1, 2 }, { 3, 4, 5 }, { 6, 7, 8 } };
+
+            Assert.AreEqual(0, m[1, 1]);
+            Assert.AreEqual(1, m[1, 2]);
+            Assert.AreEqual(2, m[1, 3]);
+
+            Assert.AreEqual(3, m[0, 1]);
+            Assert.AreEqual(4, m[0, 2]);
+            Assert.AreEqual(5, m[0, 3]);
+
+            Assert.AreEqual(6, m[2, 1]);
+            Assert.AreEqual(7, m[2, 2]);
+            Assert.AreEqual(8, m[2, 3]);
+        }
     }
 }
