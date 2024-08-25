@@ -83,7 +83,7 @@ namespace AlgebraTests {
 
             Assert.AreEqual(new Vector(5, 2, 3, 7), v[[4, 1, 2, 6]]);
 
-            v[[ 2, 1, 3 ]] = new(4, 0, 8);
+            v[[2, 1, 3]] = new(4, 0, 8);
 
             Assert.AreEqual(4, v[2]);
             Assert.AreEqual(0, v[1]);

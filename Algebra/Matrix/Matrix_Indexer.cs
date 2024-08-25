@@ -119,7 +119,7 @@ namespace Algebra {
         /// <summary>配列インデクサ</summary>
         public Matrix this[int[] row_indexes, int[] column_indexes] {
             get {
-                ddouble[,] m = new ddouble[row_indexes.Length, column_indexes.Length]; 
+                ddouble[,] m = new ddouble[row_indexes.Length, column_indexes.Length];
                 for (int i = 0; i < row_indexes.Length; i++) {
                     for (int j = 0; j < column_indexes.Length; j++) {
                         m[i, j] = e[row_indexes[i], column_indexes[j]];
@@ -153,7 +153,7 @@ namespace Algebra {
             get {
                 (int ci, int cn) = column_range.GetOffsetAndLength(Columns);
 
-                ddouble[,] m = new ddouble[row_indexes.Length, cn]; 
+                ddouble[,] m = new ddouble[row_indexes.Length, cn];
                 for (int i = 0; i < row_indexes.Length; i++) {
                     for (int j = 0; j < cn; j++) {
                         m[i, j] = e[row_indexes[i], j + ci];
@@ -189,7 +189,7 @@ namespace Algebra {
             get {
                 (int ri, int rn) = row_range.GetOffsetAndLength(Rows);
 
-                ddouble[,] m = new ddouble[rn, column_indexes.Length]; 
+                ddouble[,] m = new ddouble[rn, column_indexes.Length];
                 for (int i = 0; i < rn; i++) {
                     for (int j = 0; j < column_indexes.Length; j++) {
                         m[i, j] = e[i + ri, column_indexes[j]];
