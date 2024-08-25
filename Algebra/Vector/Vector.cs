@@ -180,6 +180,10 @@ namespace Algebra {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ddouble Sum => v.Sum();
 
+        /// <summary>平均</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public ddouble Mean => v.Average();
+
         /// <summary>最大指数</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public int MaxExponent {

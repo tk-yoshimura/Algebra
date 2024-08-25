@@ -81,6 +81,7 @@ namespace AlgebraTests {
             Matrix matrix = new double[,] { { 1, 2 }, { 3, 4 } };
 
             Assert.AreEqual(10, matrix.Sum);
+            Assert.AreEqual(2.5, matrix.Mean);
         }
 
         [TestMethod()]

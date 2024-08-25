@@ -190,6 +190,10 @@ namespace Algebra {
             }
         }
 
+        /// <summary>平均</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public ddouble Mean => Sum / checked(Rows * Columns);
+
         /// <summary>最大指数</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public int MaxExponent {
