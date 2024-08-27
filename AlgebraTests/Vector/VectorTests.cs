@@ -159,6 +159,26 @@ namespace AlgebraTests {
             for (int i = 0; i < vector.Dim; i++) {
                 Assert.AreEqual(i, vector[i]);
             }
+
+            Vector vector2 = Vector.Arange(3, 8);
+
+            Assert.AreEqual(5, vector2.Dim);
+
+            for (int i = 0; i < vector2.Dim; i++) {
+                Assert.AreEqual(i + 3, vector2[i]);
+            }
+
+            Vector vector3 = Vector.Arange(3, 3);
+
+            Assert.AreEqual(0, vector3.Dim);
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                _ = Vector.Arange(3, 2);
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                _ = Vector.Arange(int.MinValue, int.MaxValue);
+            });
         }
 
         [TestMethod()]

@@ -238,6 +238,23 @@ namespace Algebra {
             return new Vector(v, cloning: false);
         }
 
+        /// <summary>連番ベクトル</summary>
+        public static Vector Arange(int start, int stop) {
+            if (unchecked(stop - start) < 0) {
+                throw new ArgumentException("invalid index", $"{nameof(start)}, {nameof(stop)}");
+            }
+
+            int size = stop - start;
+
+            ddouble[] v = new ddouble[size];
+
+            for (int i = 0; i < v.Length; i++) {
+                v[i] = i + start;
+            }
+
+            return new Vector(v, cloning: false);
+        }
+
         /// <summary>不正なベクトル</summary>
         public static Vector Invalid(int size) {
             return Fill(size, value: ddouble.NaN);
