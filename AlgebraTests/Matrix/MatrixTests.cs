@@ -120,6 +120,15 @@ namespace AlgebraTests {
         }
 
         [TestMethod()]
+        public void FlattenTest() {
+            Matrix matrix = new double[,] { { 1, 2, 3 }, { 4, 5, 6 } };
+
+            Vector vector = Matrix.Flatten(matrix);
+
+            Assert.AreEqual(new Vector(1, 2, 3, 4, 5, 6), vector);
+        }
+
+        [TestMethod()]
         public void ZeroTest() {
             Matrix matrix = Matrix.Zero(2, 2);
 
