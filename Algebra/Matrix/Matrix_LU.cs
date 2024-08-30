@@ -96,7 +96,7 @@ namespace Algebra {
 
             // ピボット行列
             for (int i = 0; i < n; i++) {
-                p[ps[i], i] = 1d;
+                p[i, ps[i]] = 1d;
             }
 
             return (p, l, u);

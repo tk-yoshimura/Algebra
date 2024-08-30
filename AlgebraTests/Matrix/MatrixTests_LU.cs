@@ -15,7 +15,7 @@ namespace AlgebraTests {
                     Assert.AreEqual(1, diagonal);
                 }
 
-                Assert.IsTrue((matrix - pivot * lower * upper).Norm < 1e-28);
+                Assert.IsTrue((pivot * matrix - lower * upper).Norm < 1e-28);
             }
         }
 
@@ -30,7 +30,7 @@ namespace AlgebraTests {
                     Assert.AreEqual(1, diagonal);
                 }
 
-                Assert.IsTrue((matrix - pivot * lower * upper).Norm < 1e-28);
+                Assert.IsTrue((pivot * matrix - lower * upper).Norm < 1e-28);
             }
         }
 
