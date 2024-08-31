@@ -231,7 +231,7 @@ namespace Algebra {
 
         public static Matrix DiagonalAdd(Matrix matrix, ddouble r) {
             int n = int.Min(matrix.Rows, matrix.Columns);
-            
+
             Matrix ret = matrix.Copy();
 
             for (int i = 0; i < n; i++) {
