@@ -48,7 +48,7 @@ namespace AlgebraTests {
                     ddouble eigen_value = eigen_values[i];
                     Vector eigen_vector = eigen_vectors[i];
 
-                    Assert.IsTrue((matrix_scaled * eigen_vector - eigen_value * eigen_vector).Norm < 1e-1);
+                    Assert.IsTrue((matrix_scaled * eigen_vector - eigen_value * eigen_vector).Norm < 1e-28);
                 }
             }
         }
