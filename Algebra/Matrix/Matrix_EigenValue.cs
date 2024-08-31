@@ -25,7 +25,6 @@ namespace Algebra {
             int n = m.Size, notconverged = n;
             int exponent = m.MaxExponent;
             Matrix u = ScaleB(m, -exponent);
-            ddouble eps = ddouble.Ldexp(1, -98);
 
             Vector eigen_values = Vector.Fill(n, 1);
             Vector eigen_values_prev = eigen_values.Copy();
@@ -115,7 +114,7 @@ namespace Algebra {
             int n = m.Size, notconverged = n;
             int exponent = m.MaxExponent;
             Matrix u = ScaleB(m, -exponent);
-            ddouble eps = ddouble.Ldexp(1, -98);
+            ddouble eps = ddouble.Ldexp(1, -74);
 
             Vector eigen_values = Vector.Fill(n, 1);
             Vector eigen_values_prev = eigen_values.Copy();
