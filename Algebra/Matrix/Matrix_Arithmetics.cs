@@ -229,6 +229,18 @@ namespace Algebra {
             return (1 / r) * matrix;
         }
 
+        public static Matrix DiagonalAdd(Matrix matrix, ddouble r) {
+            int n = int.Min(matrix.Rows, matrix.Columns);
+            
+            Matrix ret = matrix.Copy();
+
+            for (int i = 0; i < n; i++) {
+                ret[i, i] += r;
+            }
+
+            return ret;
+        }
+
         /// <summary>行列が等しいか</summary>
         public static bool operator ==(Matrix matrix1, Matrix matrix2) {
             if (ReferenceEquals(matrix1, matrix2)) {

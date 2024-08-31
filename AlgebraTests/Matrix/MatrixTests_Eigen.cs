@@ -25,7 +25,7 @@ namespace AlgebraTests {
 
         [TestMethod()]
         public void EigenValuesEyeEpsTest() {
-            Matrix matrix = new double[,] { { 1, 1e-30, 0 }, { 0, 1, 2e-30 }, { -1e-30, 1, 1e-30 } };
+            Matrix matrix = new double[,] { { 1, 1e-30, 0 }, { 1e-30, 1, 2e-30 }, { 0, 1, 1e-30 } };
             ddouble[] eigen_values = Matrix.EigenValues(matrix);
 
             Assert.IsTrue(ddouble.Abs(eigen_values[0] - 1) < 1e-29);
@@ -71,11 +71,11 @@ namespace AlgebraTests {
 
         [TestMethod()]
         public void EigenVectorEyeEpsTest() {
-            Matrix matrix = new double[,] { { 1, 1e-30, 0 }, { 0, 1, 2e-30 }, { -1e-30, 1e-30, 1 } };
+            Matrix matrix = new double[,] { { 1, 1e-30, 0 }, { 1e-30, 1, 2e-30 }, { 0, 1e-30, 1 } };
 
             (ddouble[] eigen_values, Vector[] eigen_vectors) = Matrix.EigenValueVectors(matrix);
 
-            Assert.AreEqual(new double[,] { { 1, 1e-30, 0 }, { 0, 1, 2e-30 }, { -1e-30, 1e-30, 1 } }, matrix);
+            Assert.AreEqual(new double[,] { { 1, 1e-30, 0 }, { 1e-30, 1, 2e-30 }, { 0, 1e-30, 1 } }, matrix);
 
             for (int i = 0; i < matrix.Size; i++) {
                 ddouble eigen_value = eigen_values[i];
