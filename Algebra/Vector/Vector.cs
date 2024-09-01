@@ -188,7 +188,7 @@ namespace Algebra {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public int MaxExponent {
             get {
-                int max_exponent = int.MinValue;
+                int max_exponent = int.MinValue + 1; // abs(int.minvalue) throw arithmetic exception
 
                 for (int i = 0; i < Dim; i++) {
                     if (ddouble.IsFinite(v[i])) {
