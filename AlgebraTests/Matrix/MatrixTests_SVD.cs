@@ -86,7 +86,7 @@ namespace AlgebraTests {
         }
 
         [TestMethod()]
-        public void SVDDecompose3x4Test() {
+        public void SVDDecompose4x3Test() {
             Matrix matrix = new double[,] { { 12, -51, 4 }, { 6, 167, -68 }, { -4, 24, -41 }, { 8, 13, 7 } };
 
             (Matrix u, Vector s, Matrix v) = Matrix.SVD(matrix);
@@ -101,7 +101,7 @@ namespace AlgebraTests {
         }
 
         [TestMethod()]
-        public void SVDDecompose4x3Test() {
+        public void SVDDecompose3x4Test() {
             Matrix matrix = new double[,] { { 12, -51, 4, 6 }, { 6, 167, -68, 3 }, { -4, 24, -41, 12 } };
 
             (Matrix u, Vector s, Matrix v) = Matrix.SVD(matrix);
