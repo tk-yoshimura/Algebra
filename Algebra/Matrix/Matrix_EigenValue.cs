@@ -36,10 +36,7 @@ namespace Algebra {
 
             for (int iter_qr = 0; iter_qr <= precision_level; iter_qr++) {
                 if (d.Size > 2) {
-                    ddouble[] mu2x2 = EigenValues2x2(d[^2.., ^2..]);
-                    ddouble d_kk = d[^1, ^1];
-                    ddouble mu = ddouble.Abs(d_kk - mu2x2[0]) < ddouble.Abs(d_kk - mu2x2[1])
-                        ? mu2x2[0] : mu2x2[1];
+                    ddouble mu = EigenValues2x2(d[^2.., ^2..])[1];
 
                     if (ddouble.IsFinite(mu)) {
                         (Matrix q, Matrix r) = QR(DiagonalAdd(d, -mu));
@@ -129,11 +126,8 @@ namespace Algebra {
 
             for (int iter_qr = 0; iter_qr <= precision_level; iter_qr++) {
                 if (d.Size > 2) {
-                    ddouble[] mu2x2 = EigenValues2x2(d[^2.., ^2..]);
-                    ddouble d_kk = d[^1, ^1];
-                    ddouble mu = ddouble.Abs(d_kk - mu2x2[0]) < ddouble.Abs(d_kk - mu2x2[1])
-                        ? mu2x2[0] : mu2x2[1];
-
+                    ddouble mu = EigenValues2x2(d[^2.., ^2..])[1];
+                    
                     if (ddouble.IsFinite(mu)) {
                         (Matrix q, Matrix r) = QR(DiagonalAdd(d, -mu));
                         d = DiagonalAdd(r * q, mu);
@@ -248,7 +242,6 @@ namespace Algebra {
             else { 
                 return [val1, val0];
             }
-
         }
 
         private static (ddouble[] eigen_values, Vector[] eigen_vectors) EigenValueVectors2x2(Matrix m) {
