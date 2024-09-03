@@ -16,7 +16,7 @@ namespace Algebra {
                 (Vector eigen_vals, Vector[] eigen_vecs) = EigenValueVectors(m.T * m);
 
                 Matrix v = HConcat(eigen_vecs);
-                Vector s = (x => x >= 0d ? ddouble.Sqrt(x) : 0d, eigen_vals);
+                Vector s = (x => ddouble.IsPositive(x) ? ddouble.Sqrt(x) : 0d, eigen_vals);
                 Matrix l = m * v;
 
                 for (int i = 0; i < s.Dim; i++) {
@@ -34,7 +34,7 @@ namespace Algebra {
                 (Vector eigen_vals, Vector[] eigen_vecs) = EigenValueVectors(m * m.T);
 
                 Matrix u = HConcat(eigen_vecs);
-                Vector s = (x => x >= 0d ? ddouble.Sqrt(x) : 0d, eigen_vals);
+                Vector s = (x => ddouble.IsPositive(x) ? ddouble.Sqrt(x) : 0d, eigen_vals);
                 Matrix r = u.T * m;
 
                 for (int i = 0; i < s.Dim; i++) {
@@ -54,7 +54,7 @@ namespace Algebra {
             int n = vs[0].Dim;
 
             for (int k = vs.Count - 1; k >= 0; k--) {
-                if (Vector.IsFinite(vs[k])) {
+                if (Vector.IsFinite(vs[k]) && vs[k].Norm >= 0.75) {
                     break;
                 }
                 vs.RemoveAt(k);
