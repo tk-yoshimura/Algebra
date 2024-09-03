@@ -162,16 +162,17 @@ namespace Algebra {
 
                     ddouble eigen_val = eigen_values[i];
                     Vector v = u[.., i], h = u[i, ..];
-                    ddouble max = 0;
+                    ddouble nondiagonal_absmax = 0;
                     for (int k = 0; k < v.Dim; k++) {
                         if (k == i) {
                             continue;
                         }
 
-                        max = ddouble.Max(max, ddouble.Abs(v[k]), ddouble.Abs(h[k]));
+                        nondiagonal_absmax = 
+                            ddouble.Max(nondiagonal_absmax, ddouble.Abs(v[k]), ddouble.Abs(h[k]));
                     }
 
-                    Matrix g = DiagonalAdd(u, -eigen_val + max * eps).Inverse;
+                    Matrix g = DiagonalAdd(u, -eigen_val + nondiagonal_absmax * eps).Inverse;
 
                     Vector x;
 
