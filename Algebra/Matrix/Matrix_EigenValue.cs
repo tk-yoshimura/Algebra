@@ -278,7 +278,7 @@ namespace Algebra {
             else {
                 if (m00 != m11) {
                     Vector vec0 = (1, 0);
-                    Vector vec1 = new Vector(m[0, 1] / (m11 - m00), 1).Normal;
+                    Vector vec1 = new Vector(m01 / (m11 - m00), 1).Normal;
 
                     return (new ddouble[] { m00, m11 }, new Vector[] { vec0, vec1 });
                 }
