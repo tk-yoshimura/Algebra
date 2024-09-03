@@ -113,8 +113,7 @@ namespace Algebra {
 
             int n = m.Size, notconverged = n;
             int exponent = m.MaxExponent;
-            Matrix u = ScaleB(m, -exponent);
-            ddouble eps = ddouble.Ldexp(1, -74);
+            Matrix u = ScaleB(m, -exponent);            
 
             Vector eigen_values = Vector.Fill(n, 1);
             Vector eigen_values_prev = eigen_values.Copy();
@@ -172,7 +171,9 @@ namespace Algebra {
                             ddouble.Max(nondiagonal_absmax, ddouble.Abs(v[k]), ddouble.Abs(h[k]));
                     }
 
-                    Matrix g = DiagonalAdd(u, -eigen_val + nondiagonal_absmax * eps).Inverse;
+                    ddouble eps = ddouble.Ldexp(nondiagonal_absmax, -74);
+
+                    Matrix g = DiagonalAdd(u, -eigen_val + eps).Inverse;
 
                     Vector x;
 
