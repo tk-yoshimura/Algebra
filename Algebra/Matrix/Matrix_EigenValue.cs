@@ -161,22 +161,40 @@ namespace Algebra {
                     }
 
                     ddouble eigen_val = eigen_values[i];
-                    Matrix g = DiagonalAdd(u, -eigen_val + eps).Inverse;
-
-                    ddouble norm, norm_prev = ddouble.NaN;
-                    Vector x = Vector.Fill(n, 0.125);
-                    x[i] = ddouble.One;
-
-                    for (int iter_vector = 0; iter_vector < precision_level; iter_vector++) {
-                        x = (g * x).Normal;
-
-                        norm = (u * x - eigen_val * x).Norm;
-
-                        if (ddouble.ILogB(norm) < -53 && norm >= norm_prev) {
-                            break;
+                    Vector v = u[.., i], h = u[i, ..];
+                    ddouble max = 0;
+                    for (int k = 0; k < v.Dim; k++) {
+                        if (k == i) {
+                            continue;
                         }
 
-                        norm_prev = norm;
+                        max = ddouble.Max(max, ddouble.Abs(v[k]), ddouble.Abs(h[k]));
+                    }
+
+                    Matrix g = DiagonalAdd(u, -eigen_val + max * eps).Inverse;
+
+                    Vector x;
+
+                    if (IsFinite(g)) {
+                        ddouble norm, norm_prev = ddouble.NaN;
+                        x = Vector.Fill(n, 0.125);
+                        x[i] = ddouble.One;
+
+                        for (int iter_vector = 0; iter_vector < precision_level; iter_vector++) {
+                            x = (g * x).Normal;
+
+                            norm = (u * x - eigen_val * x).Norm;
+
+                            if (ddouble.ILogB(norm) < -53 && norm >= norm_prev) {
+                                break;
+                            }
+
+                            norm_prev = norm;
+                        }
+                    }
+                    else {
+                        x = Vector.Zero(n);
+                        x[i] = 1d;
                     }
 
                     eigen_vectors[i] = x;
