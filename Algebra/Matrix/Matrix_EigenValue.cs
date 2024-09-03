@@ -127,7 +127,7 @@ namespace Algebra {
             for (int iter_qr = 0; iter_qr <= precision_level; iter_qr++) {
                 if (d.Size > 2) {
                     ddouble mu = EigenValues2x2(d[^2.., ^2..])[1];
-                    
+
                     if (ddouble.IsFinite(mu)) {
                         (Matrix q, Matrix r) = QR(DiagonalAdd(d, -mu));
                         d = DiagonalAdd(r * q, mu);
@@ -157,10 +157,10 @@ namespace Algebra {
 
                     ddouble eigen_val = eigen_values[i];
 
-                    int nearest_diagonal_index = eigen_val == diagonal[i] 
+                    int nearest_diagonal_index = eigen_val == diagonal[i]
                         ? i
                         : diagonal.OrderBy(v => ddouble.Abs(v.val - eigen_val)).First().index;
-                    
+
                     Vector v = u[.., nearest_diagonal_index], h = u[nearest_diagonal_index, ..];
                     ddouble nondiagonal_absmax = 0d;
                     for (int k = 0; k < v.Dim; k++) {
@@ -168,7 +168,7 @@ namespace Algebra {
                             continue;
                         }
 
-                        nondiagonal_absmax = 
+                        nondiagonal_absmax =
                             ddouble.Max(nondiagonal_absmax, ddouble.Abs(v[k]), ddouble.Abs(h[k]));
                     }
 
@@ -229,17 +229,20 @@ namespace Algebra {
         private static ddouble[] EigenValues2x2(Matrix m) {
             Debug.Assert(m.Size == 2);
 
-            ddouble b = m[0, 0] + m[1, 1], c = m[0, 0] - m[1, 1];
+            ddouble m00 = m[0, 0], m11 = m[1, 1];
+            ddouble m01 = m[0, 1], m10 = m[1, 0];
 
-            ddouble d = ddouble.Sqrt(c * c + 4 * m[0, 1] * m[1, 0]);
+            ddouble b = m00 + m11, c = m00 - m11;
+
+            ddouble d = ddouble.Sqrt(c * c + 4 * m01 * m10);
 
             ddouble val0 = (b + d) / 2;
             ddouble val1 = (b - d) / 2;
 
-            if (ddouble.Abs(val0 - m[1, 1]) >= ddouble.Abs(val1 - m[1, 1])) {
+            if (ddouble.Abs(val0 - m11) >= ddouble.Abs(val1 - m11)) {
                 return [val0, val1];
             }
-            else { 
+            else {
                 return [val1, val0];
             }
         }
@@ -247,35 +250,40 @@ namespace Algebra {
         private static (ddouble[] eigen_values, Vector[] eigen_vectors) EigenValueVectors2x2(Matrix m) {
             Debug.Assert(m.Size == 2);
 
-            long diagonal_scale = long.Max(ddouble.ILogB(m[0, 0]), ddouble.ILogB(m[1, 1]));
+            ddouble m00 = m[0, 0], m11 = m[1, 1];
+            ddouble m01 = m[0, 1], m10 = m[1, 0];
 
-            long m10_scale = ddouble.ILogB(m[1, 0]);
+            long diagonal_scale = long.Max(ddouble.ILogB(m00), ddouble.ILogB(m11));
+
+            long m10_scale = ddouble.ILogB(m10);
 
             if (diagonal_scale - m10_scale < 106L) {
-                ddouble b = m[0, 0] + m[1, 1], c = m[0, 0] - m[1, 1];
+                ddouble b = m00 + m11, c = m00 - m11;
 
-                ddouble d = ddouble.Sqrt(c * c + 4 * m[0, 1] * m[1, 0]);
+                ddouble d = ddouble.Sqrt(c * c + 4 * m01 * m10);
 
                 ddouble val0 = (b + d) / 2;
                 ddouble val1 = (b - d) / 2;
 
-                Vector vec0 = new Vector((c + d) / (2 * m[1, 0]), 1).Normal;
-                Vector vec1 = new Vector((c - d) / (2 * m[1, 0]), 1).Normal;
+                Vector vec0 = new Vector((c + d) / (2 * m10), 1).Normal;
+                Vector vec1 = new Vector((c - d) / (2 * m10), 1).Normal;
 
-                return (new ddouble[] { val0, val1 }, new Vector[] { vec0, vec1 });
-            }
-            else {
-                ddouble val0 = m[0, 0];
-                ddouble val1 = m[1, 1];
-
-                if (val0 != val1) {
-                    Vector vec0 = (1, 0);
-                    Vector vec1 = new Vector(m[0, 1] / (val1 - val0), 1).Normal;
-
+                if (ddouble.Abs(val0 - m11) >= ddouble.Abs(val1 - m11)) {
                     return (new ddouble[] { val0, val1 }, new Vector[] { vec0, vec1 });
                 }
                 else {
-                    return (new ddouble[] { val0, val1 }, new Vector[] { (1, 0), (0, 1) });
+                    return (new ddouble[] { val1, val0 }, new Vector[] { vec1, vec0 });
+                }
+            }
+            else {
+                if (m00 != m11) {
+                    Vector vec0 = (1, 0);
+                    Vector vec1 = new Vector(m[0, 1] / (m11 - m00), 1).Normal;
+
+                    return (new ddouble[] { m00, m11 }, new Vector[] { vec0, vec1 });
+                }
+                else {
+                    return (new ddouble[] { m00, m11 }, new Vector[] { (1, 0), (0, 1) });
                 }
             }
         }
