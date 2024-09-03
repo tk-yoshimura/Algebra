@@ -161,7 +161,7 @@ namespace Algebra {
 
                     ddouble eigen_val = eigen_values[i];
                     Vector v = u[.., i], h = u[i, ..];
-                    ddouble nondiagonal_absmax = 0;
+                    ddouble nondiagonal_absmax = 0d;
                     for (int k = 0; k < v.Dim; k++) {
                         if (k == i) {
                             continue;
