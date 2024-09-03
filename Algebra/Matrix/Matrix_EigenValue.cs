@@ -113,7 +113,9 @@ namespace Algebra {
 
             int n = m.Size, notconverged = n;
             int exponent = m.MaxExponent;
-            Matrix u = ScaleB(m, -exponent);            
+            Matrix u = ScaleB(m, -exponent);
+
+            Vector diagonal = u.Diagonals;
 
             Vector eigen_values = Vector.Fill(n, 1);
             Vector eigen_values_prev = eigen_values.Copy();
@@ -160,10 +162,15 @@ namespace Algebra {
                     }
 
                     ddouble eigen_val = eigen_values[i];
-                    Vector v = u[.., i], h = u[i, ..];
+
+                    int nearest_diagonal_index = eigen_val == diagonal[i] 
+                        ? i
+                        : diagonal.OrderBy(v => ddouble.Abs(v.val - eigen_val)).First().index;
+                    
+                    Vector v = u[.., nearest_diagonal_index], h = u[nearest_diagonal_index, ..];
                     ddouble nondiagonal_absmax = 0d;
                     for (int k = 0; k < v.Dim; k++) {
-                        if (k == i) {
+                        if (k == nearest_diagonal_index) {
                             continue;
                         }
 
@@ -180,7 +187,7 @@ namespace Algebra {
                     if (IsFinite(g)) {
                         ddouble norm, norm_prev = ddouble.NaN;
                         x = Vector.Fill(n, 0.125);
-                        x[i] = ddouble.One;
+                        x[nearest_diagonal_index] = ddouble.One;
 
                         for (int iter_vector = 0; iter_vector < precision_level; iter_vector++) {
                             x = (g * x).Normal;
@@ -196,7 +203,7 @@ namespace Algebra {
                     }
                     else {
                         x = Vector.Zero(n);
-                        x[i] = 1d;
+                        x[nearest_diagonal_index] = 1d;
                     }
 
                     eigen_vectors[i] = x;
@@ -235,7 +242,13 @@ namespace Algebra {
             ddouble val0 = (b + d) / 2;
             ddouble val1 = (b - d) / 2;
 
-            return [val0, val1];
+            if (ddouble.Abs(val0 - m[1, 1]) >= ddouble.Abs(val1 - m[1, 1])) {
+                return [val0, val1];
+            }
+            else { 
+                return [val1, val0];
+            }
+
         }
 
         private static (ddouble[] eigen_values, Vector[] eigen_vectors) EigenValueVectors2x2(Matrix m) {
