@@ -29,8 +29,8 @@ namespace AlgebraTests {
             new Matrix(new double[,]{ { -10, -1 }, { 0, -7 } }),
             new Matrix(new double[,]{ { -6, 9 }, { -10, 1 } }),
             new Matrix(new double[,]{ { -3, -9 }, { -7, -2 } }),
-
             new Matrix(new double[,]{ { 1, 2 }, { -3, -4 } }),
+
             new Matrix(new double[,]{ { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } }),
             new Matrix(new double[,]{ { -1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 } }),
             new Matrix(new double[,]{ { 0, 1, 0 }, { 1, 0, 0 }, { 0, 0, 1 } }),
