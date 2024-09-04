@@ -113,6 +113,7 @@ namespace Algebra {
             Matrix u = ScaleB(m, -exponent);
 
             Vector diagonal = u.Diagonals;
+            bool[] diagonal_sampled = new bool[n];
 
             Vector eigen_values = Vector.Fill(n, 1);
             Vector eigen_values_prev = eigen_values.Copy();
@@ -157,9 +158,14 @@ namespace Algebra {
 
                     ddouble eigen_val = eigen_values[i];
 
-                    int nearest_diagonal_index = eigen_val == diagonal[i]
+                    int nearest_diagonal_index = eigen_val == diagonal[i] && !diagonal_sampled[i]
                         ? i
-                        : diagonal.OrderBy(v => ddouble.Abs(v.val - eigen_val)).First().index;
+                        : diagonal
+                            .Where(v => !diagonal_sampled[v.index])
+                            .OrderBy(v => ddouble.Abs(v.val - eigen_val))
+                            .First().index;
+
+                    diagonal_sampled[nearest_diagonal_index] = true;
 
                     Vector v = u[.., nearest_diagonal_index], h = u[nearest_diagonal_index, ..];
                     ddouble nondiagonal_absmax = 0d;
@@ -234,7 +240,7 @@ namespace Algebra {
 
             ddouble b = m00 + m11, c = m00 - m11;
 
-            ddouble d = ddouble.Sqrt(c * c + 4 * m01 * m10);
+            ddouble d = ddouble.Sqrt(c * c + 4d * m01 * m10);
 
             ddouble val0 = (b + d) / 2;
             ddouble val1 = (b - d) / 2;
