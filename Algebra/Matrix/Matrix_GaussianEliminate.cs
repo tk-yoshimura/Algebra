@@ -41,7 +41,7 @@ namespace Algebra {
         }
 
         /// <summary>ガウスの消去法</summary>
-        public static Matrix GaussianEliminate(Matrix m) {
+        private static Matrix GaussianEliminate(Matrix m) {
             if (!IsSquare(m)) {
                 throw new ArgumentException("not square matrix", nameof(m));
             }
