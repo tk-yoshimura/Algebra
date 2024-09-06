@@ -78,7 +78,7 @@ namespace Algebra {
                         (u.e[p, j], u.e[i, j]) = (u.e[i, j], u.e[p, j]);
                     }
 
-                    for (int j = 0; j < v.Columns; j++) {
+                    for (int j = 0; j < n; j++) {
                         (v.e[p, j], v.e[i, j]) = (v.e[i, j], v.e[p, j]);
                     }
                 }
@@ -89,7 +89,7 @@ namespace Algebra {
                 for (int j = i + 1; j < n; j++) {
                     u.e[i, j] *= inv_mii;
                 }
-                for (int j = 0; j < v.Columns; j++) {
+                for (int j = 0; j < n; j++) {
                     v.e[i, j] *= inv_mii;
                 }
 
@@ -99,7 +99,7 @@ namespace Algebra {
                     for (int k = i + 1; k < n; k++) {
                         u.e[j, k] -= u.e[i, k] * mul;
                     }
-                    for (int k = 0; k < v.Columns; k++) {
+                    for (int k = 0; k < n; k++) {
                         v.e[j, k] -= v.e[i, k] * mul;
                     }
                 }
@@ -112,7 +112,7 @@ namespace Algebra {
                     for (int k = i; k < n; k++) {
                         u.e[j, k] = 0d;
                     }
-                    for (int k = 0; k < v.Columns; k++) {
+                    for (int k = 0; k < n; k++) {
                         v.e[j, k] -= v.e[i, k] * mul;
                     }
                 }

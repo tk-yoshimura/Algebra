@@ -87,6 +87,65 @@ namespace AlgebraTests {
         }
 
         [TestMethod()]
+        public void InverseCaseNxMTest() {
+            foreach (Matrix matrix in MatrixTestCases.RegularMatrixs) {
+                if (matrix.Size < 4) {
+                    continue;
+                }
+
+                Matrix matrix_c = matrix[1.., ..];
+
+                Console.WriteLine($"test: {matrix_c}");
+
+                Matrix matrix_c_inv = matrix_c.Inverse;
+
+                Assert.IsTrue((matrix_c * matrix_c_inv * matrix_c - matrix_c).Norm < 1e-28);
+            }
+
+            foreach (Matrix matrix in MatrixTestCases.RegularMatrixs) {
+                if (matrix.Size < 4) {
+                    continue;
+                }
+
+                Matrix matrix_c = matrix[.., 1..];
+
+                Console.WriteLine($"test: {matrix_c}");
+
+                Matrix matrix_c_inv = matrix_c.Inverse;
+
+                Assert.IsTrue((matrix_c * matrix_c_inv * matrix_c - matrix_c).Norm < 1e-28);
+            }
+
+            foreach (Matrix matrix in MatrixTestCases.RegularMatrixs) {
+                if (matrix.Size < 4) {
+                    continue;
+                }
+
+                Matrix matrix_c = matrix[2.., ..];
+
+                Console.WriteLine($"test: {matrix_c}");
+
+                Matrix matrix_c_inv = matrix_c.Inverse;
+
+                Assert.IsTrue((matrix_c * matrix_c_inv * matrix_c - matrix_c).Norm < 1e-28);
+            }
+
+            foreach (Matrix matrix in MatrixTestCases.RegularMatrixs) {
+                if (matrix.Size < 4) {
+                    continue;
+                }
+
+                Matrix matrix_c = matrix[.., 2..];
+
+                Console.WriteLine($"test: {matrix_c}");
+
+                Matrix matrix_c_inv = matrix_c.Inverse;
+
+                Assert.IsTrue((matrix_c * matrix_c_inv * matrix_c - matrix_c).Norm < 1e-28);
+            }
+        }
+
+        [TestMethod()]
         public void InverseLargeCaseTest() {
             foreach (Matrix matrix in MatrixTestCases.LargeMatrixs) {
                 Console.WriteLine($"test: {matrix}");
