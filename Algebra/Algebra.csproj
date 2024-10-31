@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="TYoshimura.DoubleDouble" Version="3.2.6" />
+    <PackageReference Include="TYoshimura.DoubleDouble" Version="4.0.0" />
   </ItemGroup>
 
 </Project>
