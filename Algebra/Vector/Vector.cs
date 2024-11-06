@@ -184,6 +184,14 @@ namespace Algebra {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ddouble Mean => v.Average();
 
+        /// <summary>最小</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public ddouble Min => v.Min();
+
+        /// <summary>最小</summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public ddouble Max => v.Max();
+        
         /// <summary>最大指数</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public int MaxExponent {
