@@ -188,7 +188,7 @@ namespace Algebra {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ddouble Min => v.Min();
 
-        /// <summary>最小</summary>
+        /// <summary>最大</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ddouble Max => v.Max();
 
