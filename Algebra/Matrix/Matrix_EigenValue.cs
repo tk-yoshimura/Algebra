@@ -24,7 +24,7 @@ namespace Algebra {
 
             int n = m.Size, notconverged = n;
             int exponent = m.MaxExponent;
-            Matrix u = ScaleB(m, -exponent);
+            (Matrix u, _, _) = PermutateDiagonal(ScaleB(m, -exponent));
 
             Vector eigen_values = Vector.Fill(n, 1);
             Vector eigen_values_prev = eigen_values.Copy();
@@ -50,7 +50,7 @@ namespace Algebra {
                     eigen_values[..d.Size] = d.Diagonals[..d.Size];
                 }
                 else {
-                    eigen_values[..2] = EigenValues(d);
+                    eigen_values[..2] = EigenValues2x2(d);
                 }
 
                 for (int i = notconverged - 1; i >= 0; i--) {
@@ -110,10 +110,7 @@ namespace Algebra {
 
             int n = m.Size, notconverged = n;
             int exponent = m.MaxExponent;
-            Matrix u = ScaleB(m, -exponent);
-
-            Vector diagonal = u.Diagonals;
-            bool[] diagonal_sampled = new bool[n];
+            (Matrix u, _, int[] perm_indexes) = PermutateDiagonal(ScaleB(m, -exponent));
 
             Vector eigen_values = Vector.Fill(n, 1);
             Vector eigen_values_prev = eigen_values.Copy();
@@ -141,7 +138,7 @@ namespace Algebra {
                     eigen_values[..d.Size] = d.Diagonals[..d.Size];
                 }
                 else {
-                    eigen_values[..2] = EigenValues(d);
+                    eigen_values[..2] = EigenValues2x2(d);
                 }
 
                 for (int i = notconverged - 1; i >= 0; i--) {
@@ -158,19 +155,10 @@ namespace Algebra {
 
                     ddouble eigen_val = eigen_values[i];
 
-                    int nearest_diagonal_index = eigen_val == diagonal[i] && !diagonal_sampled[i]
-                        ? i
-                        : diagonal
-                            .Where(v => !diagonal_sampled[v.index])
-                            .OrderBy(v => ddouble.Abs(v.val - eigen_val))
-                            .First().index;
-
-                    diagonal_sampled[nearest_diagonal_index] = true;
-
-                    Vector v = u[.., nearest_diagonal_index], h = u[nearest_diagonal_index, ..];
+                    Vector v = u[.., i], h = u[i, ..];
                     ddouble nondiagonal_absmax = 0d;
                     for (int k = 0; k < v.Dim; k++) {
-                        if (k == nearest_diagonal_index) {
+                        if (k == i) {
                             continue;
                         }
 
@@ -187,7 +175,7 @@ namespace Algebra {
                     if (IsFinite(g)) {
                         ddouble norm, norm_prev = ddouble.NaN;
                         x = Vector.Fill(n, 0.125);
-                        x[nearest_diagonal_index] = ddouble.One;
+                        x[i] = ddouble.One;
 
                         for (int iter_vector = 0; iter_vector < precision_level; iter_vector++) {
                             x = (g * x).Normal;
@@ -203,10 +191,10 @@ namespace Algebra {
                     }
                     else {
                         x = Vector.Zero(n);
-                        x[nearest_diagonal_index] = 1d;
+                        x[i] = 1d;
                     }
 
-                    eigen_vectors[i] = x;
+                    eigen_vectors[i] = x[perm_indexes];
                     notconverged--;
                 }
 
@@ -310,6 +298,38 @@ namespace Algebra {
             Vector[] eigen_vectors_sorted = eigens_sorted.Select(item => item.vec).ToArray();
 
             return (eigen_values_sorted, eigen_vectors_sorted);
+        }
+
+        private static (Matrix matrix, int[] indexes, int[] indexes_invert) PermutateDiagonal(Matrix m) {
+            Debug.Assert(IsSquare(m));
+
+            int n = m.Size;
+
+            Vector rates = Vector.Zero(n);
+
+            for (int i = 0; i < n; i++) {
+                ddouble diagonal = m[i, i];
+
+                Vector nondigonal = Vector.Concat(m[i, ..i], m[i, (i + 1)..]);
+
+                ddouble nondigonal_norm = nondigonal.Norm;
+
+                ddouble rate = ddouble.Abs(diagonal) / (nondigonal_norm + ddouble.Epsilon);
+
+                rates[i] = rate;
+            }
+
+            int[] indexes = rates.Select(item => (item.index, item.val)).OrderBy(item => item.val).Select(item => item.index).ToArray();
+
+            Matrix m_perm = m[indexes, ..][.., indexes];
+
+            int[] indexes_invert = new int[n];
+
+            for (int i = 0; i < n; i++) {
+                indexes_invert[indexes[i]] = i;
+            }
+
+            return (m_perm, indexes, indexes_invert);
         }
     }
 }
