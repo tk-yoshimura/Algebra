@@ -51,6 +51,24 @@ namespace AlgebraTests {
                     Assert.IsTrue((matrix_scaled * eigen_vector - eigen_value * eigen_vector).Norm < 1e-28);
                 }
             }
+
+            foreach (Matrix matrix in MatrixTestCases.SingularMatrixs[..14]) {
+                Console.WriteLine($"test: {matrix}");
+
+                Matrix matrix_scaled = Matrix.ScaleB(matrix, -matrix.MaxExponent);
+
+                (ddouble[] eigen_values, Vector[] eigen_vectors) = Matrix.EigenValueVectors(matrix_scaled);
+                Vector eigen_values_expected = Matrix.EigenValues(matrix_scaled);
+
+                Assert.IsTrue((eigen_values - eigen_values_expected).Norm < 1e-25);
+
+                for (int i = 0; i < matrix_scaled.Size; i++) {
+                    ddouble eigen_value = eigen_values[i];
+                    Vector eigen_vector = eigen_vectors[i];
+
+                    Assert.IsTrue((matrix_scaled * eigen_vector - eigen_value * eigen_vector).Norm < 1e-10);
+                }
+            }
         }
 
         [TestMethod()]

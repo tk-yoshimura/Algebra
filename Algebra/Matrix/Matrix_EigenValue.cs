@@ -99,6 +99,9 @@ namespace Algebra {
                 throw new ArgumentException("not square matrix", nameof(m));
             }
 
+            if (IsZero(m)) {
+                return (Vector.Zero(m.Size), Identity(m.Size).Horizontals);
+            }
             if (m.Size <= 1) {
                 return ([m[0, 0]], [new Vector(1)]);
             }
@@ -249,9 +252,9 @@ namespace Algebra {
 
             long diagonal_scale = long.Max(ddouble.ILogB(m00), ddouble.ILogB(m11));
 
-            long m10_scale = ddouble.ILogB(m10);
+            long m10_scale = ddouble.ILogB(m10), m01_scale = ddouble.ILogB(m01);
 
-            if (diagonal_scale - m10_scale < 106L) {
+            if (diagonal_scale - m10_scale < 106L && m10 != 0d) {
                 ddouble b = m00 + m11, c = m00 - m11;
 
                 ddouble d = ddouble.Sqrt(c * c + 4 * m01 * m10);
@@ -261,6 +264,24 @@ namespace Algebra {
 
                 Vector vec0 = new Vector((c + d) / (2 * m10), 1).Normal;
                 Vector vec1 = new Vector((c - d) / (2 * m10), 1).Normal;
+
+                if (ddouble.Abs(val0 - m11) >= ddouble.Abs(val1 - m11)) {
+                    return (new ddouble[] { val0, val1 }, new Vector[] { vec0, vec1 });
+                }
+                else {
+                    return (new ddouble[] { val1, val0 }, new Vector[] { vec1, vec0 });
+                }
+            }
+            else if (diagonal_scale - m01_scale < 106L && m01 != 0d) {
+                ddouble b = m00 + m11, c = m00 - m11;
+
+                ddouble d = ddouble.Sqrt(c * c + 4 * m01 * m10);
+
+                ddouble val0 = (b + d) / 2;
+                ddouble val1 = (b - d) / 2;
+
+                Vector vec0 = new Vector(1, (c + d) / (2 * m01)).Normal;
+                Vector vec1 = new Vector(1, (c - d) / (2 * m01)).Normal;
 
                 if (ddouble.Abs(val0 - m11) >= ddouble.Abs(val1 - m11)) {
                     return (new ddouble[] { val0, val1 }, new Vector[] { vec0, vec1 });
