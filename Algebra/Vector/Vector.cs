@@ -191,7 +191,7 @@ namespace Algebra {
         /// <summary>最小</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ddouble Max => v.Max();
-        
+
         /// <summary>最大指数</summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public int MaxExponent {
