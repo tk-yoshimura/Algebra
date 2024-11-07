@@ -233,8 +233,8 @@ namespace Algebra {
 
             ddouble d = ddouble.Sqrt(c * c + 4d * m01 * m10);
 
-            ddouble val0 = (b + d) / 2;
-            ddouble val1 = (b - d) / 2;
+            ddouble val0 = (b + d) * 0.5d;
+            ddouble val1 = (b - d) * 0.5d;
 
             if (ddouble.Abs(val0 - m11) >= ddouble.Abs(val1 - m11)) {
                 return [val0, val1];
@@ -251,37 +251,25 @@ namespace Algebra {
             ddouble m01 = m[0, 1], m10 = m[1, 0];
 
             long diagonal_scale = long.Max(ddouble.ILogB(m00), ddouble.ILogB(m11));
+            long nondiagonal_scale = long.Max(ddouble.ILogB(m01), ddouble.ILogB(m10));
 
-            long m10_scale = ddouble.ILogB(m10), m01_scale = ddouble.ILogB(m01);
-
-            if (diagonal_scale - m10_scale < 106L && m10 != 0d) {
+            if (diagonal_scale - nondiagonal_scale < 106L) {
                 ddouble b = m00 + m11, c = m00 - m11;
 
-                ddouble d = ddouble.Sqrt(c * c + 4 * m01 * m10);
+                ddouble d = ddouble.Sqrt(c * c + 4d * m01 * m10);
 
-                ddouble val0 = (b + d) / 2;
-                ddouble val1 = (b - d) / 2;
+                ddouble val0 = (b + d) * 0.5d;
+                ddouble val1 = (b - d) * 0.5d;
 
-                Vector vec0 = new Vector((c + d) / (2 * m10), 1).Normal;
-                Vector vec1 = new Vector((c - d) / (2 * m10), 1).Normal;
-
-                if (ddouble.Abs(val0 - m11) >= ddouble.Abs(val1 - m11)) {
-                    return (new ddouble[] { val0, val1 }, new Vector[] { vec0, vec1 });
+                Vector vec0, vec1;
+                if (ddouble.Abs(m10) > ddouble.Abs(m01)) {
+                    vec0 = new Vector((c + d) / (2d * m10), 1d).Normal;
+                    vec1 = new Vector((c - d) / (2d * m10), 1d).Normal;
                 }
                 else {
-                    return (new ddouble[] { val1, val0 }, new Vector[] { vec1, vec0 });
+                    vec0 = new Vector(1d, (-c + d) / (2d * m01)).Normal;
+                    vec1 = new Vector(1d, (-c - d) / (2d * m01)).Normal;
                 }
-            }
-            else if (diagonal_scale - m01_scale < 106L && m01 != 0d) {
-                ddouble b = m00 + m11, c = m00 - m11;
-
-                ddouble d = ddouble.Sqrt(c * c + 4 * m01 * m10);
-
-                ddouble val0 = (b + d) / 2;
-                ddouble val1 = (b - d) / 2;
-
-                Vector vec0 = new Vector(1, (c + d) / (2 * m01)).Normal;
-                Vector vec1 = new Vector(1, (c - d) / (2 * m01)).Normal;
 
                 if (ddouble.Abs(val0 - m11) >= ddouble.Abs(val1 - m11)) {
                     return (new ddouble[] { val0, val1 }, new Vector[] { vec0, vec1 });
