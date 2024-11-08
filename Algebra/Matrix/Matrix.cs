@@ -203,7 +203,7 @@ namespace Algebra {
                 for (int i = 0; i < Rows; i++) {
                     for (int j = 0; j < Columns; j++) {
                         if (ddouble.IsFinite(e[i, j])) {
-                            max_exponent = Math.Max(Math.ILogB((double)e[i, j]), max_exponent);
+                            max_exponent = int.Max(ddouble.ILogB(e[i, j]), max_exponent);
                         }
                     }
                 }

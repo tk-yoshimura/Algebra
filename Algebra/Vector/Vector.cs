@@ -200,7 +200,7 @@ namespace Algebra {
 
                 for (int i = 0; i < Dim; i++) {
                     if (ddouble.IsFinite(v[i])) {
-                        max_exponent = Math.Max(Math.ILogB((double)v[i]), max_exponent);
+                        max_exponent = int.Max(ddouble.ILogB(v[i]), max_exponent);
                     }
                 }
 

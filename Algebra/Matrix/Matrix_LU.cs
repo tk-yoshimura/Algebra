@@ -40,7 +40,7 @@ namespace Algebra {
                 }
 
                 //ピボットが閾値以下ならばMは正則行列でない
-                if (Math.ILogB((double)pivot) <= -100) {
+                if (ddouble.ILogB(pivot) <= -100) {
                     return (ps, 0, Invalid(n), Zero(n));
                 }
 

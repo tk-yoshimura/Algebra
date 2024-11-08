@@ -68,7 +68,7 @@ namespace Algebra {
                 }
 
                 //ピボットが閾値以下ならばMは正則行列でないので逆行列は存在しない
-                if (Math.ILogB((double)pivot) <= -100) {
+                if (ddouble.ILogB(pivot) <= -100) {
                     return Invalid(v.Rows, v.Columns);
                 }
 
@@ -152,7 +152,7 @@ namespace Algebra {
                 }
 
                 //ピボットが閾値以下ならばMは正則行列でないので解は存在しない
-                if (Math.ILogB((double)pivot) <= -100) {
+                if (ddouble.ILogB(pivot) <= -100) {
                     return Vector.Invalid(v.Dim);
                 }
 
