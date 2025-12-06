@@ -54,7 +54,7 @@ namespace AlgebraTests {
 
             Assert.AreEqual(2, Matrix.Zero(2, 2).Size);
 
-            Assert.ThrowsException<ArithmeticException>(() => {
+            Assert.ThrowsExactly<ArithmeticException>(() => {
                 int n = Matrix.Zero(2, 3).Size;
             });
 

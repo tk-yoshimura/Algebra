@@ -20,7 +20,7 @@ namespace AlgebraTests {
             Assert.AreEqual(new Vector(-1, -2, -2, 5, -3, -3, -3, -3), Vector.Concat(vector1, vector2, 5f, vector4));
             Assert.AreEqual(new Vector(-1, -2, -2, "6.2", -3, -3, -3, -3), Vector.Concat(vector1, vector2, "6.2", vector4));
 
-            Assert.ThrowsException<ArgumentException>(() => {
+            Assert.ThrowsExactly<ArgumentException>(() => {
                 Vector.Concat(vector1, vector2, 'b', vector4);
             });
         }

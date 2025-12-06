@@ -43,7 +43,7 @@ namespace AlgebraTests {
                 (Matrix pivot, Matrix lower, Matrix upper) = Matrix.LU(matrix);
 
                 Assert.IsTrue(Matrix.IsFinite(pivot));
-                Assert.IsTrue(!Matrix.IsValid(lower));
+                Assert.IsFalse(Matrix.IsValid(lower));
                 Assert.IsTrue(Matrix.IsZero(upper));
                 Assert.AreEqual(0d, matrix.Det);
             }

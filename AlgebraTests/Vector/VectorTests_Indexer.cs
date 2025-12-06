@@ -66,12 +66,12 @@ namespace AlgebraTests {
             vector_dst[0..^2] = vector_src[1..^1];
             Assert.AreEqual(new Vector(2, 3, 4, 0, 0), vector_dst);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => {
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => {
                 vector_dst = Vector.Zero(vector_src.Dim);
                 vector_dst[0..^2] = vector_src[1..^2];
             });
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => {
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => {
                 vector_dst = Vector.Zero(vector_src.Dim);
                 vector_dst[0..^2] = vector_src[1..];
             });

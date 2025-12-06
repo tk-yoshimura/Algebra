@@ -172,11 +172,11 @@ namespace AlgebraTests {
 
             Assert.AreEqual(0, vector3.Dim);
 
-            Assert.ThrowsException<ArgumentException>(() => {
+            Assert.ThrowsExactly<ArgumentException>(() => {
                 _ = Vector.Arange(3, 2);
             });
 
-            Assert.ThrowsException<ArgumentException>(() => {
+            Assert.ThrowsExactly<ArgumentException>(() => {
                 _ = Vector.Arange(int.MinValue, int.MaxValue);
             });
         }
@@ -244,25 +244,25 @@ namespace AlgebraTests {
             (e0, e1, e2, e3, e4, e5, e6, e7) = vector8;
             Assert.AreEqual((2, 4, 6, 8, 1, 3, 5, 7), (e0, e1, e2, e3, e4, e5, e6, e7));
 
-            Assert.ThrowsException<InvalidOperationException>(() => {
+            Assert.ThrowsExactly<InvalidOperationException>(() => {
                 (x, y, z) = vector2;
             });
-            Assert.ThrowsException<InvalidOperationException>(() => {
+            Assert.ThrowsExactly<InvalidOperationException>(() => {
                 (x, y, z, w) = vector3;
             });
-            Assert.ThrowsException<InvalidOperationException>(() => {
+            Assert.ThrowsExactly<InvalidOperationException>(() => {
                 (e0, e1, e2, e3, e4) = vector4;
             });
-            Assert.ThrowsException<InvalidOperationException>(() => {
+            Assert.ThrowsExactly<InvalidOperationException>(() => {
                 (e0, e1, e2, e3, e4, e5) = vector5;
             });
-            Assert.ThrowsException<InvalidOperationException>(() => {
+            Assert.ThrowsExactly<InvalidOperationException>(() => {
                 (e0, e1, e2, e3, e4, e5, e6) = vector6;
             });
-            Assert.ThrowsException<InvalidOperationException>(() => {
+            Assert.ThrowsExactly<InvalidOperationException>(() => {
                 (e0, e1, e2, e3, e4, e5, e6, e7) = vector7;
             });
-            Assert.ThrowsException<InvalidOperationException>(() => {
+            Assert.ThrowsExactly<InvalidOperationException>(() => {
                 (e0, e1, e2, e3, e4, e5, e6) = vector8;
             });
         }

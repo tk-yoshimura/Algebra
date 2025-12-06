@@ -34,7 +34,7 @@ namespace AlgebraTests {
 
         [TestMethod()]
         public void EigenVectorTest() {
-            Matrix.EigenValueVectors(new Matrix(new double[,] { { 2, -1 }, { 0, 2 } }));
+            Matrix.EigenValueVectors(new Matrix(new double[,] { { 32, -4, 3 }, { 0, 16, 2 }, { -1, 1, 26 } }));
 
             foreach (Matrix matrix in MatrixTestCases.N2Matrixs) {
                 Console.WriteLine($"test: {matrix}");
